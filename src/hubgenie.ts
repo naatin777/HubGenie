@@ -1,8 +1,10 @@
 import { Command } from "@cliffy/command";
+import { META } from "./meta.ts";
 
 if (import.meta.main) {
   await new Command()
-    .name("hubgenie")
-    .description("AI-powered CLI for generating smart commit messages, pull requests, and issues.")
+    .name(META.name)
+    .description(META.description)
+    .version(META.version)
     .parse(Deno.args);
 }
