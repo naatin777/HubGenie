@@ -4,6 +4,7 @@
   },
   "imports": {
     "@cliffy/command": "jsr:@cliffy/command@^1.0.0-rc.8",
+    "@openai/openai": "jsr:@openai/openai@^6.7.0",
     "@std/assert": "jsr:@std/assert@1"
   }
 }
