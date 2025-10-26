@@ -1,6 +1,6 @@
 import { Command } from "@cliffy/command";
 import { META } from "./meta.ts";
-import { commitAction } from "./core/commit.ts";
+import { commitAction } from "./actions/commit.ts";
 
 if (import.meta.main) {
   await new Command()
