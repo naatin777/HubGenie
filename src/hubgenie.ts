@@ -1,6 +1,7 @@
 import { Command } from "@cliffy/command";
 import { META } from "./meta.ts";
 import { commitAction } from "./actions/commit.ts";
+import { initAction } from "./actions/init.ts";
 
 if (import.meta.main) {
   await new Command()
@@ -9,5 +10,9 @@ if (import.meta.main) {
     .version(META.version)
     .command("commit", "Generate some commit messages")
     .action(commitAction)
+    .command("init", "Initialize configuration")
+    .option("--local", "Create local project config")
+    .option("--global", "Create global user config")
+    .action(initAction)
     .parse(Deno.args);
 }
