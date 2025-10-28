@@ -1,5 +1,6 @@
 import { getGitDiff } from "../utils/git.ts";
 import { getCommitMessage } from "../utils/openai.ts";
+import { Input } from "@cliffy/prompt";
 
 export async function commitAction() {
   const diff = await getGitDiff();

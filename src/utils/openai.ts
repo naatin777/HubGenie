@@ -46,5 +46,5 @@ export async function getCommitMessage(diff: string) {
     ),
   });
 
-  return completion.choices[0].message.parsed;
+  return completion.choices[0].message.parsed.message;
 }
