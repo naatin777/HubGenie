@@ -8,11 +8,19 @@ if (import.meta.main) {
     .name(META.name)
     .description(META.description)
     .version(META.version)
-    .command("commit", "Generate some commit messages")
-    .action(commitAction)
-    .command("init", "Initialize configuration")
-    .option("--local", "Create local project config")
-    .option("--global", "Create global user config")
-    .action(initAction)
+    .command(
+      "init",
+      new Command()
+        .description("Initialize configuration")
+        .option("--local", "Create local project config")
+        .option("--global", "Create global user config")
+        .action(initAction),
+    )
+    .command(
+      "commit",
+      new Command()
+        .description("Generate some commit messages")
+        .action(commitAction),
+    )
     .parse(Deno.args);
 }

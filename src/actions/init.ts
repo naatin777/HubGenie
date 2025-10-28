@@ -130,5 +130,3 @@ export async function initLanguage(): Promise<string> {
     info: true,
   });
 }
-
-initAction({ local: true, global: true });
