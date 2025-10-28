@@ -1,4 +1,8 @@
 import OpenAI from "@openai/openai";
+import { zodResponseFormat } from "@openai/openai/helpers/zod";
+import { getApiKey, getConfig } from "./config.ts";
+
+import z from "@zod/zod";
 
 export async function getModelList(baseURL: string, apiKey: string) {
   const openai = new OpenAI({
@@ -11,4 +15,36 @@ export async function getModelList(baseURL: string, apiKey: string) {
   });
   const list = openai.models.list();
   return await Array.fromAsync(list);
+}
+
+export async function getCommitMessage(diff: string) {
+  const openai = new OpenAI({
+    baseURL: await getConfig("baseURL") as string,
+    apiKey: await getApiKey(),
+    organization: null,
+    project: null,
+    webhookSecret: null,
+    logLevel: "off",
+  });
+
+  const completion = await openai.chat.completions.parse({
+    model: await getConfig("model"),
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are a commit message assistant. Read the following diff and come up with 10 appropriate commit messages.",
+      },
+      {
+        role: "user",
+        content: diff,
+      },
+    ],
+    response_format: zodResponseFormat(
+      z.object({ message: z.array(z.string()) }),
+      "commit messages",
+    ),
+  });
+
+  return completion.choices[0].message.parsed;
 }
