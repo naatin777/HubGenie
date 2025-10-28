@@ -99,7 +99,7 @@ export async function initTemperature(): Promise<number[]> {
     info: true,
   });
 
-  return (await temperature).map((value) => Number(value));
+  return temperature.map((value) => Number(value));
 }
 
 export async function initLanguage(): Promise<string> {
