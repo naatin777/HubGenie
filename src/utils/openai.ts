@@ -38,7 +38,11 @@ export async function getCommitMessage(
           {
             role: "system",
             content:
-              "You are a commit message assistant. Read the following diff and come up with 10 appropriate commit messages.",
+              "You are a commit message assistant. Read the following diff and come up with 5 appropriate commit messages.",
+          },
+          {
+            role: "system",
+            content: `Language: ${await getConfig("language") as string}`,
           },
           {
             role: "user",
