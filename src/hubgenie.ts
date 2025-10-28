@@ -1,8 +1,26 @@
-export function add(a: number, b: number): number {
-  return a + b;
-}
+import { Command } from "@cliffy/command";
+import { META } from "./meta.ts";
+import { commitAction } from "./actions/commit.ts";
+import { initAction } from "./actions/init.ts";
 
-// Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
 if (import.meta.main) {
-  console.log("Add 2 + 3 =", add(2, 3));
+  await new Command()
+    .name(META.name)
+    .description(META.description)
+    .version(META.version)
+    .command(
+      "init",
+      new Command()
+        .description("Initialize configuration")
+        .option("--local", "Create local project config")
+        .option("--global", "Create global user config")
+        .action(initAction),
+    )
+    .command(
+      "commit",
+      new Command()
+        .description("Generate some commit messages")
+        .action(commitAction),
+    )
+    .parse(Deno.args);
 }
