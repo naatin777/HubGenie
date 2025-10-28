@@ -1,6 +1,6 @@
 import { Input, List, Secret, Select } from "@cliffy/prompt";
 import { getModelList } from "../utils/openai.ts";
-import { getApiKeyFromEnv, saveConfig } from "../utils/config.ts";
+import { getApiKey, saveConfig } from "../utils/config.ts";
 import { ConfigScope } from "../type.ts";
 
 export async function initAction(
@@ -8,9 +8,7 @@ export async function initAction(
 ): Promise<void> {
   const scope = await selectScope(options);
   const baseURL = await initBaseURL();
-  const apiKey = scope === "local"
-    ? await getApiKeyFromEnv()
-    : await initApiKey();
+  const apiKey = scope === "local" ? await getApiKey() : await initApiKey();
   const model = await initModel(baseURL, apiKey);
   const temperature = await initTemperature();
   const language = await initLanguage();
