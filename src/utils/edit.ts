@@ -1,4 +1,4 @@
-async function editText(text: string): Promise<string> {
+export async function editText(text: string): Promise<string> {
   const tempFile = await Deno.makeTempFile({ suffix: ".txt" });
 
   try {
