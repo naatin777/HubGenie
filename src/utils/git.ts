@@ -34,3 +34,10 @@ export async function getGitDiffName(
     "--name-only",
   ]);
 }
+
+export async function getStagedFileNames(
+  runner: GitRunner = new DefaultGitRunner(),
+): Promise<string[]> {
+  const name = await getGitDiffName(runner);
+  return name.split(/\r\n|\r|\n/).filter((value) => value);
+}
