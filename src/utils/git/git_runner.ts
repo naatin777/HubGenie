@@ -12,15 +12,3 @@ export class DefaultGitRunner implements GitRunner {
     return new TextDecoder().decode(output.stdout);
   }
 }
-
-export async function getGitDiff(
-  runner: GitRunner = new DefaultGitRunner(),
-): Promise<string> {
-  return await runner.run([
-    "diff",
-    "--cached",
-    "--unified=0",
-    "--color=never",
-    "--no-prefix",
-  ]);
-}

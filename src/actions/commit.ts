@@ -1,9 +1,10 @@
-import { getGitDiff } from "../utils/git.ts";
+import { GitService } from "../utils/git/git_service.ts";
 import { getCommitMessage } from "../utils/openai.ts";
 import { Input } from "@cliffy/prompt";
 
 export async function commitAction() {
-  const diff = await getGitDiff();
+  const git = new GitService()
+  const diff = await git.diff.getGitDiff();
   const messages = await getCommitMessage(diff);
   const message = await Input.prompt({
     message: "Enter commit messages",
