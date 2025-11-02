@@ -24,3 +24,13 @@ export async function getGitDiff(
     "--no-prefix",
   ]);
 }
+
+export async function getGitDiffName(
+  runner: GitRunner = new DefaultGitRunner(),
+): Promise<string> {
+  return await runner.run([
+    "diff",
+    "--cached",
+    "--name-only",
+  ]);
+}
