@@ -3,6 +3,7 @@ import { META } from "./meta.ts";
 import { commitAction } from "./actions/commit.ts";
 import { initAction } from "./actions/init.ts";
 import { issueAction } from "./actions/issue.ts";
+import { configAction } from "./actions/config.ts";
 
 if (import.meta.main) {
   await new Command()
@@ -16,6 +17,14 @@ if (import.meta.main) {
         .option("--local", "Create local project config")
         .option("--global", "Create global user config")
         .action(initAction),
+    )
+    .command(
+      "config",
+      new Command()
+        .description("Manage configuration")
+        .option("--local", "Create local project config")
+        .option("--global", "Create global user config")
+        .action(configAction),
     )
     .command(
       "commit",
