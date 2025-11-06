@@ -3,7 +3,7 @@ import { getCommitMessage } from "../utils/openai.ts";
 import { Input } from "@cliffy/prompt";
 
 export async function commitAction() {
-  const git = new GitService()
+  const git = new GitService();
   const diff = await git.diff.getGitDiff();
   const messages = await getCommitMessage(diff);
   const message = await Input.prompt({
