@@ -68,3 +68,19 @@ export async function getConfig(key: keyof LocalConfig) {
     return globalConfig[key];
   }
 }
+
+export async function getAllLocalConfig(): Promise<LocalConfig> {
+  const localConfigFile = await Deno.readTextFile(
+    ConfigPaths.getConfigPath("local"),
+  );
+  const localConfig: LocalConfig = JSON.parse(localConfigFile);
+  return localConfig;
+}
+
+export async function getAllGlobalConfig(): Promise<GlobalConfig> {
+  const globalConfigFile = await Deno.readTextFile(
+    ConfigPaths.getConfigPath("global"),
+  );
+  const globalConfig: GlobalConfig = JSON.parse(globalConfigFile);
+  return globalConfig;
+}
