@@ -1,4 +1,4 @@
-class Spinner {
+export class Spinner {
   private frames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
   private interval = 50;
   private timer?: number;
@@ -46,9 +46,3 @@ class Spinner {
     Deno.stdout.writeSync(new TextEncoder().encode("\r\x1b[K"));
   }
 }
-
-const spinner = new Spinner("Loading...");
-spinner.start();
-setTimeout(() => {
-  spinner.stop("Done!");
-}, 10000);
