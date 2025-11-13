@@ -14,6 +14,9 @@ if (import.meta.main) {
     .name(META.name)
     .description(META.description)
     .version(META.version)
+    .action(function () {
+      this.showHelp();
+    })
     .command(
       "init",
       new Command()
