@@ -79,7 +79,9 @@ export async function getCommitMessage(
           },
           {
             role: "system",
-            content: `Please output in ${await getConfig("language") as string}.`
+            content: `Please output in ${await getConfig(
+              "language",
+            ) as string}.`,
           },
           {
             role: "user",
