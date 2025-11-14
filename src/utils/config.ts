@@ -1,6 +1,7 @@
 import { load } from "@std/dotenv";
 import { ConfigPaths } from "./path.ts";
 import { ConfigScope } from "../type.ts";
+import { getEnv } from "./env.ts";
 
 export interface Config {
   baseURL: string;
@@ -19,11 +20,7 @@ export async function saveConfig(
 }
 
 export async function getApiKey(): Promise<string> {
-  await load({ export: true });
-
-  const apiKey = Deno.env.get("HUBGENIE_API_KEY");
-  if (!apiKey) throw new Error("HUBGENIE_API_KEY is not set");
-  return apiKey;
+  return await getEnv("HUBGENIE_API_KEY");
 }
 
 export async function getConfig(key: keyof Config) {
