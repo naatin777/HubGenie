@@ -1,15 +1,14 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:base"
   ],
-  "customManagers": [
+  "regexManagers": [
     {
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/(^|/)deno\\.jsonc?$/",
-        "/deps\\.ts$/",
-        "/mod\\.ts$/"
+      "fileMatch": [
+        "(^|/)deno\\.jsonc?$",
+        "deps\\.ts$",
+        "mod\\.ts$"
       ],
       "matchStrings": [
         "\"(?<depName>https://deno.land/x/[^\"]+)@(?<currentValue>[^\"']+)"
