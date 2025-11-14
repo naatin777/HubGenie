@@ -1,21 +1,21 @@
 import { assertEquals } from "@std/assert";
 import { GitRunner } from "./git_runner.ts";
 import { GitDiffRepository } from "./diff_repository.ts";
-Deno.test("getGitDiff", async () => {
+Deno.test("getGitDiffStaged", async () => {
   const mock: GitRunner = {
     run: (args) => new Promise((resolve) => resolve(args.join(" "))),
   };
   const gitDiffRepository = new GitDiffRepository();
-  const result = await gitDiffRepository.getGitDiff(mock);
+  const result = await gitDiffRepository.getGitDiffStaged(mock);
   assertEquals(result, "diff --cached --unified=0 --color=never --no-prefix");
 });
 
-Deno.test("getGitDiffName", async () => {
+Deno.test("getGitDiffStagedName", async () => {
   const mock: GitRunner = {
     run: (args) => new Promise((resolve) => resolve(args.join(" "))),
   };
   const gitDiffRepository = new GitDiffRepository();
-  const result = await gitDiffRepository.getGitDiffName(mock);
+  const result = await gitDiffRepository.getGitDiffStagedName(mock);
   assertEquals(result, "diff --cached --name-only");
 });
 
