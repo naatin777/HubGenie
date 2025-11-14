@@ -3,13 +3,7 @@
   "extends": [
     "config:recommended"
   ],
-  "packageRules": [
-    {
-      "matchDatasources": [
-        "deno"
-      ],
-      "groupName": "Deno",
-      "automerge": false
-    }
-  ]
+  "deno": {
+    "enabled": true
+  }
 }
