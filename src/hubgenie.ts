@@ -3,11 +3,7 @@ import { META } from "./meta.ts";
 import { commitAction } from "./actions/commit.ts";
 import { initAction } from "./actions/init.ts";
 import { issueAction } from "./actions/issue.ts";
-import {
-  configLanguageAction,
-  configModelAction,
-  configTemperatureAction,
-} from "./actions/config.ts";
+import { configLanguageAction, configModelAction } from "./actions/config.ts";
 
 if (import.meta.main) {
   await new Command()
@@ -39,14 +35,6 @@ if (import.meta.main) {
             .option("--local", "Edit local project config")
             .option("--global", "Edit global user config")
             .action(configLanguageAction),
-        )
-        .command(
-          "temperature",
-          new Command()
-            .description("Manage temperature")
-            .option("--local", "Edit local project config")
-            .option("--global", "Edit global user config")
-            .action(configTemperatureAction),
         )
         .command(
           "model",

@@ -1,9 +1,4 @@
-import {
-  initLanguage,
-  initModel,
-  initTemperature,
-  selectScope,
-} from "../utils/selection.ts";
+import { initLanguage, initModel, selectScope } from "../utils/selection.ts";
 import {
   getAllConfig,
   getApiKey,
@@ -21,19 +16,6 @@ export async function configLanguageAction(
   const language = await initLanguage();
   const localConfig = await getAllConfig(scope);
   localConfig.language = language;
-  await saveConfig(localConfig, scope);
-}
-
-export async function configTemperatureAction(
-  options: {
-    local?: true | undefined;
-    global?: true | undefined;
-  },
-): Promise<void> {
-  const scope = await selectScope(options);
-  const temperature = await initTemperature();
-  const localConfig = await getAllConfig(scope);
-  localConfig.temperature = temperature;
   await saveConfig(localConfig, scope);
 }
 

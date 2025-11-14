@@ -1,4 +1,4 @@
-import { Input, List, Secret, Select } from "@cliffy/prompt";
+import { Input, Secret, Select } from "@cliffy/prompt";
 import { ConfigScope } from "../type.ts";
 import { getModelList } from "./openai.ts";
 
@@ -59,18 +59,6 @@ export async function initModel(
     options: models.map((value) => ({ name: value.id, value: value.id })),
   });
   return model;
-}
-
-export async function initTemperature(): Promise<number[]> {
-  const temperature = await List.prompt({
-    message: "Select temperature value (0.0 - 2.0)",
-    suggestions: [...Array(21).keys()].map((i) => (i * 0.1).toFixed(1)),
-    default: ["0.2", "0.7", "1.0"],
-    list: true,
-    info: true,
-  });
-
-  return temperature.map((value) => Number(value));
 }
 
 export async function initLanguage(): Promise<string> {
