@@ -1,4 +1,4 @@
-import { GitService } from "../utils/git/git_service.ts";
+import { GitService } from "../git/git_service.ts";
 import { getCommitMessage } from "../utils/openai.ts";
 import { Input } from "@cliffy/prompt";
 import { Spinner } from "../utils/spinner.ts";
