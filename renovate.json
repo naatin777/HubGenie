@@ -3,5 +3,6 @@
   "extends": [
     "config:base",
     "github>Omochice/renovate-config:deno"
-  ]
+  ],
+  "dependencyDashboard": false
 }
