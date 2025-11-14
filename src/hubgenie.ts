@@ -14,7 +14,7 @@ if (import.meta.main) {
     .name(META.name)
     .description(META.description)
     .version(META.version)
-    .action(function () {
+    .action(function (this: Command) {
       this.showHelp();
     })
     .command(
@@ -29,6 +29,9 @@ if (import.meta.main) {
       "config",
       new Command()
         .description("Manage configuration")
+        .action(function (this: Command) {
+          this.showHelp();
+        })
         .command(
           "language",
           new Command()
