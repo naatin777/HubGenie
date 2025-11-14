@@ -1,0 +1,4 @@
+comment:
+  layout: "coverage, diff"
+  require_changes: false
+  after_n_builds: 1
