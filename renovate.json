@@ -1,47 +1,15 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:base"
   ],
-  "customManagers": [
+  "packageRules": [
     {
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/\\.ts$/",
-        "/\\.tsx$/",
-        "/deno\\.json$/",
-        "/deno\\.jsonc$/"
+      "matchDatasources": [
+        "deno"
       ],
-      "matchStrings": [
-        "\"(?<depName>https:?//deno\\.land/(?:std|x)/.+?)@(?<currentValue>[^/\" ]+)\""
-      ],
-      "datasourceTemplate": "deno"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/\\.ts$/",
-        "/\\.tsx$/",
-        "/deno\\.json$/",
-        "/deno\\.jsonc$/"
-      ],
-      "matchStrings": [
-        "\"jsr:(?<depName>@.+?/.+?)@(?<currentValue>[\\^~]?\\d+\\.\\d+\\.\\d+.*?)\""
-      ],
-      "datasourceTemplate": "jsr"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/\\.ts$/",
-        "/\\.tsx$/",
-        "/deno\\.json$/",
-        "/deno\\.jsonc$/"
-      ],
-      "matchStrings": [
-        "\"npm:(?<depName>.+?)@(?<currentValue>[\\^~]?\\d+\\.\\d+\\.\\d+.*?)\""
-      ],
-      "datasourceTemplate": "npm"
+      "groupName": "Deno",
+      "automerge": false
     }
   ]
 }
