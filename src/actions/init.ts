@@ -17,21 +17,10 @@ export async function initAction(
   const model = await initModel(baseURL, apiKey);
   const temperature = await initTemperature();
   const language = await initLanguage();
-
-  if (scope === "local") {
-    saveConfig({
-      baseURL: baseURL,
-      model: model,
-      temperature: temperature,
-      language: language,
-    }, scope);
-  } else {
-    saveConfig({
-      baseURL: baseURL,
-      model: model,
-      temperature: temperature,
-      language: language,
-      apiKey: apiKey,
-    }, scope);
-  }
+  saveConfig({
+    baseURL: baseURL,
+    model: model,
+    temperature: temperature,
+    language: language,
+  }, scope);
 }
