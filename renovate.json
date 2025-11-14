@@ -1,15 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    "config:recommended"
   ],
-  "packageRules": [
-    {
-      "matchDatasources": [
-        "deno"
-      ],
-      "groupName": "Deno",
-      "automerge": false
-    }
-  ]
+  "deno": {
+    "enabled": true
+  }
 }
