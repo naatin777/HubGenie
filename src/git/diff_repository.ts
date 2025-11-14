@@ -7,10 +7,8 @@ export class GitDiffRepository {
     this.runner = runner;
   }
 
-  async getGitDiffStaged(
-    runner: GitRunner = new DefaultGitRunner(),
-  ): Promise<string> {
-    return await runner.run([
+  async getGitDiffStaged(): Promise<string> {
+    return await this.runner.run([
       "diff",
       "--cached",
       "--unified=0",
@@ -19,27 +17,21 @@ export class GitDiffRepository {
     ]);
   }
 
-  async getGitDiffStagedName(
-    runner: GitRunner = new DefaultGitRunner(),
-  ): Promise<string> {
-    return await runner.run([
+  async getGitDiffStagedName(): Promise<string> {
+    return await this.runner.run([
       "diff",
       "--cached",
       "--name-only",
     ]);
   }
 
-  async getStagedFileNames(
-    runner: GitRunner = new DefaultGitRunner(),
-  ): Promise<string[]> {
-    const name = await this.getGitDiffStagedName(runner);
+  async getStagedFileNames(): Promise<string[]> {
+    const name = await this.getGitDiffStagedName();
     return name.split(/\r\n|\r|\n/).filter((value) => value);
   }
 
-  async getGitDiffUnstaged(
-    runner: GitRunner = new DefaultGitRunner(),
-  ): Promise<string> {
-    return await runner.run([
+  async getGitDiffUnstaged(): Promise<string> {
+    return await this.runner.run([
       "diff",
       "--unified=0",
       "--color=never",
@@ -47,19 +39,15 @@ export class GitDiffRepository {
     ]);
   }
 
-  async getGitDiffUnstagedName(
-    runner: GitRunner = new DefaultGitRunner(),
-  ): Promise<string> {
-    return await runner.run([
+  async getGitDiffUnstagedName(): Promise<string> {
+    return await this.runner.run([
       "diff",
       "--name-only",
     ]);
   }
 
-  async getUnStagedFileNames(
-    runner: GitRunner = new DefaultGitRunner(),
-  ): Promise<string[]> {
-    const name = await this.getGitDiffUnstagedName(runner);
+  async getUnStagedFileNames(): Promise<string[]> {
+    const name = await this.getGitDiffUnstagedName();
     return name.split(/\r\n|\r|\n/).filter((value) => value);
   }
 }
