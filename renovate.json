@@ -1,9 +1,27 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:base"
   ],
-  "deno": {
-    "enabled": true
-  }
+  "regexManagers": [
+    {
+      "fileMatch": [
+        "(^|/)deno\\.jsonc?$",
+        "deps\\.ts$",
+        "mod\\.ts$"
+      ],
+      "matchStrings": [
+        "\"(?<depName>https://deno.land/x/[^\"]+)@(?<currentValue>[^\"']+)"
+      ],
+      "datasourceTemplate": "deno"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchDatasources": [
+        "deno"
+      ],
+      "groupName": "Deno Modules"
+    }
+  ]
 }
