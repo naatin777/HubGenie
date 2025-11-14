@@ -29,23 +29,30 @@ if (import.meta.main) {
       "config",
       new Command()
         .description("Manage configuration")
-        .globalOption("--local", "Edit local project config")
-        .globalOption("--global", "Edit global user config")
         .command(
           "language",
-          "Manage language",
+          new Command()
+            .description("Manage language")
+            .option("--local", "Edit local project config")
+            .option("--global", "Edit global user config")
+            .action(configLanguageAction),
         )
-        .action(configLanguageAction)
         .command(
           "temperature",
-          "Manage temperature",
+          new Command()
+            .description("Manage temperature")
+            .option("--local", "Edit local project config")
+            .option("--global", "Edit global user config")
+            .action(configTemperatureAction),
         )
-        .action(configTemperatureAction)
         .command(
           "model",
-          "Manage model",
-        )
-        .action(configModelAction),
+          new Command()
+            .description("Manage model")
+            .option("--local", "Edit local project config")
+            .option("--global", "Edit global user config")
+            .action(configModelAction),
+        ),
     )
     .command(
       "commit",

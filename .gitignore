@@ -7,3 +7,6 @@
 *.orig
 *.pyc
 *.swp
+
+/.zed/
+.hubgenie.json
