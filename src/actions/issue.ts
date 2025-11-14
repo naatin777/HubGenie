@@ -1,8 +1,6 @@
-import { Input } from "@cliffy/prompt";
 import { createParsedCompletions } from "../utils/openai.ts";
 import z from "zod";
 import { getConfig } from "../utils/config.ts";
-import { editText } from "../utils/edit.ts";
 
 export async function issueAction() {
   const issueOverview = prompt("? Enter the issue overview › ") ?? "";
