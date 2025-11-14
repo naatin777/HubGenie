@@ -1,4 +1,3 @@
-import { load } from "@std/dotenv";
 import { ConfigPaths } from "./path.ts";
 import { ConfigScope } from "../type.ts";
 import { getEnv } from "./env.ts";
