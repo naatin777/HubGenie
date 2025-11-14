@@ -1,12 +1,13 @@
 import { assertEquals } from "@std/assert";
 import { GitRunner } from "./git_runner.ts";
 import { GitDiffRepository } from "./diff_repository.ts";
+
 Deno.test("getGitDiffStaged", async () => {
   const mock: GitRunner = {
     run: (args) => new Promise((resolve) => resolve(args.join(" "))),
   };
-  const gitDiffRepository = new GitDiffRepository();
-  const result = await gitDiffRepository.getGitDiffStaged(mock);
+  const gitDiffRepository = new GitDiffRepository(mock);
+  const result = await gitDiffRepository.getGitDiffStaged();
   assertEquals(result, "diff --cached --unified=0 --color=never --no-prefix");
 });
 
@@ -14,8 +15,8 @@ Deno.test("getGitDiffStagedName", async () => {
   const mock: GitRunner = {
     run: (args) => new Promise((resolve) => resolve(args.join(" "))),
   };
-  const gitDiffRepository = new GitDiffRepository();
-  const result = await gitDiffRepository.getGitDiffStagedName(mock);
+  const gitDiffRepository = new GitDiffRepository(mock);
+  const result = await gitDiffRepository.getGitDiffStagedName();
   assertEquals(result, "diff --cached --name-only");
 });
 
@@ -26,7 +27,7 @@ Deno.test("getStagedFileNames", async () => {
         resolve("aaa/bbb.txt\n/ccc/ddd.txt\r\neee.txt\rppp.txt\n\n")
       ),
   };
-  const gitDiffRepository = new GitDiffRepository();
-  const result = await gitDiffRepository.getStagedFileNames(mock);
+  const gitDiffRepository = new GitDiffRepository(mock);
+  const result = await gitDiffRepository.getStagedFileNames();
   assertEquals(result, ["aaa/bbb.txt", "/ccc/ddd.txt", "eee.txt", "ppp.txt"]);
 });
