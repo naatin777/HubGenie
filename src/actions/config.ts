@@ -5,8 +5,7 @@ import {
   selectScope,
 } from "../utils/selection.ts";
 import {
-  getAllGlobalConfig,
-  getAllLocalConfig,
+  getAllConfig,
   getApiKey,
   getConfig,
   saveConfig,
@@ -20,15 +19,9 @@ export async function configLanguageAction(
 ): Promise<void> {
   const scope = await selectScope(options);
   const language = await initLanguage();
-  if (scope === "local") {
-    const localConfig = await getAllLocalConfig();
-    localConfig.language = language;
-    await saveConfig(localConfig, scope);
-  } else {
-    const globalConfig = await getAllGlobalConfig();
-    globalConfig.language = language;
-    await saveConfig(globalConfig, scope);
-  }
+  const localConfig = await getAllConfig(scope);
+  localConfig.language = language;
+  await saveConfig(localConfig, scope);
 }
 
 export async function configTemperatureAction(
@@ -39,15 +32,9 @@ export async function configTemperatureAction(
 ): Promise<void> {
   const scope = await selectScope(options);
   const temperature = await initTemperature();
-  if (scope === "local") {
-    const localConfig = await getAllLocalConfig();
-    localConfig.temperature = temperature;
-    await saveConfig(localConfig, scope);
-  } else {
-    const globalConfig = await getAllGlobalConfig();
-    globalConfig.temperature = temperature;
-    await saveConfig(globalConfig, scope);
-  }
+  const localConfig = await getAllConfig(scope);
+  localConfig.temperature = temperature;
+  await saveConfig(localConfig, scope);
 }
 
 export async function configModelAction(
@@ -60,13 +47,7 @@ export async function configModelAction(
   const apiKey = await getApiKey();
   const scope = await selectScope(options);
   const model = await initModel(baseURL, apiKey);
-  if (scope === "local") {
-    const localConfig = await getAllLocalConfig();
-    localConfig.model = model;
-    await saveConfig(localConfig, scope);
-  } else {
-    const globalConfig = await getAllGlobalConfig();
-    globalConfig.model = model;
-    await saveConfig(globalConfig, scope);
-  }
+  const localConfig = await getAllConfig(scope);
+  localConfig.model = model;
+  await saveConfig(localConfig, scope);
 }
