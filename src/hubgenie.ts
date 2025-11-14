@@ -29,6 +29,9 @@ if (import.meta.main) {
       "config",
       new Command()
         .description("Manage configuration")
+        .action(function (this: Command) {
+          this.showHelp();
+        })
         .command(
           "language",
           new Command()
