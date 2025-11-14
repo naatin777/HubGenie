@@ -26,7 +26,6 @@ export async function createParsedCompletions<T extends z.ZodType>(
 ) {
   const apiKey = await getApiKey();
   const baseURL = await getConfig("baseURL") as string;
-  const temperatures = await getConfig("temperature") as number[];
   const model = await getConfig("model") as string;
 
   const openai = new OpenAI({
@@ -37,20 +36,16 @@ export async function createParsedCompletions<T extends z.ZodType>(
     webhookSecret: null,
     logLevel: "off",
   });
-  return await Promise.all(
-    temperatures.map(async (temperature: number) => {
-      const completion = await openai.chat.completions.parse({
-        model: model,
-        temperature: temperature,
-        messages: message,
-        response_format: zodResponseFormat(
-          zod,
-          name,
-        ),
-      });
-      return completion.choices[0].message.parsed;
-    }),
-  );
+
+  const completion = await openai.chat.completions.parse({
+    model: model,
+    messages: message,
+    response_format: zodResponseFormat(
+      zod,
+      name,
+    ),
+  });
+  return completion.choices[0].message.parsed;
 }
 
 export async function getCommitMessage(
@@ -65,38 +60,31 @@ export async function getCommitMessage(
     logLevel: "off",
   });
 
-  const temperatures = await getConfig("temperature") as number[];
-  const commitMessages = await Promise.all(
-    temperatures.map(async (temperature) => {
-      const completion = await openai.chat.completions.parse({
-        model: await getConfig("model") as string,
-        temperature: temperature,
-        messages: [
-          {
-            role: "system",
-            content:
-              "You are a commit message assistant. Read the following diff and come up with 10 appropriate commit messages.",
-          },
-          {
-            role: "system",
-            content: `Please output in ${await getConfig(
-              "language",
-            ) as string}.`,
-          },
-          {
-            role: "user",
-            content: diff,
-          },
-        ],
-        response_format: zodResponseFormat(
-          z.object({
-            commit_messages: z.array(z.string()),
-          }),
-          "commit messages",
-        ),
-      });
-      return completion.choices[0].message.parsed?.commit_messages ?? [];
-    }),
-  );
-  return commitMessages.flat();
+  const completion = await openai.chat.completions.parse({
+    model: await getConfig("model") as string,
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are a commit message assistant. Read the following diff and come up with 10 appropriate commit messages.",
+      },
+      {
+        role: "system",
+        content: `Please output in ${await getConfig(
+          "language",
+        ) as string}.`,
+      },
+      {
+        role: "user",
+        content: diff,
+      },
+    ],
+    response_format: zodResponseFormat(
+      z.object({
+        commit_messages: z.array(z.string()),
+      }),
+      "commit messages",
+    ),
+  });
+  return completion.choices[0].message.parsed?.commit_messages ?? [];
 }

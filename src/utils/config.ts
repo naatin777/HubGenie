@@ -5,7 +5,6 @@ import { getEnv } from "./env.ts";
 export interface Config {
   baseURL: string;
   model: string;
-  temperature: number[];
   language: string;
 }
 

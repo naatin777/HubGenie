@@ -4,7 +4,7 @@ import { getConfig } from "../utils/config.ts";
 
 export async function issueAction() {
   const issueOverview = prompt("? Enter the issue overview › ") ?? "";
-  const issueList = await createParsedCompletions(
+  const issue = await createParsedCompletions(
     [
       {
         role: "system",
@@ -26,12 +26,10 @@ export async function issueAction() {
     "issue",
   );
 
-  for (const issue of issueList) {
-    for (const item of issue!.issue) {
-      console.log(item.title);
-      console.log(item.body);
-      console.log("\n");
-    }
+  for (const item of issue!.issue) {
+    console.log(item.title);
+    console.log(item.body);
+    console.log("\n");
   }
 
   // const editedIssueList = (await editText(issueList.join("\n"))).split("\n");

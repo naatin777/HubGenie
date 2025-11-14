@@ -4,7 +4,6 @@ import {
   initBaseURL,
   initLanguage,
   initModel,
-  initTemperature,
   selectScope,
 } from "../utils/selection.ts";
 
@@ -15,12 +14,10 @@ export async function initAction(
   const baseURL = await initBaseURL();
   const apiKey = scope === "local" ? await getApiKey() : await initApiKey();
   const model = await initModel(baseURL, apiKey);
-  const temperature = await initTemperature();
   const language = await initLanguage();
   saveConfig({
     baseURL: baseURL,
     model: model,
-    temperature: temperature,
     language: language,
   }, scope);
 }
