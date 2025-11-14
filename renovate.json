@@ -1,6 +1,47 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:base"
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": [
+        "\\.ts$",
+        "\\.tsx$",
+        "deno\\.json$",
+        "deno\\.jsonc$"
+      ],
+      "matchStrings": [
+        // deno.land/x/ または deno.land/std@
+        "\"(?<depName>https:?//deno\\.land/(?:std|x)/.+?)@(?<currentValue>[^/\" ]+)\""
+      ],
+      "datasourceTemplate": "deno"
+    },
+    {
+      "fileMatch": [
+        "\\.ts$",
+        "\\.tsx$",
+        "deno\\.json$",
+        "deno\\.jsonc$"
+      ],
+      "matchStrings": [
+        // jsr: specifiers (例: "jsr:@std/http@0.224.0")
+        "\"jsr:(?<depName>@.+?/.+?)@(?<currentValue>[\\^~]?\\d+\\.\\d+\\.\\d+.*?)\""
+      ],
+      "datasourceTemplate": "jsr"
+    },
+    {
+      "fileMatch": [
+        "\\.ts$",
+        "\\.tsx$",
+        "deno\\.json$",
+        "deno\\.jsonc$"
+      ],
+      "matchStrings": [
+        // npm: specifiers (例: "npm:react@18.2.0")
+        "\"npm:(?<depName>.+?)@(?<currentValue>[\\^~]?\\d+\\.\\d+\\.\\d+.*?)\""
+      ],
+      "datasourceTemplate": "npm"
+    }
   ]
 }
