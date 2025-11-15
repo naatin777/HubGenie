@@ -36,7 +36,8 @@ export async function commitAction() {
         list: true,
         info: true,
       });
-      console.log(message);
+      await git.commit.commitWithMessage(message);
+      console.log("Commit successful");
     } else {
       console.log("No changes to commit");
     }
