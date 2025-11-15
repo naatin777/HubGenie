@@ -27,6 +27,7 @@ export async function createParsedCompletions<T extends z.ZodType>(
   const apiKey = await getApiKey();
   const baseURL = await getConfig("baseURL") as string;
   const model = await getConfig("model") as string;
+  const language = await getConfig("language") as string;
 
   const openai = new OpenAI({
     baseURL: baseURL,
@@ -39,7 +40,10 @@ export async function createParsedCompletions<T extends z.ZodType>(
 
   const completion = await openai.chat.completions.parse({
     model: model,
-    messages: message,
+    messages: [
+      { role: "system", content: `Please output in ${language}.` },
+      ...message,
+    ],
     response_format: zodResponseFormat(
       zod,
       name,
@@ -70,9 +74,7 @@ export async function getCommitMessage(
       },
       {
         role: "system",
-        content: `Please output in ${await getConfig(
-          "language",
-        ) as string}.`,
+        content: `Please output in $.`,
       },
       {
         role: "user",
