@@ -8,14 +8,20 @@ export async function commitAction() {
   spinner.start();
   const git = new GitService();
   const diff = await git.diff.getGitDiffStaged();
-  const messages = await getCommitMessage(diff);
-  spinner.stop();
-  const message = await Input.prompt({
-    message: "Enter commit messages",
-    suggestions: messages,
-    default: messages[0],
-    list: true,
-    info: true,
-  });
-  console.log(message);
+  if (diff) {
+    console.log(diff);
+    const messages = await getCommitMessage(diff);
+    spinner.stop();
+    const message = await Input.prompt({
+      message: "Enter commit messages",
+      suggestions: messages,
+      default: messages[0],
+      list: true,
+      info: true,
+    });
+    console.log(message);
+  } else {
+    spinner.stop();
+    console.log("No changes to commit");
+  }
 }
