@@ -7,7 +7,7 @@ export async function initAction(
   const scope = await selectScope(options);
   const language = await initLanguage();
   const editor = initEditor();
-  saveConfig({
+  await saveConfig({
     language: language,
     editor: editor,
   }, scope);
