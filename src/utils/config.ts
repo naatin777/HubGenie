@@ -6,6 +6,7 @@ export interface Config {
   baseURL: string;
   model: string;
   language: string;
+  editor: string;
 }
 
 export async function saveConfig(

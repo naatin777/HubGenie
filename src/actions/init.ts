@@ -2,6 +2,7 @@ import { getApiKey, saveConfig } from "../utils/config.ts";
 import {
   initApiKey,
   initBaseURL,
+  initEditor,
   initLanguage,
   initModel,
   selectScope,
@@ -15,9 +16,11 @@ export async function initAction(
   const apiKey = scope === "local" ? await getApiKey() : await initApiKey();
   const model = await initModel(baseURL, apiKey);
   const language = await initLanguage();
+  const editor = initEditor();
   saveConfig({
     baseURL: baseURL,
     model: model,
     language: language,
+    editor: editor,
   }, scope);
 }

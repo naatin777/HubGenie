@@ -1,4 +1,9 @@
-import { initLanguage, initModel, selectScope } from "../utils/selection.ts";
+import {
+  initEditor,
+  initLanguage,
+  initModel,
+  selectScope,
+} from "../utils/selection.ts";
 import {
   getAllConfig,
   getApiKey,
@@ -31,5 +36,18 @@ export async function configModelAction(
   const model = await initModel(baseURL, apiKey);
   const localConfig = await getAllConfig(scope);
   localConfig.model = model;
+  await saveConfig(localConfig, scope);
+}
+
+export async function configEditorAction(
+  options: {
+    local?: true | undefined;
+    global?: true | undefined;
+  },
+): Promise<void> {
+  const scope = await selectScope(options);
+  const editor = initEditor();
+  const localConfig = await getAllConfig(scope);
+  localConfig.editor = editor;
   await saveConfig(localConfig, scope);
 }
