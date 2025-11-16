@@ -3,8 +3,6 @@ import { ConfigScope } from "../type.ts";
 import { getEnv } from "./env.ts";
 
 export interface Config {
-  baseURL: string;
-  model: string;
   language: string;
   editor: string;
 }
@@ -20,6 +18,14 @@ export async function saveConfig(
 
 export async function getApiKey(): Promise<string> {
   return await getEnv("HUBGENIE_API_KEY");
+}
+
+export async function getBaseURL(): Promise<string> {
+  return await getEnv("HUBGENIE_BASE_URL");
+}
+
+export async function getModel(): Promise<string> {
+  return await getEnv("HUBGENIE_MODEL");
 }
 
 export async function getConfig(key: keyof Config) {
