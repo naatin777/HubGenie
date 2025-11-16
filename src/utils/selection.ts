@@ -87,3 +87,8 @@ export async function initLanguage(): Promise<string> {
     info: true,
   });
 }
+
+export function initEditor(): string {
+  const editor = prompt("? Enter the editor › ") ?? "code --wait";
+  return editor;
+}
