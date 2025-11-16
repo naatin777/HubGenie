@@ -22,6 +22,14 @@ export async function getApiKey(): Promise<string> {
   return await getEnv("HUBGENIE_API_KEY");
 }
 
+export async function getBaseURL(): Promise<string> {
+  return await getEnv("HUBGENIE_BASE_URL");
+}
+
+export async function getModel(): Promise<string> {
+  return await getEnv("HUBGENIE_MODEL");
+}
+
 export async function getConfig(key: keyof Config) {
   try {
     const localConfigFile = await Deno.readTextFile(
