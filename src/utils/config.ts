@@ -3,8 +3,6 @@ import { ConfigScope } from "../type.ts";
 import { getEnv } from "./env.ts";
 
 export interface Config {
-  baseURL: string;
-  model: string;
   language: string;
   editor: string;
 }

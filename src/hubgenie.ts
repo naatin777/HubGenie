@@ -3,11 +3,7 @@ import { META } from "./meta.ts";
 import { commitAction } from "./actions/commit.ts";
 import { initAction } from "./actions/init.ts";
 import { issueAction } from "./actions/issue.ts";
-import {
-  configEditorAction,
-  configLanguageAction,
-  configModelAction,
-} from "./actions/config.ts";
+import { configEditorAction, configLanguageAction } from "./actions/config.ts";
 
 if (import.meta.main) {
   await new Command()
@@ -39,14 +35,6 @@ if (import.meta.main) {
             .option("--local", "Edit local project config")
             .option("--global", "Edit global user config")
             .action(configLanguageAction),
-        )
-        .command(
-          "model",
-          new Command()
-            .description("Manage model")
-            .option("--local", "Edit local project config")
-            .option("--global", "Edit global user config")
-            .action(configModelAction),
         )
         .command(
           "editor",

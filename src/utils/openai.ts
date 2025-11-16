@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import { zodResponseFormat } from "openai/helpers/zod";
-import { getApiKey, getConfig } from "./config.ts";
+import { getApiKey, getBaseURL, getConfig, getModel } from "./config.ts";
 import { z } from "zod";
 
 export async function getModelList(baseURL: string, apiKey: string) {
@@ -25,8 +25,8 @@ export async function createParsedCompletions<T extends z.ZodType>(
   name: string,
 ) {
   const apiKey = await getApiKey();
-  const baseURL = await getConfig("baseURL") as string;
-  const model = await getConfig("model") as string;
+  const baseURL = await getBaseURL();
+  const model = await getModel();
   const language = await getConfig("language") as string;
 
   const openai = new OpenAI({
@@ -56,7 +56,7 @@ export async function getCommitMessage(
   diff: string,
 ): Promise<string[]> {
   const openai = new OpenAI({
-    baseURL: (await getConfig("baseURL")) as string,
+    baseURL: await getBaseURL(),
     apiKey: await getApiKey(),
     organization: null,
     project: null,
@@ -65,7 +65,7 @@ export async function getCommitMessage(
   });
 
   const completion = await openai.chat.completions.parse({
-    model: await getConfig("model") as string,
+    model: await getModel(),
     messages: [
       {
         role: "system",
