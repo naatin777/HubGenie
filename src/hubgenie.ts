@@ -24,8 +24,10 @@ if (import.meta.main) {
       "init",
       "Initialize configuration",
       () => {},
-      (argv: ArgumentsCamelCase<{ local?: boolean; global?: boolean }>) => {
-        initAction({ local: argv.local, global: argv.global });
+      async (
+        argv: ArgumentsCamelCase<{ local?: boolean; global?: boolean }>,
+      ) => {
+        await initAction({ local: argv.local, global: argv.global });
       },
     )
     .command(
@@ -36,19 +38,25 @@ if (import.meta.main) {
           .command(
             "language",
             "Manage language",
-            (
+            async (
               argv: ArgumentsCamelCase<{ local?: boolean; global?: boolean }>,
             ) => {
-              configLanguageAction({ local: argv.local, global: argv.global });
+              await configLanguageAction({
+                local: argv.local,
+                global: argv.global,
+              });
             },
           )
           .command(
             "editor",
             "Manage editor",
-            (
+            async (
               argv: ArgumentsCamelCase<{ local?: boolean; global?: boolean }>,
             ) => {
-              configEditorAction({ local: argv.local, global: argv.global });
+              await configEditorAction({
+                local: argv.local,
+                global: argv.global,
+              });
             },
           )
           .demandCommand(1, "You need to specify a subcommand");
@@ -58,16 +66,16 @@ if (import.meta.main) {
       "commit",
       "Generate some commit messages",
       () => {},
-      () => {
-        commitAction();
+      async () => {
+        await commitAction();
       },
     )
     .command(
       "issue",
       "Generate an issue",
       () => {},
-      () => {
-        issueAction();
+      async () => {
+        await issueAction();
       },
     )
     .demandCommand(1, "You need to specify a command")
