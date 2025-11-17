@@ -39,9 +39,17 @@ export async function commitAction() {
           default: result.commit_message[0],
         },
       ]);
-      const edited = await editText(answer.commit_message);
-      await git.commit.commitWithMessage(edited);
-      console.log("Commit successful");
+      try {
+        const edited = await editText(answer.commit_message);
+        if (edited.trim()) {
+          await git.commit.commitWithMessage(edited);
+          console.log("Commit successful");
+        } else {
+          console.log("Commit cancelled - empty message");
+        }
+      } catch (error) {
+        console.error("Error committing changes:", error);
+      }
     } else {
       console.log("No changes to commit");
     }
