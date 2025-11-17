@@ -106,7 +106,8 @@ export async function verticalCyclePrompt<T>(
   try {
     Deno.stdin.setRaw(true);
   } catch (e) {
-    console.warn(`Failed to set TTY raw mode: ${e.message}.`);
+    const message = e instanceof Error ? e.message : String(e);
+    console.warn(`Failed to set TTY raw mode: ${message}.`);
   }
   await Deno.stdout.write(encoder.encode(HIDE_CURSOR));
 
