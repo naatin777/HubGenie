@@ -83,5 +83,5 @@ if (import.meta.main) {
     .alias("help", "h")
     .alias("version", "v")
     .strict()
-    .parse();
+    .parseAsync();
 }
