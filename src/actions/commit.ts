@@ -30,13 +30,15 @@ export async function commitAction() {
     );
     spinner.stop();
     if (result != null) {
-      const answer = await inquirer.prompt({
-        type: "select",
-        name: "commit_message",
-        message: "Enter commit messages",
-        choices: result.commit_message,
-        default: result.commit_message[0],
-      });
+      const answer = await inquirer.prompt([
+        {
+          type: "select",
+          name: "commit_message",
+          message: "Enter commit messages",
+          choices: result.commit_message,
+          default: result.commit_message[0],
+        },
+      ]);
       const edited = await editText(answer.commit_message);
       await git.commit.commitWithMessage(edited);
       console.log("Commit successful");
