@@ -5,13 +5,12 @@
   },
   "imports": {
     "@cliffy/command": "jsr:@cliffy/command@1.0.0-rc.7",
-    "@cliffy/prompt": "jsr:@cliffy/prompt@1.0.0-rc.7",
-    "@std/assert": "jsr:@std/assert@1",
+    "@std/assert": "jsr:@std/assert@^1.0.15",
     "@std/dotenv": "jsr:@std/dotenv@^0.225.5",
     "@std/fs": "jsr:@std/fs@^1.0.19",
     "@std/path": "jsr:@std/path@^1.1.2",
     "inquirer": "npm:inquirer@^13.0.1",
-    "openai": "npm:openai@^6.7.0",
+    "openai": "npm:openai@^6.9.0",
     "zod": "npm:zod@^4.1.12"
   }
 }
