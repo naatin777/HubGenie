@@ -3,6 +3,7 @@
   "specifiers": {
     "jsr:@std/assert@^1.0.15": "1.0.15",
     "jsr:@std/dotenv@~0.225.5": "0.225.5",
+    "jsr:@std/fmt@^1.0.8": "1.0.8",
     "jsr:@std/fs@^1.0.19": "1.0.19",
     "jsr:@std/internal@^1.0.10": "1.0.12",
     "jsr:@std/internal@^1.0.12": "1.0.12",
@@ -25,6 +26,9 @@
     },
     "@std/dotenv@0.225.5": {
       "integrity": "9ce6f9d0ec3311f74a32535aa1b8c62ed88b1ab91b7f0815797d77a6f60c922f"
+    },
+    "@std/fmt@1.0.8": {
+      "integrity": "71e1fc498787e4434d213647a6e43e794af4fd393ef8f52062246e06f7e372b7"
     },
     "@std/fs@1.0.19": {
       "integrity": "051968c2b1eae4d2ea9f79a08a3845740ef6af10356aff43d3e2ef11ed09fb06",
@@ -366,6 +370,7 @@
     "dependencies": [
       "jsr:@std/assert@^1.0.15",
       "jsr:@std/dotenv@~0.225.5",
+      "jsr:@std/fmt@^1.0.8",
       "jsr:@std/fs@^1.0.19",
       "jsr:@std/path@^1.1.2",
       "npm:chalk@^5.6.2",
