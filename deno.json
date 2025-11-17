@@ -11,6 +11,7 @@
     "@std/path": "jsr:@std/path@^1.1.2",
     "inquirer": "npm:inquirer@^13.0.1",
     "openai": "npm:openai@^6.9.0",
+    "yargs": "npm:yargs@^18.0.0",
     "zod": "npm:zod@^4.1.12"
   }
 }
