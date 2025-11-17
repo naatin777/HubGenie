@@ -1,8 +1,9 @@
 import { GitService } from "../git/git_service.ts";
 import { createParsedCompletions } from "../utils/openai.ts";
-import { Input } from "@cliffy/prompt";
+import inquirer from "inquirer";
 import { Spinner } from "../utils/spinner.ts";
 import z from "zod";
+import { editText } from "../utils/edit.ts";
 
 export async function commitAction() {
   const spinner = new Spinner("Loading...");
@@ -29,14 +30,15 @@ export async function commitAction() {
     );
     spinner.stop();
     if (result != null) {
-      const message = await Input.prompt({
+      const answer = await inquirer.prompt({
+        type: "select",
+        name: "commit_message",
         message: "Enter commit messages",
-        suggestions: result.commit_message,
+        choices: result.commit_message,
         default: result.commit_message[0],
-        list: true,
-        info: true,
       });
-      await git.commit.commitWithMessage(message);
+      const edited = await editText(answer.commit_message);
+      await git.commit.commitWithMessage(edited);
       console.log("Commit successful");
     } else {
       console.log("No changes to commit");
