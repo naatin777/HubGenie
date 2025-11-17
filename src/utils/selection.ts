@@ -1,5 +1,5 @@
-import { Input, Select } from "@cliffy/prompt";
 import { ConfigScope } from "../type.ts";
+import inquirer from "inquirer";
 
 export async function selectScope(
   options: { local?: true | undefined; global?: true | undefined },
@@ -12,15 +12,17 @@ export async function selectScope(
   } else if (!localFlag && globalFlag) {
     return "global";
   } else {
-    const scope = await Select.prompt({
+    const scope = await inquirer.prompt<{ scope: ConfigScope }>({
+      type: "select",
+      name: "scope",
       message: "Select configuration scope",
-      options: [
+      choices: [
         { name: "Local (project)", value: "local" },
         { name: "Global (user-wide)", value: "global" },
       ],
       default: "local",
     });
-    return scope as ConfigScope;
+    return scope.scope;
   }
 }
 
@@ -42,13 +44,13 @@ export async function initLanguage(): Promise<string> {
     "vi - Tiếng Việt (Vietnamese)",
     "th - ไทย (Thai)",
   ];
-  return await Input.prompt({
+  return (await inquirer.prompt<{ language: string }>({
+    type: "select",
+    name: "language",
     message: "Enter language",
-    suggestions: SUPPORTED_LANGUAGES,
+    choices: SUPPORTED_LANGUAGES,
     default: SUPPORTED_LANGUAGES[0],
-    list: true,
-    info: true,
-  });
+  })).language;
 }
 
 export function initEditor(): string {
