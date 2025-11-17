@@ -1,4 +1,4 @@
-import { Command } from "@cliffy/command";
+import yargs, { type ArgumentsCamelCase, type Argv } from "yargs";
 import { META } from "./meta.ts";
 import { commitAction } from "./actions/commit.ts";
 import { initAction } from "./actions/init.ts";
@@ -6,56 +6,82 @@ import { issueAction } from "./actions/issue.ts";
 import { configEditorAction, configLanguageAction } from "./actions/config.ts";
 
 if (import.meta.main) {
-  await new Command()
-    .name(META.name)
-    .description(META.description)
+  await yargs(Deno.args)
+    .scriptName(META.name)
     .version(META.version)
-    .action(function (this: Command) {
-      this.showHelp();
+    .usage(META.description)
+    .option("local", {
+      type: "boolean",
+      description: "Use local project config",
+      global: true,
+    })
+    .option("global", {
+      type: "boolean",
+      description: "Use global user config",
+      global: true,
     })
     .command(
       "init",
-      new Command()
-        .description("Initialize configuration")
-        .option("--local", "Create local project config")
-        .option("--global", "Create global user config")
-        .action(initAction),
+      "Initialize configuration",
+      () => {},
+      async (
+        argv: ArgumentsCamelCase<{ local?: boolean; global?: boolean }>,
+      ) => {
+        await initAction({ local: argv.local, global: argv.global });
+      },
     )
     .command(
-      "config",
-      new Command()
-        .description("Manage configuration")
-        .action(function (this: Command) {
-          this.showHelp();
-        })
-        .command(
-          "language",
-          new Command()
-            .description("Manage language")
-            .option("--local", "Edit local project config")
-            .option("--global", "Edit global user config")
-            .action(configLanguageAction),
-        )
-        .command(
-          "editor",
-          new Command()
-            .description("Manage editor")
-            .option("--local", "Edit local project config")
-            .option("--global", "Edit global user config")
-            .action(configEditorAction),
-        ),
+      "config <subcommand>",
+      "Manage configuration",
+      (yargs: Argv) => {
+        return yargs
+          .command(
+            "language",
+            "Manage language",
+            async (
+              argv: ArgumentsCamelCase<{ local?: boolean; global?: boolean }>,
+            ) => {
+              await configLanguageAction({
+                local: argv.local,
+                global: argv.global,
+              });
+            },
+          )
+          .command(
+            "editor",
+            "Manage editor",
+            async (
+              argv: ArgumentsCamelCase<{ local?: boolean; global?: boolean }>,
+            ) => {
+              await configEditorAction({
+                local: argv.local,
+                global: argv.global,
+              });
+            },
+          )
+          .demandCommand(1, "You need to specify a subcommand");
+      },
     )
     .command(
       "commit",
-      new Command()
-        .description("Generate some commit messages")
-        .action(commitAction),
+      "Generate some commit messages",
+      () => {},
+      async () => {
+        await commitAction();
+      },
     )
     .command(
       "issue",
-      new Command()
-        .description("Generate an issue")
-        .action(issueAction),
+      "Generate an issue",
+      () => {},
+      async () => {
+        await issueAction();
+      },
     )
-    .parse(Deno.args);
+    .demandCommand(1, "You need to specify a command")
+    .help()
+    .alias("help", "h")
+    .alias("version", "v")
+    .strict()
+    .parseAsync();
 }
