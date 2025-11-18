@@ -10,11 +10,6 @@ if (import.meta.main) {
     .scriptName(META.name)
     .version(META.version)
     .usage(META.description)
-    .option("local", {
-      type: "boolean",
-      description: "Use local project config",
-      global: true,
-    })
     .option("global", {
       type: "boolean",
       description: "Use global user config",
@@ -25,9 +20,9 @@ if (import.meta.main) {
       "Initialize configuration",
       () => {},
       async (
-        argv: ArgumentsCamelCase<{ local?: boolean; global?: boolean }>,
+        argv: ArgumentsCamelCase<{ global?: boolean }>,
       ) => {
-        await initAction({ local: argv.local, global: argv.global });
+        await initAction({ global: argv.global });
       },
     )
     .command(
@@ -39,10 +34,9 @@ if (import.meta.main) {
             "language",
             "Manage language",
             async (
-              argv: ArgumentsCamelCase<{ local?: boolean; global?: boolean }>,
+              argv: ArgumentsCamelCase<{ global?: boolean }>,
             ) => {
               await configLanguageAction({
-                local: argv.local,
                 global: argv.global,
               });
             },
@@ -51,10 +45,9 @@ if (import.meta.main) {
             "editor",
             "Manage editor",
             async (
-              argv: ArgumentsCamelCase<{ local?: boolean; global?: boolean }>,
+              argv: ArgumentsCamelCase<{ global?: boolean }>,
             ) => {
               await configEditorAction({
-                local: argv.local,
                 global: argv.global,
               });
             },

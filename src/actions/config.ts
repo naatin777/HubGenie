@@ -3,11 +3,10 @@ import { getAllConfig, saveConfig } from "../utils/config.ts";
 
 export async function configLanguageAction(
   options: {
-    local?: true | undefined;
     global?: true | undefined;
   },
 ): Promise<void> {
-  const scope = await selectScope(options);
+  const scope = selectScope(options);
   const language = await initLanguage();
   const localConfig = await getAllConfig(scope);
   localConfig.language = language;
@@ -16,11 +15,10 @@ export async function configLanguageAction(
 
 export async function configEditorAction(
   options: {
-    local?: true | undefined;
     global?: true | undefined;
   },
 ): Promise<void> {
-  const scope = await selectScope(options);
+  const scope = selectScope(options);
   const editor = initEditor();
   const localConfig = await getAllConfig(scope);
   localConfig.editor = editor;
