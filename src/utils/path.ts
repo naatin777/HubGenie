@@ -20,9 +20,7 @@ export class ConfigPaths {
   }
 
   static getConfigPath(global?: true | undefined): string {
-    return global
-      ? this.getGlobalConfigPath()
-      : this.getLocalConfigPath();
+    return global ? this.getGlobalConfigPath() : this.getLocalConfigPath();
   }
 
   static async ensureConfigDir(global?: true | undefined): Promise<void> {
