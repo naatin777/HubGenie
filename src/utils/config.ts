@@ -1,5 +1,4 @@
 import { ConfigPaths } from "./path.ts";
-import { ConfigScope } from "../type.ts";
 import { getEnv } from "./env.ts";
 
 export interface Config {
@@ -9,11 +8,11 @@ export interface Config {
 
 export async function saveConfig(
   config: Config,
-  scope: ConfigScope,
+  global?: true | undefined,
 ): Promise<void> {
-  await ConfigPaths.ensureConfigDir(scope);
+  await ConfigPaths.ensureConfigDir(global);
   const json = JSON.stringify(config, null, 2);
-  await Deno.writeTextFile(ConfigPaths.getConfigPath(scope), json);
+  await Deno.writeTextFile(ConfigPaths.getConfigPath(global), json);
 }
 
 export async function getApiKey(): Promise<string> {
@@ -31,13 +30,13 @@ export async function getModel(): Promise<string> {
 export async function getConfig(key: keyof Config) {
   try {
     const localConfigFile = await Deno.readTextFile(
-      ConfigPaths.getConfigPath("local"),
+      ConfigPaths.getConfigPath(undefined),
     );
     const localConfig: Config = JSON.parse(localConfigFile);
     return localConfig[key];
   } catch (_) {
     const globalConfigFile = await Deno.readTextFile(
-      ConfigPaths.getConfigPath("global"),
+      ConfigPaths.getConfigPath(true),
     );
     const globalConfig: Config = JSON.parse(
       globalConfigFile,
@@ -46,9 +45,9 @@ export async function getConfig(key: keyof Config) {
   }
 }
 
-export async function getAllConfig(scope: ConfigScope): Promise<Config> {
+export async function getAllConfig(global?: true | undefined): Promise<Config> {
   const configFile = await Deno.readTextFile(
-    ConfigPaths.getConfigPath(scope),
+    ConfigPaths.getConfigPath(global),
   );
   const config: Config = JSON.parse(configFile);
   return config;

@@ -1,15 +1,4 @@
-import { ConfigScope } from "../type.ts";
 import inquirer from "inquirer";
-
-export function selectScope(
-  options: { global?: true | undefined },
-): ConfigScope {
-  if (options.global) {
-    return "global";
-  } else {
-    return "local";
-  }
-}
 
 export async function initLanguage(): Promise<string> {
   const SUPPORTED_LANGUAGES = [
