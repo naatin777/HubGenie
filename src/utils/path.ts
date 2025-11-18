@@ -1,6 +1,5 @@
 import { join } from "@std/path";
 import { ensureDir } from "@std/fs";
-import { ConfigScope } from "../type.ts";
 import { META } from "../meta.ts";
 
 export class ConfigPaths {
@@ -20,14 +19,12 @@ export class ConfigPaths {
     return join(Deno.cwd(), `.${META.name}.json`);
   }
 
-  static getConfigPath(scope: ConfigScope): string {
-    return scope === "local"
-      ? this.getLocalConfigPath()
-      : this.getGlobalConfigPath();
+  static getConfigPath(global?: true | undefined): string {
+    return global ? this.getGlobalConfigPath() : this.getLocalConfigPath();
   }
 
-  static async ensureConfigDir(scope: ConfigScope): Promise<void> {
-    if (scope === "global") {
+  static async ensureConfigDir(global?: true | undefined): Promise<void> {
+    if (global) {
       await ensureDir(this.getGlobalConfigDir());
     }
   }

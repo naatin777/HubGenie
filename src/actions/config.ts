@@ -1,28 +1,24 @@
-import { initEditor, initLanguage, selectScope } from "../utils/selection.ts";
+import { initEditor, initLanguage } from "../utils/selection.ts";
 import { getAllConfig, saveConfig } from "../utils/config.ts";
 
 export async function configLanguageAction(
   options: {
-    local?: true | undefined;
     global?: true | undefined;
   },
 ): Promise<void> {
-  const scope = await selectScope(options);
   const language = await initLanguage();
-  const localConfig = await getAllConfig(scope);
+  const localConfig = await getAllConfig(options.global);
   localConfig.language = language;
-  await saveConfig(localConfig, scope);
+  await saveConfig(localConfig, options.global);
 }
 
 export async function configEditorAction(
   options: {
-    local?: true | undefined;
     global?: true | undefined;
   },
 ): Promise<void> {
-  const scope = await selectScope(options);
   const editor = initEditor();
-  const localConfig = await getAllConfig(scope);
+  const localConfig = await getAllConfig(options.global);
   localConfig.editor = editor;
-  await saveConfig(localConfig, scope);
+  await saveConfig(localConfig, options.global);
 }

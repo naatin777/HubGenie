@@ -1,30 +1,4 @@
-import { ConfigScope } from "../type.ts";
 import inquirer from "inquirer";
-
-export async function selectScope(
-  options: { local?: true | undefined; global?: true | undefined },
-): Promise<ConfigScope> {
-  const localFlag = options.local;
-  const globalFlag = options.global;
-
-  if (localFlag && !globalFlag) {
-    return "local";
-  } else if (!localFlag && globalFlag) {
-    return "global";
-  } else {
-    const scope = await inquirer.prompt<{ scope: ConfigScope }>({
-      type: "select",
-      name: "scope",
-      message: "Select configuration scope",
-      choices: [
-        { name: "Local (project)", value: "local" },
-        { name: "Global (user-wide)", value: "global" },
-      ],
-      default: "local",
-    });
-    return scope.scope;
-  }
-}
 
 export async function initLanguage(): Promise<string> {
   const SUPPORTED_LANGUAGES = [
