@@ -9,6 +9,7 @@
     "@std/fmt": "jsr:@std/fmt@^1.0.8",
     "@std/fs": "jsr:@std/fs@^1.0.19",
     "@std/path": "jsr:@std/path@^1.1.2",
+    "@std/yaml": "jsr:@std/yaml@^1.0.10",
     "chalk": "npm:chalk@^5.6.2",
     "inquirer": "npm:inquirer@^13.0.1",
     "openai": "npm:openai@^6.9.0",

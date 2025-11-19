@@ -1,5 +1,6 @@
 /.idea/
 /.vscode/
+/.zed/
 
 /node_modules
 
@@ -8,5 +9,4 @@
 *.pyc
 *.swp
 
-/.zed/
-.hubgenie.json
+.hubgenie.local.yml
