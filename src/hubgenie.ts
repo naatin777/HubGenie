@@ -15,6 +15,11 @@ if (import.meta.main) {
       description: "Use global user config",
       global: true,
     })
+    .option("local", {
+      type: "boolean",
+      description: "Use local personal configuration (git-ignored)",
+      global: true,
+    })
     .command(
       "init",
       "Initialize configuration",
