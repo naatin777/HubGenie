@@ -9,7 +9,8 @@ export async function saveConfig(
 ): Promise<void> {
   await ConfigPaths.ensureConfigDir(global);
   const json = stringify(config);
-  await Deno.writeTextFile(ConfigPaths.getConfigPath(global), json);
+  const path = await ConfigPaths.getConfigPath(global, true);
+  await Deno.writeTextFile(path, json);
 }
 
 export async function getApiKey(): Promise<string> {
@@ -26,15 +27,13 @@ export async function getModel(): Promise<string> {
 
 export async function getConfig(key: keyof Config) {
   try {
-    const localConfigFile = await Deno.readTextFile(
-      ConfigPaths.getConfigPath(undefined),
-    );
+    const path = await ConfigPaths.getConfigPath(undefined);
+    const localConfigFile = await Deno.readTextFile(path);
     const localConfig: Config = parse(localConfigFile) as Config;
     return localConfig[key];
   } catch (_) {
-    const globalConfigFile = await Deno.readTextFile(
-      ConfigPaths.getConfigPath(true),
-    );
+    const path = await ConfigPaths.getConfigPath(true);
+    const globalConfigFile = await Deno.readTextFile(path);
     const globalConfig: Config = parse(
       globalConfigFile,
     ) as Config;
@@ -43,9 +42,8 @@ export async function getConfig(key: keyof Config) {
 }
 
 export async function getAllConfig(global?: true | undefined): Promise<Config> {
-  const configFile = await Deno.readTextFile(
-    ConfigPaths.getConfigPath(global),
-  );
+  const path = await ConfigPaths.getConfigPath(global);
+  const configFile = await Deno.readTextFile(path);
   const config: Config = parse(configFile) as Config;
   return config;
 }
