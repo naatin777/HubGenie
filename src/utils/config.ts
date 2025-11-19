@@ -1,17 +1,14 @@
 import { ConfigPaths } from "./path.ts";
 import { getEnv } from "./env.ts";
-
-export interface Config {
-  language: string;
-  editor: string;
-}
+import { parse, stringify } from "@std/yaml";
+import { Config } from "../type.ts";
 
 export async function saveConfig(
   config: Config,
   global?: true | undefined,
 ): Promise<void> {
   await ConfigPaths.ensureConfigDir(global);
-  const json = JSON.stringify(config, null, 2);
+  const json = stringify(config);
   await Deno.writeTextFile(ConfigPaths.getConfigPath(global), json);
 }
 
@@ -32,15 +29,15 @@ export async function getConfig(key: keyof Config) {
     const localConfigFile = await Deno.readTextFile(
       ConfigPaths.getConfigPath(undefined),
     );
-    const localConfig: Config = JSON.parse(localConfigFile);
+    const localConfig: Config = parse(localConfigFile) as Config;
     return localConfig[key];
   } catch (_) {
     const globalConfigFile = await Deno.readTextFile(
       ConfigPaths.getConfigPath(true),
     );
-    const globalConfig: Config = JSON.parse(
+    const globalConfig: Config = parse(
       globalConfigFile,
-    );
+    ) as Config;
     return globalConfig[key];
   }
 }
@@ -49,6 +46,6 @@ export async function getAllConfig(global?: true | undefined): Promise<Config> {
   const configFile = await Deno.readTextFile(
     ConfigPaths.getConfigPath(global),
   );
-  const config: Config = JSON.parse(configFile);
+  const config: Config = parse(configFile) as Config;
   return config;
 }
