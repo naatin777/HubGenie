@@ -1,8 +1,9 @@
 import { createParsedCompletions } from "../utils/openai.ts";
 import z from "zod";
-import { getConfig } from "../utils/config.ts";
+import { getMergedConfig } from "../utils/config.ts";
 
 export async function issueAction() {
+  const config = await getMergedConfig();
   const issueOverview = prompt("? Enter the issue overview › ") ?? "";
   const issue = await createParsedCompletions(
     [
@@ -13,7 +14,7 @@ export async function issueAction() {
       },
       {
         role: "system",
-        content: `Please output in ${await getConfig("language") as string}.`,
+        content: `Please output in ${config.language}.`,
       },
       {
         role: "user",

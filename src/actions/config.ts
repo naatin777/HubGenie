@@ -1,10 +1,9 @@
 import { initEditor, initLanguage } from "../utils/selection.ts";
 import { getMergedConfig, saveConfig } from "../utils/config.ts";
+import { ScopeFlag } from "../type.ts";
 
 export async function configLanguageAction(
-  options: {
-    global?: true | undefined;
-  },
+  options: ScopeFlag,
 ): Promise<void> {
   const language = await initLanguage();
   const localConfig = await getMergedConfig();
@@ -13,9 +12,7 @@ export async function configLanguageAction(
 }
 
 export async function configEditorAction(
-  options: {
-    global?: true | undefined;
-  },
+  options: ScopeFlag,
 ): Promise<void> {
   const editor = initEditor();
   const localConfig = await getMergedConfig();

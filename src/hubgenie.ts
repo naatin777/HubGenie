@@ -28,7 +28,7 @@ if (import.meta.main) {
       async (
         argv: ArgumentsCamelCase<ScopeFlag>,
       ) => {
-        await initAction({ global: argv.global });
+        await initAction({ global: argv.global, local: argv.local });
       },
     )
     .command(
@@ -44,6 +44,7 @@ if (import.meta.main) {
             ) => {
               await configLanguageAction({
                 global: argv.global,
+                local: argv.local,
               });
             },
           )
@@ -55,6 +56,7 @@ if (import.meta.main) {
             ) => {
               await configEditorAction({
                 global: argv.global,
+                local: argv.local,
               });
             },
           )
