@@ -7,3 +7,8 @@ export type Config = {
   language: string;
   editor: string;
 };
+
+export type ScopeFlag = {
+  global?: true;
+  local?: true;
+};

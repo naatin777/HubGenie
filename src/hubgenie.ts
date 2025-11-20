@@ -4,6 +4,7 @@ import { commitAction } from "./actions/commit.ts";
 import { initAction } from "./actions/init.ts";
 import { issueAction } from "./actions/issue.ts";
 import { configEditorAction, configLanguageAction } from "./actions/config.ts";
+import { ScopeFlag } from "./type.ts";
 
 if (import.meta.main) {
   await yargs(Deno.args)
@@ -15,14 +16,19 @@ if (import.meta.main) {
       description: "Use global user config",
       global: true,
     })
+    .option("local", {
+      type: "boolean",
+      description: "Use local personal configuration (git-ignored)",
+      global: true,
+    })
     .command(
       "init",
       "Initialize configuration",
       () => {},
       async (
-        argv: ArgumentsCamelCase<{ global?: boolean }>,
+        argv: ArgumentsCamelCase<ScopeFlag>,
       ) => {
-        await initAction({ global: argv.global });
+        await initAction({ global: argv.global, local: argv.local });
       },
     )
     .command(
@@ -34,10 +40,11 @@ if (import.meta.main) {
             "language",
             "Manage language",
             async (
-              argv: ArgumentsCamelCase<{ global?: boolean }>,
+              argv: ArgumentsCamelCase<ScopeFlag>,
             ) => {
               await configLanguageAction({
                 global: argv.global,
+                local: argv.local,
               });
             },
           )
@@ -45,10 +52,11 @@ if (import.meta.main) {
             "editor",
             "Manage editor",
             async (
-              argv: ArgumentsCamelCase<{ global?: boolean }>,
+              argv: ArgumentsCamelCase<ScopeFlag>,
             ) => {
               await configEditorAction({
                 global: argv.global,
+                local: argv.local,
               });
             },
           )
