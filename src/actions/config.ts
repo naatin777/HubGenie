@@ -7,9 +7,9 @@ export async function configLanguageAction(
   },
 ): Promise<void> {
   const language = await initLanguage();
-  const localConfig = await getAllConfig(options.global);
+  const localConfig = await getAllConfig(options);
   localConfig.language = language;
-  await saveConfig(localConfig, options.global);
+  await saveConfig(localConfig, options);
 }
 
 export async function configEditorAction(
@@ -18,7 +18,7 @@ export async function configEditorAction(
   },
 ): Promise<void> {
   const editor = initEditor();
-  const localConfig = await getAllConfig(options.global);
+  const localConfig = await getAllConfig(options);
   localConfig.editor = editor;
-  await saveConfig(localConfig, options.global);
+  await saveConfig(localConfig, options);
 }
