@@ -1,16 +1,15 @@
 import { ConfigPaths } from "./path.ts";
 import { getEnv } from "./env.ts";
 import { parse, stringify } from "@std/yaml";
-import { Config } from "../type.ts";
+import { Config, ScopeFlag } from "../type.ts";
 
 export async function saveConfig(
   config: Config,
-  global?: true | undefined,
+  scopeFlag: ScopeFlag,
 ): Promise<void> {
-  await ConfigPaths.ensureConfigDir(global);
-  const json = stringify(config);
-  const path = await ConfigPaths.getConfigPath(global, true);
-  await Deno.writeTextFile(path, json);
+  const yaml = stringify(config);
+  const path = await ConfigPaths.getConfigPath(scopeFlag, true);
+  await Deno.writeTextFile(path, yaml);
 }
 
 export async function getApiKey(): Promise<string> {
@@ -27,12 +26,12 @@ export async function getModel(): Promise<string> {
 
 export async function getConfig(key: keyof Config) {
   try {
-    const path = await ConfigPaths.getConfigPath(undefined);
+    const path = await ConfigPaths.getConfigPath({ local: true });
     const localConfigFile = await Deno.readTextFile(path);
     const localConfig: Config = parse(localConfigFile) as Config;
     return localConfig[key];
   } catch (_) {
-    const path = await ConfigPaths.getConfigPath(true);
+    const path = await ConfigPaths.getConfigPath({ global: true });
     const globalConfigFile = await Deno.readTextFile(path);
     const globalConfig: Config = parse(
       globalConfigFile,
@@ -41,8 +40,8 @@ export async function getConfig(key: keyof Config) {
   }
 }
 
-export async function getAllConfig(global?: true | undefined): Promise<Config> {
-  const path = await ConfigPaths.getConfigPath(global);
+export async function getAllConfig(scopeFlag: ScopeFlag): Promise<Config> {
+  const path = await ConfigPaths.getConfigPath(scopeFlag);
   const configFile = await Deno.readTextFile(path);
   const config: Config = parse(configFile) as Config;
   return config;

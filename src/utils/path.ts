@@ -1,6 +1,7 @@
 import { dirname, join } from "@std/path";
 import { ensureDir, existsSync } from "@std/fs";
 import { META } from "../meta.ts";
+import { ScopeFlag } from "../type.ts";
 
 export class ConfigPaths {
   private static findProjectConfig(filename: string): string {
@@ -52,14 +53,14 @@ export class ConfigPaths {
     return createPath;
   }
 
-  private static async getProjectConfigPath(
+  private static async getOrCreateProjectConfigPath(
     create?: boolean,
   ): Promise<string> {
     const filename = `.${META.name}.yml`;
     return await this.getOrCreateProjectConfig(filename, create);
   }
 
-  private static async getLocalConfigPath(
+  private static async getOrCreateLocalConfigPath(
     create?: boolean,
   ): Promise<string> {
     const filename = `.${META.name}.local.yml`;
@@ -67,17 +68,15 @@ export class ConfigPaths {
   }
 
   static async getConfigPath(
-    global?: true | undefined,
+    scopeFlag: ScopeFlag,
     create?: boolean,
   ): Promise<string> {
-    return global
-      ? await this.getOrCreateGlobalConfigPath()
-      : await this.getLocalConfigPath(create);
-  }
-
-  static async ensureConfigDir(global?: true | undefined): Promise<void> {
-    if (global) {
-      await ensureDir(this.getGlobalConfigDir());
+    if (scopeFlag.global) {
+      return await this.getOrCreateGlobalConfigPath();
+    } else if (scopeFlag.local) {
+      return await this.getOrCreateLocalConfigPath(create);
+    } else {
+      return await this.getOrCreateProjectConfigPath(create);
     }
   }
 }
