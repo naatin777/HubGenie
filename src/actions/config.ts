@@ -1,5 +1,5 @@
 import { initEditor, initLanguage } from "../utils/selection.ts";
-import { getAllConfig, saveConfig } from "../utils/config.ts";
+import { getMergedConfig, saveConfig } from "../utils/config.ts";
 
 export async function configLanguageAction(
   options: {
@@ -7,7 +7,7 @@ export async function configLanguageAction(
   },
 ): Promise<void> {
   const language = await initLanguage();
-  const localConfig = await getAllConfig(options);
+  const localConfig = await getMergedConfig();
   localConfig.language = language;
   await saveConfig(localConfig, options);
 }
@@ -18,7 +18,7 @@ export async function configEditorAction(
   },
 ): Promise<void> {
   const editor = initEditor();
-  const localConfig = await getAllConfig(options);
+  const localConfig = await getMergedConfig();
   localConfig.editor = editor;
   await saveConfig(localConfig, options);
 }

@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import { zodResponseFormat } from "openai/helpers/zod";
-import { getConfig } from "./config.ts";
+import { getMergedConfig } from "./config.ts";
 import { z } from "zod";
 import { getApiKey, getBaseURL, getModel } from "./env.ts";
 
@@ -15,7 +15,7 @@ export async function createParsedCompletions<T extends z.ZodType>(
   const apiKey = await getApiKey();
   const baseURL = await getBaseURL();
   const model = await getModel();
-  const language = await getConfig("language") as string;
+  const config = await getMergedConfig();
 
   const openai = new OpenAI({
     baseURL: baseURL,
@@ -29,7 +29,7 @@ export async function createParsedCompletions<T extends z.ZodType>(
   const completion = await openai.chat.completions.parse({
     model: model,
     messages: [
-      { role: "system", content: `Please output in ${language}.` },
+      { role: "system", content: `Please output in ${config.language}.` },
       ...message,
     ],
     response_format: zodResponseFormat(

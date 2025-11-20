@@ -11,25 +11,32 @@ export async function saveConfig(
   await Deno.writeTextFile(path, yaml);
 }
 
-export async function getConfig(key: keyof Config) {
+export async function getConfig(
+  scopeFlag: ScopeFlag,
+): Promise<Config | undefined> {
   try {
-    const path = await ConfigPaths.getConfigPath({ local: true });
-    const localConfigFile = await Deno.readTextFile(path);
-    const localConfig: Config = parse(localConfigFile) as Config;
-    return localConfig[key];
+    const path = await ConfigPaths.getConfigPath(scopeFlag);
+    const configFile = await Deno.readTextFile(path);
+    const config: Config = parse(configFile) as Config;
+    return config;
   } catch (_) {
-    const path = await ConfigPaths.getConfigPath({ global: true });
-    const globalConfigFile = await Deno.readTextFile(path);
-    const globalConfig: Config = parse(
-      globalConfigFile,
-    ) as Config;
-    return globalConfig[key];
+    return undefined;
   }
 }
 
-export async function getAllConfig(scopeFlag: ScopeFlag): Promise<Config> {
-  const path = await ConfigPaths.getConfigPath(scopeFlag);
-  const configFile = await Deno.readTextFile(path);
-  const config: Config = parse(configFile) as Config;
-  return config;
+export async function getMergedConfig(): Promise<Config> {
+  const globalConfig = await getConfig({ local: undefined, global: true }) ||
+    {};
+  const projectConfig =
+    await getConfig({ local: undefined, global: undefined }) || {};
+  const localConfig = await getConfig({ local: true, global: undefined }) || {};
+
+  const mergedConfig = {
+    ...{ editor: "vscode --wait", language: "en" },
+    ...globalConfig,
+    ...projectConfig,
+    ...localConfig,
+  };
+
+  return mergedConfig;
 }
