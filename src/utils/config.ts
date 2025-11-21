@@ -32,7 +32,7 @@ export async function getMergedConfig(): Promise<Config> {
   const localConfig = await getConfig({ local: true, global: undefined }) || {};
 
   const mergedConfig = {
-    ...{ editor: "vscode --wait", language: "en" },
+    ...{ editor: "vscode --wait", language: "en - English" },
     ...globalConfig,
     ...projectConfig,
     ...localConfig,
