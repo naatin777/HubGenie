@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { GitRunner } from "./git_runner.ts";
+import type { GitRunner } from "./git_runner.ts";
 import { GitDiffRepository } from "./diff_repository.ts";
 
 Deno.test("getGitDiffStaged", async () => {

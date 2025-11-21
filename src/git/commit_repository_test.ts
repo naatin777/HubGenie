@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { GitRunner } from "./git_runner.ts";
+import type { GitRunner } from "./git_runner.ts";
 import { GitCommitRepository } from "./commit_repository.ts";
 
 Deno.test("commitWithMessage", async () => {

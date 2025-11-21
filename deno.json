@@ -1,7 +1,11 @@
 {
+  "name": "demmithub",
+  "displayName": "DemmitHub",
+  "description": "AI-powered CLI for generating smart commit messages, pull requests, and issues.",
+  "version": "0.0.0",
+  "exports": "./src/demmithub.ts",
   "tasks": {
-    "init": "deno run src/hubgenie.ts init",
-    "commit": "deno run src/hubgenie.ts commit"
+    "commit": "deno run src/demmithub.ts commit"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@^1.0.15",
