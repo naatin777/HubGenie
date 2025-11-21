@@ -1,4 +1,4 @@
-import { bold, cyan } from "@std/fmt/colors";
+import { bold, cyan, gray } from "@std/fmt/colors";
 
 const encoder = new TextEncoder();
 
@@ -18,6 +18,7 @@ export interface SelectPromptOptions<T> {
   message: string;
   choices: Choice<T>[];
   default?: T;
+  pageSize?: number;
 }
 
 function moveUp(lines: number = 1): Uint8Array {
@@ -37,13 +38,13 @@ async function readKey(): Promise<KeyType> {
 
   if (bytes.length === 1) {
     if (bytes[0] === 13) return "enter";
-    if (bytes[0] === 106) return "down"; // j
-    if (bytes[0] === 107) return "up"; // k
+    if (bytes[0] === 106) return "down";
+    if (bytes[0] === 107) return "up";
     if (bytes[0] === 3) return "exit";
   }
   if (bytes.length === 3 && bytes[0] === 27 && bytes[1] === 91) {
-    if (bytes[2] === 65) return "up"; // Arrow Up
-    if (bytes[2] === 66) return "down"; // Arrow Down
+    if (bytes[2] === 65) return "up";
+    if (bytes[2] === 66) return "down";
   }
   return null;
 }
@@ -53,6 +54,8 @@ async function renderPrompt<T>(
   choices: Choice<T>[],
   selectedIndex: number,
   lineCount: number,
+  scrollTop: number,
+  pageSize: number,
 ): Promise<number> {
   if (lineCount > 0) {
     await Deno.stdout.write(moveUp(lineCount));
@@ -66,13 +69,27 @@ async function renderPrompt<T>(
   output += q;
   newLines += q.split("\n").length - 1;
 
-  for (let i = 0; i < choices.length; i++) {
-    const choice = choices[i];
-    if (i === selectedIndex) {
+  if (scrollTop > 0) {
+    output += gray("  ↑\n");
+    newLines += 1;
+  }
+
+  const visibleChoices = choices.slice(scrollTop, scrollTop + pageSize);
+
+  for (let i = 0; i < visibleChoices.length; i++) {
+    const choiceIndex = scrollTop + i;
+    const choice = visibleChoices[i];
+
+    if (choiceIndex === selectedIndex) {
       output += `${cyan("❯")} ${cyan(choice.name)}\n`;
     } else {
       output += `  ${choice.name}\n`;
     }
+    newLines += 1;
+  }
+
+  if (scrollTop + pageSize < choices.length) {
+    output += gray("  ↓\n");
     newLines += 1;
   }
 
@@ -83,7 +100,7 @@ async function renderPrompt<T>(
 export async function selectPrompt<T>(
   options: SelectPromptOptions<T>,
 ): Promise<T> {
-  const { message, choices, default: defaultValue } = options;
+  const { message, choices, default: defaultValue, pageSize = 10 } = options;
 
   let selectedIndex: number = 0;
   if (defaultValue) {
@@ -93,6 +110,11 @@ export async function selectPrompt<T>(
     if (defaultIndex > -1) {
       selectedIndex = defaultIndex;
     }
+  }
+
+  let scrollTop = 0;
+  if (selectedIndex >= pageSize) {
+    scrollTop = selectedIndex - pageSize + 1;
   }
 
   try {
@@ -112,6 +134,8 @@ export async function selectPrompt<T>(
       choices,
       selectedIndex,
       lineCount,
+      scrollTop,
+      pageSize,
     );
 
     const key: KeyType = await readKey();
@@ -119,9 +143,19 @@ export async function selectPrompt<T>(
     switch (key) {
       case "down":
         selectedIndex = (selectedIndex + 1) % choices.length;
+        if (selectedIndex === 0) {
+          scrollTop = 0;
+        } else if (selectedIndex >= scrollTop + pageSize) {
+          scrollTop = selectedIndex - pageSize + 1;
+        }
         break;
       case "up":
         selectedIndex = (selectedIndex - 1 + choices.length) % choices.length;
+        if (selectedIndex === choices.length - 1) {
+          scrollTop = Math.max(0, choices.length - pageSize);
+        } else if (selectedIndex < scrollTop) {
+          scrollTop = selectedIndex;
+        }
         break;
       case "enter":
         running = false;
