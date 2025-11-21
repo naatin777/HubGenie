@@ -65,14 +65,10 @@ async function renderPrompt<T>(
   let newLines = 0;
   let output = "";
 
-  const q: string = `${bold(`? ${question}`)}\n`;
+  const counter = gray(`(${selectedIndex + 1}/${choices.length})`);
+  const q: string = `${bold(`? ${question}`)} ${counter}\n`;
   output += q;
   newLines += q.split("\n").length - 1;
-
-  if (scrollTop > 0) {
-    output += gray("  ↑\n");
-    newLines += 1;
-  }
 
   const visibleChoices = choices.slice(scrollTop, scrollTop + pageSize);
 
@@ -82,15 +78,19 @@ async function renderPrompt<T>(
 
     if (choiceIndex === selectedIndex) {
       output += `${cyan("❯")} ${cyan(choice.name)}\n`;
+      newLines += 1;
+
+      if (choice.description) {
+        const descLines = choice.description.split("\n");
+        for (const line of descLines) {
+          output += `  ${gray(line)}\n`;
+          newLines += 1;
+        }
+      }
     } else {
       output += `  ${choice.name}\n`;
+      newLines += 1;
     }
-    newLines += 1;
-  }
-
-  if (scrollTop + pageSize < choices.length) {
-    output += gray("  ↓\n");
-    newLines += 1;
   }
 
   await Deno.stdout.write(encoder.encode(output));
