@@ -1,11 +1,15 @@
+import { getMergedConfig } from "./config.ts";
+
 export async function editText(text: string): Promise<string> {
   const tempFile = await Deno.makeTempFile({ suffix: ".txt" });
 
   try {
     await Deno.writeTextFile(tempFile, text);
 
-    const command = new Deno.Command("code", {
-      args: ["--wait", tempFile],
+    const config = await getMergedConfig();
+    const [cmd, ...args] = config.editor.split(" ");
+    const command = new Deno.Command(cmd, {
+      args: [...args, tempFile],
       stdin: "inherit",
       stdout: "inherit",
       stderr: "inherit",
