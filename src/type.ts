@@ -1,7 +1,7 @@
 export type EnvKey =
-  | "HUBGENIE_API_KEY"
-  | "HUBGENIE_BASE_URL"
-  | "HUBGENIE_MODEL";
+  | "DEMMIT_HUB_API_KEY"
+  | "DEMMIT_HUB_BASE_URL"
+  | "DEMMIT_HUB_MODEL";
 
 export type Config = {
   language: string;
