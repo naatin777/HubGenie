@@ -10,13 +10,13 @@ async function getEnv(key: EnvKey): Promise<string> {
 }
 
 export async function getApiKey(): Promise<string> {
-  return await getEnv("DEMMIT_HUB_API_KEY");
+  return await getEnv("DEMMITHUB_API_KEY");
 }
 
 export async function getBaseURL(): Promise<string> {
-  return await getEnv("DEMMIT_HUB_BASE_URL");
+  return await getEnv("DEMMITHUB_BASE_URL");
 }
 
 export async function getModel(): Promise<string> {
-  return await getEnv("DEMMIT_HUB_MODEL");
+  return await getEnv("DEMMITHUB_MODEL");
 }

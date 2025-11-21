@@ -1,7 +1,7 @@
 import { dirname, join } from "@std/path";
 import { ensureDir, existsSync } from "@std/fs";
-import { META } from "../meta.ts";
 import { ScopeFlag } from "../type.ts";
+import DemmitHub from "../../deno.json" with { type: "json" };
 
 export class ConfigPaths {
   private static findProjectConfig(filename: string): string {
@@ -41,7 +41,7 @@ export class ConfigPaths {
     if (!home) {
       throw new Error("Home directory not found");
     }
-    return join(home, ".config", META.name);
+    return join(home, ".config", DemmitHub.name);
   }
 
   private static async getOrCreateGlobalConfigPath(): Promise<string> {
@@ -63,7 +63,7 @@ export class ConfigPaths {
   private static async getOrCreateLocalConfigPath(
     create?: boolean,
   ): Promise<string> {
-    const filename = `.${META.name}.local.yml`;
+    const filename = `.${DemmitHub.name}.local.yml`;
     return await this.getOrCreateProjectConfig(filename, create);
   }
 
