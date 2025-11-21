@@ -1,7 +1,6 @@
 {
   "tasks": {
-    "init": "deno run src/hubgenie.ts init",
-    "commit": "deno run src/hubgenie.ts commit"
+    "commit": "deno run src/demmit_hub.ts commit"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@^1.0.15",
