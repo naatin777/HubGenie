@@ -1,6 +1,6 @@
 import { GitCommitRepository } from "./commit_repository.ts";
 import { GitDiffRepository } from "./diff_repository.ts";
-import { DefaultGitRunner, GitRunner } from "./git_runner.ts";
+import { DefaultGitRunner, type GitRunner } from "./git_runner.ts";
 
 export class GitService {
   private readonly runner: GitRunner;

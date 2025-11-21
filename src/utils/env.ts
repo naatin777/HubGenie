@@ -1,5 +1,5 @@
 import { load } from "@std/dotenv";
-import { EnvKey } from "../type.ts";
+import type { EnvKey } from "../type.ts";
 
 async function getEnv(key: EnvKey): Promise<string> {
   await load({ export: true });

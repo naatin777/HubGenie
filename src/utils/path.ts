@@ -1,6 +1,6 @@
 import { dirname, join } from "@std/path";
 import { ensureDir, existsSync } from "@std/fs";
-import { ScopeFlag } from "../type.ts";
+import type { ScopeFlag } from "../type.ts";
 import DemmitHub from "../../deno.json" with { type: "json" };
 
 export class ConfigPaths {
@@ -56,7 +56,7 @@ export class ConfigPaths {
   private static async getOrCreateProjectConfigPath(
     create?: boolean,
   ): Promise<string> {
-    const filename = `.${META.name}.yml`;
+    const filename = `.${DemmitHub.name}.yml`;
     return await this.getOrCreateProjectConfig(filename, create);
   }
 

@@ -1,4 +1,4 @@
-import { DefaultGitRunner, GitRunner } from "./git_runner.ts";
+import { DefaultGitRunner, type GitRunner } from "./git_runner.ts";
 
 export class GitCommitRepository {
   private readonly runner: GitRunner;

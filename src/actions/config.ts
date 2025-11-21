@@ -1,6 +1,6 @@
 import { initEditor, initLanguage } from "../utils/selection.ts";
 import { getMergedConfig, saveConfig } from "../utils/config.ts";
-import { ScopeFlag } from "../type.ts";
+import type { ScopeFlag } from "../type.ts";
 
 export async function configLanguageAction(
   options: ScopeFlag,

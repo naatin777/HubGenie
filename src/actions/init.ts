@@ -1,4 +1,4 @@
-import { ScopeFlag } from "../type.ts";
+import type { ScopeFlag } from "../type.ts";
 import { saveConfig } from "../utils/config.ts";
 import { initEditor, initLanguage } from "../utils/selection.ts";
 

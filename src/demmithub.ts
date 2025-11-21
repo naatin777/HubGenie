@@ -3,7 +3,7 @@ import { commitAction } from "./actions/commit.ts";
 import { initAction } from "./actions/init.ts";
 import { issueAction } from "./actions/issue.ts";
 import { configEditorAction, configLanguageAction } from "./actions/config.ts";
-import { ScopeFlag } from "./type.ts";
+import type { ScopeFlag } from "./type.ts";
 import DemmitHub from "../deno.json" with { type: "json" };
 
 if (import.meta.main) {

@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 import { zodResponseFormat } from "openai/helpers/zod";
 import { getMergedConfig } from "./config.ts";
-import { z } from "zod";
+import type { z } from "zod";
 import { getApiKey, getBaseURL, getModel } from "./env.ts";
 
 export async function createParsedCompletions<T extends z.ZodType>(

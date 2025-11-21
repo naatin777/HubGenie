@@ -1,6 +1,6 @@
 import { ConfigPaths } from "./path.ts";
 import { parse, stringify } from "@std/yaml";
-import { Config, ScopeFlag } from "../type.ts";
+import type { Config, ScopeFlag } from "../type.ts";
 
 export async function saveConfig(
   config: Config,
