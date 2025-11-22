@@ -61,11 +61,15 @@ export async function commitAction() {
         choices: result.commit_message.map((m) => ({
           name: m.header,
           value: m,
-          description: m.body + "\n" + m.footer,
+          description: [m.body, m.footer].filter(Boolean).join("\n\n"),
         })),
       });
       try {
-        const edited = await editText(answer.header);
+        const edited = await editText(
+          [answer.header, answer.body, answer.footer].filter(Boolean).join(
+            "\n\n",
+          ),
+        );
         if (edited.trim()) {
           await git.commit.commitWithMessages([edited]);
           console.log("Commit successful");
