@@ -1,4 +1,4 @@
 comment:
-  layout: "coverage, diff"
+  layout: "header, diff, changes"
   require_changes: false
   after_n_builds: 1
