@@ -7,7 +7,10 @@ export class GitCommitRepository {
     this.runner = runner;
   }
 
-  async commitWithMessage(message: string): Promise<string> {
-    return await this.runner.run(["commit", "-m", message]);
+  async commitWithMessages(messages: string[]): Promise<string> {
+    return await this.runner.run([
+      "commit",
+      ...messages.flatMap((message) => ["-m", message]),
+    ]);
   }
 }

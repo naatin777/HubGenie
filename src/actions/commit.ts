@@ -67,7 +67,7 @@ export async function commitAction() {
       try {
         const edited = await editText(answer.header);
         if (edited.trim()) {
-          await git.commit.commitWithMessage(edited);
+          await git.commit.commitWithMessages([edited]);
           console.log("Commit successful");
         } else {
           console.log("Commit cancelled - empty message");
