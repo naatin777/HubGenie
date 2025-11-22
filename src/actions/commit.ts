@@ -47,8 +47,8 @@ export async function commitAction() {
         commit_message: z.array(
           z.object({
             header: z.string(),
-            body: z.string().optional(),
-            footer: z.string().optional(),
+            body: z.string().nullable(),
+            footer: z.string().nullable(),
           }),
         ),
       }),
