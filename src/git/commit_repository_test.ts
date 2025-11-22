@@ -7,6 +7,11 @@ Deno.test("commitWithMessage", async () => {
     run: (args) => new Promise((resolve) => resolve(args.join(" "))),
   };
   const gitCommitRepository = new GitCommitRepository(mock);
-  const result = await gitCommitRepository.commitWithMessage("test");
+  const result = await gitCommitRepository.commitWithMessages(["test"]);
   assertEquals(result, "commit -m test");
+  const result2 = await gitCommitRepository.commitWithMessages([
+    "test",
+    "test2",
+  ]);
+  assertEquals(result2, "commit -m test -m test2");
 });
