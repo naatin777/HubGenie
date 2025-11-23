@@ -16,4 +16,11 @@ Deno.test("isGitRepository", async () => {
   const gitRevParseRepository2 = new GitRevParseRepository(mock2);
   const isGitRepository2 = await gitRevParseRepository2.isGitRepository();
   assertEquals(isGitRepository2, true);
+
+  const mock3: GitRunner = {
+    run: (_) => new Promise((_, reject) => reject("true")),
+  };
+  const gitRevParseRepository3 = new GitRevParseRepository(mock3);
+  const isGitRepository3 = await gitRevParseRepository3.isGitRepository();
+  assertEquals(isGitRepository3, false);
 });
