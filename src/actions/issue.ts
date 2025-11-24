@@ -17,6 +17,10 @@ export async function issueAction() {
       Deno.readFileSync(markdownPath),
     ))
   );
+  if (issueTemplates.length === 0) {
+    console.log("No issue templates found.");
+    return;
+  }
   const issueTemplate = await selectPrompt({
     message: "Select an issue template",
     choices: issueTemplates.map((template) => ({
@@ -63,7 +67,7 @@ export async function issueAction() {
     "issue",
   );
   spinner.stop();
-  if (!issues?.issue) {
+  if (!issues?.issue || issues.issue.length === 0) {
     console.log("No issues found.");
     return;
   }
