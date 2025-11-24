@@ -1,0 +1,48 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: "en-US"
+early_access: false
+
+reviews:
+  profile: "chill"
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: true
+  review_status: true
+  collapse_walkthrough: false
+
+  auto_review:
+    enabled: true
+    drafts: false
+    ignore_title_keywords:
+      - "WIP"
+      - "Draft"
+      - "DO NOT MERGE"
+
+  path_filters:
+    - "!deno.lock"
+    - "!**/*.lock"
+    - "!**/cov_profile/**"
+    - "!**/testdata/**"
+    - "!**/*.generated.ts"
+
+  path_instructions:
+    - path: "**"
+      instructions: |
+        You are a Senior Deno Software Engineer.
+        Review the code based on the following criteria:
+
+        1. **Deno Best Practices**:
+           - Ensure code follows modern Deno conventions (using `deno.json`).
+           - Encourage using **JSR** (`jsr:`) imports where appropriate.
+           - Verify permissions and security handles.
+
+        2. **TypeScript & Logic**:
+           - Enforce strict TypeScript typing (avoid `any`).
+           - Focus on logic errors, security risks, and performance issues.
+           - Do not comment on formatting (assume `deno fmt` handles it).
+
+        3. **Tone**:
+           - Keep feedback concise, constructive, and "chill".
+
+chat:
+  auto_reply: true
