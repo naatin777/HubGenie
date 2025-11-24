@@ -12,3 +12,13 @@ export type ScopeFlag = {
   global?: true;
   local?: true;
 };
+
+export type Issue = {
+  title: string;
+  body: string;
+};
+
+export type IssueTemplate = Issue & {
+  name: string;
+  about: string;
+};
