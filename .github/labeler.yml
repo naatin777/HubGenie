@@ -1,0 +1,49 @@
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - .github/**/*
+          - codecov.yml
+
+config:
+  - changed-files:
+      - any-glob-to-any-file:
+          - deno.json
+          - deno.lock
+          - .demmithub.yml
+          - .gitignore
+
+actions:
+  - changed-files:
+      - any-glob-to-any-file:
+          - src/actions/**/*
+
+git:
+  - changed-files:
+      - any-glob-to-any-file:
+          - src/git/**/*
+
+issue:
+  - changed-files:
+      - any-glob-to-any-file:
+          - src/issue/**/*
+
+prompt:
+  - changed-files:
+      - any-glob-to-any-file:
+          - src/prompt/**/*
+
+utils:
+  - changed-files:
+      - any-glob-to-any-file:
+          - src/utils/**/*
+          - src/type.ts
+
+core:
+  - changed-files:
+      - any-glob-to-any-file:
+          - src/demmithub.ts
+
+test:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*_test.ts"
