@@ -1,0 +1,48 @@
+version: "0.1"
+
+language: "en-US"
+
+reviews:
+  profile: "chill"
+  high_level_summary: true
+  walkthrough: true
+  poem: false
+
+  auto_review:
+    enabled: true
+    ignore_title_keywords:
+      - "WIP"
+      - "Draft"
+      - "DO NOT MERGE"
+
+  path_filters:
+    - "!deno.lock"
+    - "!**/*.lock"
+    - "!**/cov_profile/**"
+    - "!**/testdata/**"
+    - "!**/*.generated.ts"
+
+chat:
+  auto_reply: true
+
+instructions: |
+  You are a Senior Deno Software Engineer and Technical Lead.
+  Review the code based on the following criteria:
+
+  1. **Deno Best Practices**:
+     - Ensure code follows modern Deno conventions (e.g., using `deno.json`).
+     - Encourage using **JSR** (`jsr:`) or standard library imports over explicit URL imports where appropriate.
+     - Verify that permissions are handled correctly if relevant.
+
+  2. **TypeScript & Style**:
+     - Enforce strict TypeScript typing. Avoid `any` unless absolutely necessary.
+     - Assume `deno fmt` is used; do not nitpick on formatting unless it affects readability logic.
+
+  3. **Security & Performance**:
+     - Watch out for potential security risks (shell injection, uncontrolled file access).
+     - Suggest asynchronous operations (`await`) where blocking I/O is used.
+
+  4. **Tone & Language**:
+     - Provide feedback in clear, concise **English**.
+     - Be constructive and highlight good code practices.
+     - If a suggestion is subjective, frame it as an option rather than a demand.
