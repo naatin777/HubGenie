@@ -35,7 +35,6 @@ Deno.test("stringifyMarkdownIssue", () => {
     markdown,
     `---
 title: My Issue Template
-
 ---
 
 This is the body of my issue template.
