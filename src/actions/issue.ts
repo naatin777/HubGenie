@@ -9,6 +9,7 @@ import {
 import { Spinner } from "../utils/spinner.ts";
 import { carouselPrompt } from "../prompt/carousel.ts";
 import { editText } from "../utils/edit.ts";
+import { createIssue } from "../github/issue.ts";
 
 export async function issueAction() {
   const issueTemplatePath = await getIssueTemplatePath();
@@ -84,7 +85,6 @@ export async function issueAction() {
   const editedMarkdown = await editText(markdown);
   const editedIssue = parseMarkdownIssueTemplate(editedMarkdown);
 
-  console.log(editedIssue.title);
-  console.log(editedIssue.body);
-  console.log("\n");
+  const issueResponse = await createIssue(editedIssue.title, editedIssue.body);
+  console.log(`Issue created: ${issueResponse.url}`);
 }

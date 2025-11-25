@@ -8,6 +8,7 @@
     "commit": "deno run src/demmithub.ts commit"
   },
   "imports": {
+    "@octokit/plugin-rest-endpoint-methods": "npm:@octokit/plugin-rest-endpoint-methods@^17.0.0",
     "@std/assert": "jsr:@std/assert@^1.0.15",
     "@std/dotenv": "jsr:@std/dotenv@^0.225.5",
     "@std/fmt": "jsr:@std/fmt@^1.0.8",
@@ -17,6 +18,7 @@
     "@std/yaml": "jsr:@std/yaml@^1.0.10",
     "chalk": "npm:chalk@^5.6.2",
     "inquirer": "npm:inquirer@^13.0.1",
+    "octokit": "npm:octokit@^5.0.5",
     "openai": "npm:openai@^6.9.0",
     "yargs": "npm:yargs@^18.0.0",
     "zod": "npm:zod@^4.1.12"

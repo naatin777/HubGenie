@@ -20,3 +20,7 @@ export async function getBaseURL(): Promise<string> {
 export async function getModel(): Promise<string> {
   return await getEnv("DEMMITHUB_MODEL");
 }
+
+export async function getGitHubToken(): Promise<string> {
+  return await getEnv("DEMMITHUB_GITHUB_TOKEN");
+}
