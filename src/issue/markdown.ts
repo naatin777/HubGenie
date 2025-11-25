@@ -21,8 +21,7 @@ export function stringifyMarkdownIssue(
     title: issue.title,
   });
   return `---
-${yamlBlock}
----
+${yamlBlock}---
 
 ${issue.body.trim()}
 `;
