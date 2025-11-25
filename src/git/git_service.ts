@@ -1,6 +1,7 @@
 import { GitCommitRepository } from "./commit_repository.ts";
 import { GitDiffRepository } from "./diff_repository.ts";
 import { DefaultGitRunner, type GitRunner } from "./git_runner.ts";
+import { GitRemoteRepository } from "./remote_repository.ts";
 import { GitRevParseRepository } from "./rev_parse_repository.ts";
 import { GitStatusRepository } from "./status_repository.ts";
 
@@ -10,6 +11,7 @@ export class GitService {
   public readonly commit: GitCommitRepository;
   public readonly rev_parse: GitRevParseRepository;
   public readonly status: GitStatusRepository;
+  public readonly remote: GitRemoteRepository;
 
   constructor(runner: GitRunner = new DefaultGitRunner()) {
     this.runner = runner;
@@ -17,5 +19,6 @@ export class GitService {
     this.commit = new GitCommitRepository(this.runner);
     this.rev_parse = new GitRevParseRepository(this.runner);
     this.status = new GitStatusRepository(this.runner);
+    this.remote = new GitRemoteRepository(this.runner);
   }
 }
