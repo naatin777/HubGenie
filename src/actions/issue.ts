@@ -52,6 +52,8 @@ export async function issueAction() {
         role: "system",
         content: `
       You are an expert Project Manager on GitHub.
+      If you have any questions or need clarification regarding the question, please set the status to “question”.
+      If not, please set the status to “final_answer”.
       Your task is to generate **10 distinct GitHub issues** based on the user's input.
 
       # Instructions
