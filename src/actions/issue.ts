@@ -1,4 +1,4 @@
-import { createParsedCompletions } from "../utils/openai.ts";
+import { runAgentLoop } from "../utils/openai.ts";
 import z from "zod";
 import { selectPrompt } from "../prompt/select.ts";
 import { getIssueTemplatePath } from "../issue/path.ts";
@@ -33,7 +33,20 @@ export async function issueAction() {
   const issueOverview = prompt("? Enter the issue overview › ") ?? "";
   const spinner = new Spinner("Loading...");
   spinner.start();
-  const issues = await createParsedCompletions(
+
+  const IssuesResultSchema = z.array(
+    z.object({
+      title: z.string(),
+      body: z.string(),
+    }),
+  );
+  const AgentSchema = z.object({
+    status: z.enum(["question", "final_answer"]),
+    question: z.string().nullable(),
+    final_answer: IssuesResultSchema.nullable(),
+  });
+
+  const issues: z.infer<typeof IssuesResultSchema> = await runAgentLoop(
     [
       {
         role: "system",
@@ -62,19 +75,17 @@ export async function issueAction() {
           `Here is the issue overview provided by the user:\n\n${issueOverview}`,
       },
     ],
-    z.object({
-      issue: z.array(z.object({ title: z.string(), body: z.string() })),
-    }),
+    AgentSchema,
     "issue",
   );
   spinner.stop();
-  if (!issues?.issue || issues.issue.length === 0) {
+  if (issues.length === 0) {
     console.log("No issues found.");
     return;
   }
   const issue = await carouselPrompt({
     message: "Select an issue to edit",
-    choices: issues.issue.filter(Boolean).map((item) => ({
+    choices: issues.filter(Boolean).map((item) => ({
       name: item.title,
       value: item,
       description: item.body,

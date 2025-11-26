@@ -9,7 +9,7 @@ export async function createParsedCompletions<T extends z.ZodType>(
     role: "user" | "system" | "assistant";
     content: string;
   }[],
-  zod: T,
+  schema: T,
   name: string,
 ): Promise<z.Infer<T> | null> {
   const apiKey = await getApiKey();
@@ -33,7 +33,7 @@ export async function createParsedCompletions<T extends z.ZodType>(
       ...message,
     ],
     response_format: zodResponseFormat(
-      zod,
+      schema,
       name,
     ),
   });
@@ -42,10 +42,7 @@ export async function createParsedCompletions<T extends z.ZodType>(
 
 interface AgentLoopProtocol<TResult> {
   status: "question" | "final_answer";
-  question: {
-    content: string;
-    reason: string;
-  } | null;
+  question: string | null;
   final_answer: TResult | null;
 }
 
@@ -59,7 +56,6 @@ export async function runAgentLoop<
   }[],
   schema: TSchema,
   name: string,
-  askUser: (question: string) => Promise<string>,
 ): Promise<TResult> {
   const history = [...messages];
 
@@ -78,14 +74,12 @@ export async function runAgentLoop<
       const qData = completion.question;
       if (!qData) throw new Error("Status is question but data is null");
 
-      console.log(`[Thinking] ${qData.reason}`);
-
       history.push({
         role: "assistant",
-        content: qData.content,
+        content: qData,
       });
 
-      const userAnswer = await askUser(qData.content);
+      const userAnswer = prompt(qData) || "leave it to you";
 
       history.push({
         role: "user",
