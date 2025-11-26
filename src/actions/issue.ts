@@ -1,4 +1,4 @@
-import { createParsedCompletions } from "../utils/openai.ts";
+import { runAgentLoop } from "../utils/openai.ts";
 import z from "zod";
 import { selectPrompt } from "../prompt/select.ts";
 import { getIssueTemplatePath } from "../issue/path.ts";
@@ -33,27 +33,59 @@ export async function issueAction() {
   const issueOverview = prompt("? Enter the issue overview › ") ?? "";
   const spinner = new Spinner("Loading...");
   spinner.start();
-  const issues = await createParsedCompletions(
+
+  const IssuesResultSchema = z.array(
+    z.object({
+      title: z.string(),
+      body: z.string(),
+    }),
+  );
+  const AgentSchema = z.object({
+    status: z.enum(["question", "final_answer"]),
+    question: z.string().nullable(),
+    final_answer: IssuesResultSchema.nullable(),
+  });
+
+  const issues: z.infer<typeof IssuesResultSchema> = await runAgentLoop(
     [
       {
         role: "system",
         content: `
-      You are an expert Project Manager on GitHub.
-      Your task is to generate **10 distinct GitHub issues** based on the user's input.
+          You are an expert, meticulous Technical Project Manager on GitHub.
+          Your goal is to break down a project into **10 distinct, highly detailed GitHub issues**.
 
-      # Instructions
-      1. **Analyze** the user's input (Issue Overview).
-      2. **Break down** the input into **10 separate, actionable tasks or sub-issues**.
-      3. For **each** of the 10 issues:
-         - **Fill in** the provided Issue Template Body with relevant details.
-         - **Generate** a concise and descriptive Title, keeping the format of the provided Template Title.
+          # CRITICAL RULE: DO NOT ASSUME
+          **You must NOT make assumptions about technical details, user scope, or features if they are not explicitly stated in the input.**
+          If the user's input is vague (e.g., "Make a todo app"), you **MUST** set the status to "question" to clarify requirements before generating issues.
 
-      # Issue Template
-      Title Format: ${issueTemplate.title}
-      Body Structure:
-      """
-      ${issueTemplate.body}
-      """
+          # Clarification Checklist
+          Before generating issues, check if the user provided:
+          - **Tech Stack**: (e.g., React, Next.js, Go, Python, DB type)
+          - **Specific Features**: (e.g., Auth, Payments, specific UI requirements)
+          - **Target Audience**: (Who is this for?)
+          - **Scope**: (MVP only? Full production?)
+
+          If ANY of the above are missing or unclear, ask the user specifically about them.
+
+          # Process
+          1. **Analyze** the user's input deeply.
+          2. **Check** against the Clarification Checklist.
+          3. **Decision**:
+             - If information is missing -> Set status to "question" and ask strictly about the missing parts.
+             - If (and ONLY IF) information is sufficient -> Set status to "final_answer" and generate the 10 issues.
+
+          # Instructions for Generation (Only when sufficient)
+          1. **Break down** the input into **10 separate, actionable tasks**.
+          2. For **each** issue:
+             - **Fill in** the Issue Template Body.
+             - **Generate** a concise Title.
+
+          # Issue Template
+          Title Format: ${issueTemplate.title}
+          Body Structure:
+          """
+          ${issueTemplate.body}
+          """
           `.trim(),
       },
       {
@@ -62,19 +94,17 @@ export async function issueAction() {
           `Here is the issue overview provided by the user:\n\n${issueOverview}`,
       },
     ],
-    z.object({
-      issue: z.array(z.object({ title: z.string(), body: z.string() })),
-    }),
+    AgentSchema,
     "issue",
   );
   spinner.stop();
-  if (!issues?.issue || issues.issue.length === 0) {
+  if (issues.length === 0) {
     console.log("No issues found.");
     return;
   }
   const issue = await carouselPrompt({
     message: "Select an issue to edit",
-    choices: issues.issue.filter(Boolean).map((item) => ({
+    choices: issues.filter(Boolean).map((item) => ({
       name: item.title,
       value: item,
       description: item.body,
