@@ -12,5 +12,5 @@ assignees: ''
 - [ ] 
 - [ ] 
 
-## Definition of Done
-## Resources / References
+## Definition of Done (Optional)
+## Resources / References (Optional)
