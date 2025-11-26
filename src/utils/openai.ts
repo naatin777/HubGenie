@@ -29,7 +29,11 @@ export async function createParsedCompletions<T extends z.ZodType>(
   const completion = await openai.chat.completions.parse({
     model: model,
     messages: [
-      { role: "system", content: `Please output in ${config.language}.` },
+      {
+        role: "system",
+        content:
+          `You must output *exclusively* in ${config.language}. No exceptions.`,
+      },
       ...message,
     ],
     response_format: zodResponseFormat(
