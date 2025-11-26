@@ -6,7 +6,7 @@ import {
   parseMarkdownIssueTemplate,
   stringifyMarkdownIssue,
 } from "../issue/markdown.ts";
-import { Spinner } from "../utils/spinner.ts";
+import { Spinner } from "../prompt/spinner.ts";
 import { carouselPrompt } from "../prompt/carousel.ts";
 import { editText } from "../utils/edit.ts";
 import { createIssue } from "../github/issue.ts";

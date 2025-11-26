@@ -1,7 +1,7 @@
 import { GitService } from "../git/git_service.ts";
 import { createParsedCompletions } from "../utils/openai.ts";
 import { selectPrompt } from "../prompt/select.ts";
-import { Spinner } from "../utils/spinner.ts";
+import { Spinner } from "../prompt/spinner.ts";
 import z from "zod";
 import { editText } from "../utils/edit.ts";
 
