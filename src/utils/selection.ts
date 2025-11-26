@@ -1,4 +1,4 @@
-import inquirer from "inquirer";
+import { selectPrompt } from "../prompt/select.ts";
 
 export async function initLanguage(): Promise<string> {
   const SUPPORTED_LANGUAGES = [
@@ -18,13 +18,14 @@ export async function initLanguage(): Promise<string> {
     "vi - Tiếng Việt (Vietnamese)",
     "th - ไทย (Thai)",
   ];
-  return (await inquirer.prompt<{ language: string }>({
-    type: "select",
-    name: "language",
+  return await selectPrompt({
     message: "Enter language",
-    choices: SUPPORTED_LANGUAGES,
+    choices: SUPPORTED_LANGUAGES.map((language) => ({
+      name: language,
+      value: language,
+    })),
     default: SUPPORTED_LANGUAGES[0],
-  })).language;
+  });
 }
 
 export function initEditor(): string {
