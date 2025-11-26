@@ -1,17 +1,31 @@
 ---
 name: 🐛 Bug Report
-about: Create a report to help us improve DemmitHub
-title: "[Bug]: "
+about: Create a report to help us improve the project
+title: "[BUG] "
 labels: bug
 assignees: ""
 ---
 
-### Describe the bug
+## Description
 
-### Steps to Reproduce
+## Steps to Reproduce
 
-### Expected behavior
+1.
 
-### Logs or Screenshots
+2.
 
-### Environment
+3.
+
+## Expected Behavior
+
+## Actual Behavior
+
+## Context & Environment (Optional)
+
+- **Version/Commit** (Optional):
+
+- **System/OS** (Optional):
+
+- **Other Context** (Optional):
+
+## Screenshots / Logs (Optional)

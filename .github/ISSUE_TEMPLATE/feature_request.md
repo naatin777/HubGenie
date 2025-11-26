@@ -1,15 +1,15 @@
 ---
-name: 🚀 Feature Request
+name: ✨ Feature Request
 about: Suggest an idea for this project
-title: "[Feat]: "
+title: "[FEAT] "
 labels: enhancement
 assignees: ""
 ---
 
-### Is your feature request related to a problem?
+## Problem Statement (Optional)
 
-### Describe the solution you'd like
+## Proposed Solution
 
-### Describe alternatives you've considered
+## Alternatives Considered (Optional)
 
-### Additional context
+## Additional Context (Optional)
