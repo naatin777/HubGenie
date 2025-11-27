@@ -1,33 +1,17 @@
-import inquirer from "inquirer";
+import { LANGUAGES } from "../constants/language.ts";
+import { selectPrompt } from "../prompt/select.ts";
 
-export async function initLanguage(): Promise<string> {
-  const SUPPORTED_LANGUAGES = [
-    "en - English",
-    "ja - 日本語 (Japanese)",
-    "zh - 中文 (Chinese)",
-    "ko - 한국어 (Korean)",
-    "es - Español (Spanish)",
-    "fr - Français (French)",
-    "de - Deutsch (German)",
-    "it - Italiano (Italian)",
-    "pt - Português (Portuguese)",
-    "ru - Русский (Russian)",
-    "ar - العربية (Arabic)",
-    "hi - हिन्दी (Hindi)",
-    "tr - Türkçe (Turkish)",
-    "vi - Tiếng Việt (Vietnamese)",
-    "th - ไทย (Thai)",
-  ];
-  return (await inquirer.prompt<{ language: string }>({
-    type: "select",
-    name: "language",
+export async function selectLanguage(): Promise<string> {
+  return await selectPrompt({
     message: "Enter language",
-    choices: SUPPORTED_LANGUAGES,
-    default: SUPPORTED_LANGUAGES[0],
-  })).language;
+    choices: LANGUAGES.map((language) => ({
+      name: `${language.code} - ${language.label}`,
+      value: `${language.code} - ${language.label}`,
+    })),
+  });
 }
 
-export function initEditor(): string {
+export function selectEditor(): string {
   const editor = prompt("? Enter the editor › ") ?? "code --wait";
   return editor;
 }
