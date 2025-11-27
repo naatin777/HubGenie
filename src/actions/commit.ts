@@ -4,7 +4,7 @@ import { selectPrompt } from "../prompt/select.ts";
 import { Spinner } from "../prompt/spinner.ts";
 import { editText } from "../utils/edit.ts";
 import { CommitSchema } from "../schema.ts";
-import { ISSUE_SYSTEM_MESSAGE } from "../constants/message.ts";
+import { COMMIT_SYSTEM_MESSAGE } from "../constants/message.ts";
 
 export async function commitAction() {
   const spinner = new Spinner("Loading...");
@@ -22,7 +22,7 @@ export async function commitAction() {
     [
       {
         role: "system",
-        content: ISSUE_SYSTEM_MESSAGE,
+        content: COMMIT_SYSTEM_MESSAGE,
       },
       {
         role: "user",

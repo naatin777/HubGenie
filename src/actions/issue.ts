@@ -9,6 +9,7 @@ import { Spinner } from "../prompt/spinner.ts";
 import { carouselPrompt } from "../prompt/carousel.ts";
 import { editText } from "../utils/edit.ts";
 import { createIssue } from "../github/issue.ts";
+import { ISSUE_SYSTEM_MESSAGE } from "../constants/message.ts";
 
 export async function issueAction() {
   const issueTemplatePath = await getIssueTemplatePath();
@@ -37,36 +38,9 @@ export async function issueAction() {
     [
       {
         role: "system",
-        content: `
-          You are an expert, meticulous Technical Project Manager on GitHub.
-          Your goal is to break down a project into **10 distinct, highly detailed GitHub issues**.
-
-          # CRITICAL RULE: DO NOT ASSUME
-          **You must NOT make assumptions about technical details, user scope, or features if they are not explicitly stated in the input.**
-          If the user's input is vague (e.g., "Make a todo app"), you **MUST** set the status to "question" to clarify requirements before generating issues.
-
-          If ANY of the above are missing or unclear, ask the user specifically about them.
-
-          # Process
-          1. **Analyze** the user's input deeply.
-          2. **Check** against the Clarification Checklist.
-          3. **Decision**:
-             - If information is missing -> Set status to "question" and ask strictly about the missing parts.
-             - If (and ONLY IF) information is sufficient -> Set status to "final_answer" and generate the 10 issues.
-
-          # Instructions for Generation (Only when sufficient)
-          1. **Break down** the input into **10 separate, actionable tasks**.
-          2. For **each** issue:
-             - **Fill in** the Issue Template Body.
-             - **Generate** a concise Title.
-
-          # Issue Template
-          Title Format: ${issueTemplate.title}
-          Body Structure:
-          """
-          ${issueTemplate.body}
-          """
-          `.trim(),
+        content: ISSUE_SYSTEM_MESSAGE
+          .replace(/{{issueTemplate.title}}/g, issueTemplate.title)
+          .replace(/{{issueTemplate.body}}/g, issueTemplate.body),
       },
       {
         role: "user",
