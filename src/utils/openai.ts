@@ -65,12 +65,15 @@ export async function issueAgent(
     }
 
     if (completion.agent.status === "question") {
-      const userAnswer = prompt(completion.agent.question) || "leave it to you";
+      for (const question of completion.agent.questions) {
+        const userAnswer = prompt(question) ||
+          "leave it to you";
 
-      history.push({
-        role: "user",
-        content: `question: ${completion.agent.question} answer: ${userAnswer}`,
-      });
+        history.push({
+          role: "user",
+          content: `question: ${question} answer: ${userAnswer}`,
+        });
+      }
     } else if (completion.agent.status === "final_answer") {
       return completion.agent.item;
     } else {

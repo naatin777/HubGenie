@@ -22,8 +22,14 @@ export const IssueSchema = z.object({
 export const createAgentSchema = <T extends z.ZodTypeAny>(item: T) => {
   return z.object({
     agent: z.discriminatedUnion("status", [
-      z.object({ status: z.literal("question"), question: z.string() }),
-      z.object({ status: z.literal("final_answer"), item: item }),
+      z.object({
+        status: z.literal("question"),
+        questions: z.array(z.string()),
+      }),
+      z.object({
+        status: z.literal("final_answer"),
+        item: item,
+      }),
     ]),
   });
 };
