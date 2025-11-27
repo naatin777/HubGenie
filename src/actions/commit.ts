@@ -11,51 +11,50 @@ export async function commitAction() {
   spinner.start();
   const git = new GitService();
   const diff = await git.diff.getGitDiffStaged();
-  if (diff) {
-    const result = await generateStructuredOutput(
-      [
-        {
-          role: "system",
-          content: ISSUE_SYSTEM_MESSAGE,
-        },
-        {
-          role: "user",
-          content: diff,
-        },
-      ],
-      CommitSchema,
-      "commit messages",
-    );
-    spinner.stop();
-    if (result != null) {
-      const answer = await selectPrompt({
-        message: "Enter commit messages",
-        choices: result.commit_message.map((m) => ({
-          name: m.header,
-          value: m,
-          description: [m.body, m.footer].filter(Boolean).join("\n\n"),
-        })),
-      });
-      try {
-        const edited = await editText(
-          [answer.header, answer.body, answer.footer].filter(Boolean).join(
-            "\n\n",
-          ),
-        );
-        if (edited.trim()) {
-          await git.commit.commitWithMessages([edited]);
-          console.log("Commit successful");
-        } else {
-          console.log("Commit cancelled - empty message");
-        }
-      } catch (error) {
-        console.error("Error committing changes:", error);
-      }
-    } else {
-      console.log("No changes to commit");
-    }
-  } else {
+
+  if (!diff) {
     spinner.stop();
     console.log("No changes to commit");
+    return;
+  }
+
+  const result = await generateStructuredOutput(
+    [
+      {
+        role: "system",
+        content: ISSUE_SYSTEM_MESSAGE,
+      },
+      {
+        role: "user",
+        content: diff,
+      },
+    ],
+    CommitSchema,
+    "commit messages",
+  );
+  spinner.stop();
+
+  if (!result) {
+    console.log("No commit messages generated");
+    return;
+  }
+
+  const answer = await selectPrompt({
+    message: "Enter commit messages",
+    choices: result.commit_message.map((m) => ({
+      name: m.header,
+      value: m,
+      description: [m.body, m.footer].filter(Boolean).join("\n\n"),
+    })),
+  });
+
+  const combinedCommitMessage = [answer.header, answer.body, answer.footer]
+    .filter(Boolean).join("\n\n");
+  const editedCombinedCommitMessage = await editText(combinedCommitMessage);
+  if (editedCombinedCommitMessage.trim()) {
+    await git.commit.commitWithMessages([editedCombinedCommitMessage]);
+    console.log("Commit successful");
+  } else {
+    console.log("Commit cancelled - empty message");
   }
 }
