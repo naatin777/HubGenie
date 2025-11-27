@@ -1,5 +1,20 @@
 import z from "zod";
 
+const createAgentSchema = <T extends z.ZodTypeAny>(item: T) => {
+  return z.object({
+    agent: z.discriminatedUnion("status", [
+      z.object({
+        status: z.literal("question"),
+        questions: z.array(z.string()),
+      }),
+      z.object({
+        status: z.literal("final_answer"),
+        item: item,
+      }),
+    ]),
+  });
+};
+
 export const CommitSchema = z.object({
   commit_message: z.array(
     z.object({
@@ -18,20 +33,5 @@ export const IssueSchema = z.object({
     }),
   ),
 });
-
-export const createAgentSchema = <T extends z.ZodTypeAny>(item: T) => {
-  return z.object({
-    agent: z.discriminatedUnion("status", [
-      z.object({
-        status: z.literal("question"),
-        questions: z.array(z.string()),
-      }),
-      z.object({
-        status: z.literal("final_answer"),
-        item: item,
-      }),
-    ]),
-  });
-};
 
 export const IssueAgentSchema = createAgentSchema(IssueSchema);
