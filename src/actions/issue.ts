@@ -1,5 +1,4 @@
-import { runAgentLoop } from "../utils/openai.ts";
-import z from "zod";
+import { issueAgent } from "../utils/openai.ts";
 import { selectPrompt } from "../prompt/select.ts";
 import { getIssueTemplatePath } from "../issue/path.ts";
 import {
@@ -34,19 +33,7 @@ export async function issueAction() {
   const spinner = new Spinner("Loading...");
   spinner.start();
 
-  const IssuesResultSchema = z.array(
-    z.object({
-      title: z.string(),
-      body: z.string(),
-    }),
-  );
-  const AgentSchema = z.object({
-    status: z.enum(["question", "final_answer"]),
-    question: z.string().nullable(),
-    final_answer: IssuesResultSchema.nullable(),
-  });
-
-  const issues: z.infer<typeof IssuesResultSchema> = await runAgentLoop(
+  const issues = await issueAgent(
     [
       {
         role: "system",
@@ -57,13 +44,6 @@ export async function issueAction() {
           # CRITICAL RULE: DO NOT ASSUME
           **You must NOT make assumptions about technical details, user scope, or features if they are not explicitly stated in the input.**
           If the user's input is vague (e.g., "Make a todo app"), you **MUST** set the status to "question" to clarify requirements before generating issues.
-
-          # Clarification Checklist
-          Before generating issues, check if the user provided:
-          - **Tech Stack**: (e.g., React, Next.js, Go, Python, DB type)
-          - **Specific Features**: (e.g., Auth, Payments, specific UI requirements)
-          - **Target Audience**: (Who is this for?)
-          - **Scope**: (MVP only? Full production?)
 
           If ANY of the above are missing or unclear, ask the user specifically about them.
 
@@ -94,17 +74,15 @@ export async function issueAction() {
           `Here is the issue overview provided by the user:\n\n${issueOverview}`,
       },
     ],
-    AgentSchema,
-    "issue",
   );
   spinner.stop();
-  if (issues.length === 0) {
+  if (issues.issue.length === 0) {
     console.log("No issues found.");
     return;
   }
   const issue = await carouselPrompt({
     message: "Select an issue to edit",
-    choices: issues.filter(Boolean).map((item) => ({
+    choices: issues.issue.filter(Boolean).map((item) => ({
       name: item.title,
       value: item,
       description: item.body,

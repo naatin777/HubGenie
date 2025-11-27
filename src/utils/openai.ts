@@ -3,8 +3,9 @@ import { zodResponseFormat } from "openai/helpers/zod";
 import { getMergedConfig } from "./config.ts";
 import type z from "zod";
 import { getApiKey, getBaseURL, getModel } from "./env.ts";
+import { IssueAgentSchema } from "../schema.ts";
 
-export async function createParsedCompletions<T extends z.ZodType>(
+export async function generateStructuredOutput<T extends z.ZodType>(
   message: {
     role: "user" | "system" | "assistant";
     content: string;
@@ -44,56 +45,34 @@ export async function createParsedCompletions<T extends z.ZodType>(
   return completion.choices[0].message.parsed;
 }
 
-interface AgentLoopProtocol<TResult> {
-  status: "question" | "final_answer";
-  question: string | null;
-  final_answer: TResult | null;
-}
-
-export async function runAgentLoop<
-  TResult,
-  TSchema extends z.ZodType<AgentLoopProtocol<TResult>>,
->(
+export async function issueAgent(
   messages: {
     role: "user" | "system" | "assistant";
     content: string;
   }[],
-  schema: TSchema,
-  name: string,
-): Promise<TResult> {
+) {
   const history = [...messages];
 
   while (true) {
-    const completion = await createParsedCompletions(
+    const completion = await generateStructuredOutput(
       history,
-      schema,
-      name,
+      IssueAgentSchema,
+      "issueAgent",
     );
 
     if (!completion) {
       throw new Error("Failed to parse completion");
     }
 
-    if (completion.status === "question") {
-      const qData = completion.question;
-      if (!qData) throw new Error("Status is question but data is null");
-
-      history.push({
-        role: "assistant",
-        content: qData,
-      });
-
-      const userAnswer = prompt(qData) || "leave it to you";
+    if (completion.agent.status === "question") {
+      const userAnswer = prompt(completion.agent.question) || "leave it to you";
 
       history.push({
         role: "user",
-        content: userAnswer,
+        content: `question: ${completion.agent.question} answer: ${userAnswer}`,
       });
-    } else if (completion.status === "final_answer") {
-      const result = completion.final_answer;
-      if (!result) throw new Error("Status is final_answer but data is null");
-
-      return result;
+    } else if (completion.agent.status === "final_answer") {
+      return completion.agent.item;
     } else {
       throw new Error(`Unexpected status received`);
     }

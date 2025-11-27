@@ -1,9 +1,9 @@
 import { GitService } from "../git/git_service.ts";
-import { createParsedCompletions } from "../utils/openai.ts";
+import { generateStructuredOutput } from "../utils/openai.ts";
 import { selectPrompt } from "../prompt/select.ts";
 import { Spinner } from "../prompt/spinner.ts";
-import z from "zod";
 import { editText } from "../utils/edit.ts";
+import { CommitSchema } from "../schema.ts";
 
 export async function commitAction() {
   const spinner = new Spinner("Loading...");
@@ -11,7 +11,7 @@ export async function commitAction() {
   const git = new GitService();
   const diff = await git.diff.getGitDiffStaged();
   if (diff) {
-    const result = await createParsedCompletions(
+    const result = await generateStructuredOutput(
       [
         {
           role: "system",
@@ -43,15 +43,7 @@ export async function commitAction() {
           content: diff,
         },
       ],
-      z.object({
-        commit_message: z.array(
-          z.object({
-            header: z.string(),
-            body: z.string().nullable(),
-            footer: z.string().nullable(),
-          }),
-        ),
-      }),
+      CommitSchema,
       "commit messages",
     );
     spinner.stop();
