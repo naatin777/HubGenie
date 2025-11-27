@@ -1,7 +1,7 @@
 import { LANGUAGES } from "../constants/language.ts";
 import { selectPrompt } from "../prompt/select.ts";
 
-export async function initLanguage(): Promise<string> {
+export async function selectLanguage(): Promise<string> {
   return await selectPrompt({
     message: "Enter language",
     choices: LANGUAGES.map((language) => ({
@@ -11,7 +11,7 @@ export async function initLanguage(): Promise<string> {
   });
 }
 
-export function initEditor(): string {
+export function selectEditor(): string {
   const editor = prompt("? Enter the editor › ") ?? "code --wait";
   return editor;
 }

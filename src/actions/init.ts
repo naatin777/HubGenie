@@ -1,6 +1,6 @@
 import type { ScopeFlag } from "../type.ts";
 import { saveConfig } from "../utils/config.ts";
-import { initEditor, initLanguage } from "../utils/selection.ts";
+import { selectEditor, selectLanguage } from "../utils/selection.ts";
 import { getConfig } from "../utils/config.ts";
 
 export async function initAction(
@@ -11,8 +11,8 @@ export async function initAction(
     console.error("Config already exists");
     Deno.exit(1);
   }
-  const language = await initLanguage();
-  const editor = initEditor();
+  const language = await selectLanguage();
+  const editor = selectEditor();
   await saveConfig({
     language: language,
     editor: editor,
