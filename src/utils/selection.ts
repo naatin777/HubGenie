@@ -1,14 +1,13 @@
-import { LANGUAGE } from "../constants/language.ts";
+import { LANGUAGES } from "../constants/language.ts";
 import { selectPrompt } from "../prompt/select.ts";
 
 export async function initLanguage(): Promise<string> {
   return await selectPrompt({
     message: "Enter language",
-    choices: LANGUAGE.map((language) => ({
-      name: language,
-      value: language,
+    choices: LANGUAGES.map((language) => ({
+      name: `${language.code} - ${language.label}`,
+      value: `${language.code} - ${language.label}`,
     })),
-    default: LANGUAGE[0],
   });
 }
 
