@@ -2,8 +2,8 @@ import OpenAI from "openai";
 import { zodResponseFormat } from "openai/helpers/zod";
 import { getMergedConfig } from "./config.ts";
 import type z from "zod";
-import { getApiKey, getBaseURL, getModel } from "./env.ts";
 import { IssueAgentSchema } from "../schema.ts";
+import { envService } from "./env.ts";
 
 export async function generateStructuredOutput<T extends z.ZodType>(
   message: {
@@ -13,14 +13,11 @@ export async function generateStructuredOutput<T extends z.ZodType>(
   schema: T,
   name: string,
 ): Promise<z.Infer<T> | null> {
-  const apiKey = await getApiKey();
-  const baseURL = await getBaseURL();
-  const model = await getModel();
   const config = await getMergedConfig();
 
   const openai = new OpenAI({
-    baseURL: baseURL,
-    apiKey: apiKey,
+    baseURL: envService.getBaseURL(),
+    apiKey: envService.getApiKey(),
     organization: null,
     project: null,
     webhookSecret: null,
@@ -28,7 +25,7 @@ export async function generateStructuredOutput<T extends z.ZodType>(
   });
 
   const completion = await openai.chat.completions.parse({
-    model: model,
+    model: envService.getModel(),
     messages: [
       {
         role: "system",

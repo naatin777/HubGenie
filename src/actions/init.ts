@@ -9,7 +9,7 @@ export async function initAction(
   const config = await getConfig(options);
   if (config) {
     console.error("Config already exists");
-    Deno.exit(1);
+    return;
   }
   const language = await selectLanguage();
   const editor = selectEditor();
