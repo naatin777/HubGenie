@@ -43,7 +43,7 @@ export const ISSUE_SYSTEM_MESSAGE = `
 
   # Instructions for Generation (Only when sufficient)
   1. **Proposal**: For the single topic (Issue) provided in the input, propose **10 alternative Issue options**, each with a distinct title and body.
-  2. ** Issue Complementation Priority**:
+  2. **Issue Complementation Priority**:
      - If fewer than 5 core feature Issues can be identified, complement the remaining Issue count to a total of 10 using the following priority order:
        a. Writing Unit Tests / E2E Tests
        b. Error Handling / Logging Mechanism Implementation
