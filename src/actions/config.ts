@@ -1,4 +1,8 @@
-import { selectEditor, selectLanguage } from "../utils/selection.ts";
+import {
+  inputOverview,
+  selectEditor,
+  selectLanguage,
+} from "../utils/selection.ts";
 import { getMergedConfig, saveConfig } from "../utils/config.ts";
 import type { ScopeFlag } from "../type.ts";
 
@@ -17,5 +21,14 @@ export async function configEditorAction(
   const editor = selectEditor();
   const localConfig = await getMergedConfig();
   localConfig.editor = editor;
+  await saveConfig(localConfig, options);
+}
+
+export async function configOverviewAction(
+  options: ScopeFlag,
+): Promise<void> {
+  const overview = inputOverview();
+  const localConfig = await getMergedConfig();
+  localConfig.overview = overview;
   await saveConfig(localConfig, options);
 }
