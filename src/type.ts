@@ -9,6 +9,7 @@ export type EnvKey =
 export type Config = {
   language: string;
   editor: string;
+  overview: string;
 };
 
 export type ScopeFlag = {

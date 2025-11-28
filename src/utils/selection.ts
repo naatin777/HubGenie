@@ -15,3 +15,8 @@ export function selectEditor(): string {
   const editor = prompt("? Enter the editor › ") ?? "code --wait";
   return editor;
 }
+
+export function inputOverview(): string {
+  const overview = prompt("? Enter the overview › ") ?? "";
+  return overview;
+}
