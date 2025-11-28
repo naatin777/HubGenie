@@ -1,6 +1,10 @@
 import type { ScopeFlag } from "../type.ts";
 import { saveConfig } from "../utils/config.ts";
-import { selectEditor, selectLanguage } from "../utils/selection.ts";
+import {
+  inputOverview,
+  selectEditor,
+  selectLanguage,
+} from "../utils/selection.ts";
 import { getConfig } from "../utils/config.ts";
 
 export async function initAction(
@@ -13,8 +17,10 @@ export async function initAction(
   }
   const language = await selectLanguage();
   const editor = selectEditor();
+  const overview = inputOverview();
   await saveConfig({
     language: language,
     editor: editor,
+    overview: overview,
   }, options);
 }

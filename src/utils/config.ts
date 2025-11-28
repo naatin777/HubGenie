@@ -1,6 +1,7 @@
 import { ConfigPaths } from "./path.ts";
 import { parse, stringify } from "@std/yaml";
 import type { Config, ScopeFlag } from "../type.ts";
+import { defaultConfig } from "../constants/config.ts";
 
 export async function saveConfig(
   config: Config,
@@ -32,7 +33,7 @@ export async function getMergedConfig(): Promise<Config> {
   const localConfig = await getConfig({ local: true, global: undefined }) || {};
 
   const mergedConfig = {
-    ...{ editor: "code --wait", language: "en - English" },
+    ...defaultConfig,
     ...globalConfig,
     ...projectConfig,
     ...localConfig,

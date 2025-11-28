@@ -32,6 +32,10 @@ export async function generateStructuredOutput<T extends z.ZodType>(
         content:
           `You must output *exclusively* in ${config.language}. No exceptions.`,
       },
+      {
+        role: "system",
+        content: `${config.overview}`,
+      },
       ...message,
     ],
     response_format: zodResponseFormat(
