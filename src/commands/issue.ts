@@ -12,11 +12,22 @@ import { editText } from "../utils/edit.ts";
 import { createIssue } from "../github/issue.ts";
 import { ISSUE_SYSTEM_MESSAGE } from "../constants/message.ts";
 
+interface IssueCommandOption {
+  help: boolean;
+  [key: string]: unknown;
+}
+
 export class IssueCommand extends BaseCommand {
   name: string = "issue";
   description: string = "Manage issues in the repository";
   commands: Command[] = [];
-  async execute(_: (string | number)[]): Promise<void> {
+  async execute(
+    args: (string | number)[],
+    options: IssueCommandOption,
+  ): Promise<void> {
+    console.log(args);
+    console.log(options);
+
     const issueTemplatePath = await getIssueTemplatePath();
     const issueTemplates = issueTemplatePath.markdown.map((markdownPath) =>
       parseMarkdownIssueTemplate(new TextDecoder().decode(

@@ -1,6 +1,13 @@
 import { parseArgs } from "@std/cli";
 import { BaseCommand, type Command } from "../lib/command.ts";
 
+interface ConfigCommandOption {
+  help: boolean;
+  local: boolean;
+  global: boolean;
+  [key: string]: unknown;
+}
+
 export class ConfigCommand extends BaseCommand {
   name: string = "config";
   description: string = "Configure the repository";
@@ -11,13 +18,16 @@ export class ConfigCommand extends BaseCommand {
     this.commands = subCommands;
   }
 
-  async execute(args: (string | number)[]): Promise<void> {
+  async execute(
+    args: (string | number)[],
+    options: ConfigCommandOption,
+  ): Promise<void> {
     const parsed = parseArgs(args.map((arg) => arg.toString()), {
-      boolean: ["local", "global"],
+      boolean: ["local", "global", "help"],
     });
 
     if (parsed._.length > 0) {
-      await this.executeSubCommand(parsed._);
+      await this.executeSubCommand(parsed._, options);
       return;
     }
 

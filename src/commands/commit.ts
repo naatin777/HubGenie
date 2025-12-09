@@ -11,7 +11,13 @@ export class CommitCommand extends BaseCommand {
   name: string = "commit";
   description: string = "Commit changes to the repository";
   commands: Command[] = [];
-  async execute(_: (string | number)[]): Promise<void> {
+  async execute(
+    args: (string | number)[],
+    options: Record<string, unknown>,
+  ): Promise<void> {
+    console.log(args);
+    console.log(options);
+
     const spinner = new Spinner("Loading...");
     spinner.start();
     const git = new GitService();
