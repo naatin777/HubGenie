@@ -13,8 +13,8 @@ export type Config = {
 };
 
 export type ScopeFlag = {
-  global?: true;
-  local?: true;
+  global?: boolean;
+  local?: boolean;
 };
 
 export type Issue = {

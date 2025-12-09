@@ -4,6 +4,9 @@ import { ConfigCommand } from "./commands/config.ts";
 import { InitCommand } from "./commands/init.ts";
 import { IssueCommand } from "./commands/issue.ts";
 import { RootCommand } from "./commands/root.ts";
+import { LanguageCommand } from "./commands/config/language.ts";
+import { EditorCommand } from "./commands/config/editor.ts";
+import { OverviewCommand } from "./commands/config/overview.ts";
 
 if (import.meta.main) {
   const app = new RootCommand({
@@ -12,7 +15,13 @@ if (import.meta.main) {
     version: DemmitHub.version,
     commands: [
       new InitCommand(),
-      new ConfigCommand(),
+      new ConfigCommand({
+        subCommands: [
+          new LanguageCommand(),
+          new EditorCommand(),
+          new OverviewCommand(),
+        ],
+      }),
       new IssueCommand(),
       new CommitCommand(),
     ],
