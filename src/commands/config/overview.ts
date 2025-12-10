@@ -3,27 +3,41 @@ import { BaseCommand, type Command } from "../../lib/command.ts";
 import { inputOverview } from "../../utils/selection.ts";
 import { getMergedConfig, saveConfig } from "../../utils/config.ts";
 
-interface OverviewCommandOption {
-  help: boolean;
-  local: boolean;
-  global: boolean;
-  [key: string]: unknown;
-}
+const OverviewCommandOption = {
+  help: {
+    value: false,
+    description: "abcdefg",
+    alias: "h",
+  },
+  local: {
+    value: false,
+    description: "aafff",
+    alias: undefined,
+  },
+  global: {
+    value: false,
+    description: "aafff",
+    alias: undefined,
+  },
+};
 
-export class OverviewCommand extends BaseCommand {
+type OverviewCommandOptionType = typeof OverviewCommandOption;
+
+export class OverviewCommand extends BaseCommand<OverviewCommandOptionType> {
   name: string = "overview";
   description: string = "Configure the overview";
   commands: Command[] = [];
   async execute(
     args: (string | number)[],
-    options: OverviewCommandOption,
+    context: string[],
+    options: OverviewCommandOptionType,
   ): Promise<void> {
     const parsed = parseArgs(args.map((arg) => arg.toString()), {
       boolean: ["local", "global", "help"],
     });
 
     if (parsed._.length > 0) {
-      await this.executeSubCommand(parsed._, options);
+      await this.executeSubCommand(parsed._, context, options);
       return;
     }
 
@@ -33,6 +47,9 @@ export class OverviewCommand extends BaseCommand {
     const overview = inputOverview();
     const localConfig = await getMergedConfig();
     localConfig.overview = overview;
-    await saveConfig(localConfig, options);
+    await saveConfig(localConfig, {
+      local: parsed.local,
+      global: parsed.global,
+    });
   }
 }

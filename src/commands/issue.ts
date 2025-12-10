@@ -12,18 +12,24 @@ import { editText } from "../utils/edit.ts";
 import { createIssue } from "../github/issue.ts";
 import { ISSUE_SYSTEM_MESSAGE } from "../constants/message.ts";
 
-interface IssueCommandOption {
-  help: boolean;
-  [key: string]: unknown;
-}
+const IssueCommandOption = {
+  help: {
+    value: false,
+    description: "abcdefg",
+    alias: "h",
+  },
+};
 
-export class IssueCommand extends BaseCommand {
+type IssueCommandOptionType = typeof IssueCommandOption;
+
+export class IssueCommand extends BaseCommand<IssueCommandOptionType> {
   name: string = "issue";
   description: string = "Manage issues in the repository";
   commands: Command[] = [];
   async execute(
     args: (string | number)[],
-    options: IssueCommandOption,
+    context: string[],
+    options: IssueCommandOptionType,
   ): Promise<void> {
     console.log(args);
     console.log(options);

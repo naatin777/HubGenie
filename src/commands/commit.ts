@@ -7,14 +7,26 @@ import { editText } from "../utils/edit.ts";
 import { CommitSchema } from "../schema.ts";
 import { COMMIT_SYSTEM_MESSAGE } from "../constants/message.ts";
 
-export class CommitCommand extends BaseCommand {
+const CommitCommandOption = {
+  help: {
+    value: false,
+    description: "abcdefg",
+    alias: "h",
+  },
+};
+
+type CommitCommandOptionType = typeof CommitCommandOption;
+
+export class CommitCommand extends BaseCommand<CommitCommandOptionType> {
   name: string = "commit";
   description: string = "Commit changes to the repository";
   commands: Command[] = [];
   async execute(
     args: (string | number)[],
-    options: Record<string, unknown>,
+    context: string[],
+    options: CommitCommandOptionType,
   ): Promise<void> {
+    console.log(this.name);
     console.log(args);
     console.log(options);
 

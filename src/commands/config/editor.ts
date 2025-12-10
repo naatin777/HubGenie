@@ -3,27 +3,41 @@ import { BaseCommand, type Command } from "../../lib/command.ts";
 import { selectLanguage } from "../../utils/selection.ts";
 import { getMergedConfig, saveConfig } from "../../utils/config.ts";
 
-interface EditorCommandOption {
-  help: boolean;
-  local: boolean;
-  global: boolean;
-  [key: string]: unknown;
-}
+const EditorCommandOption = {
+  help: {
+    value: false,
+    description: "abcdefg",
+    alias: "h",
+  },
+  local: {
+    value: false,
+    description: "aafff",
+    alias: undefined,
+  },
+  global: {
+    value: false,
+    description: "aafff",
+    alias: undefined,
+  },
+};
 
-export class EditorCommand extends BaseCommand {
+type EditorCommandOptionType = typeof EditorCommandOption;
+
+export class EditorCommand extends BaseCommand<EditorCommandOptionType> {
   name: string = "editor";
   description: string = "Configure the editor";
   commands: Command[] = [];
   async execute(
     args: (string | number)[],
-    options: EditorCommandOption,
+    context: string[],
+    options: EditorCommandOptionType,
   ): Promise<void> {
     const parsed = parseArgs(args.map((arg) => arg.toString()), {
       boolean: ["local", "global", "help"],
     });
 
     if (parsed._.length > 0) {
-      await this.executeSubCommand(parsed._, options);
+      await this.executeSubCommand(parsed._, context, options);
       return;
     }
 
@@ -33,6 +47,9 @@ export class EditorCommand extends BaseCommand {
     const language = await selectLanguage();
     const localConfig = await getMergedConfig();
     localConfig.language = language;
-    await saveConfig(localConfig, options);
+    await saveConfig(localConfig, {
+      local: parsed.local,
+      global: parsed.global,
+    });
   }
 }

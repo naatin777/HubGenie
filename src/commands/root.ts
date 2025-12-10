@@ -8,13 +8,22 @@ type RootCommandInit = {
   commands: Command[];
 };
 
-interface RootCommandOption {
-  help: boolean;
-  version: boolean;
-  [key: string]: unknown;
-}
+const RootCommandOption = {
+  help: {
+    value: false,
+    description: "abcdefg",
+    alias: "h",
+  },
+  version: {
+    value: false,
+    description: "hijklmn",
+    alias: "v",
+  },
+};
 
-export class RootCommand extends BaseCommand {
+type RootCommandOptionType = typeof RootCommandOption;
+
+export class RootCommand extends BaseCommand<RootCommandOptionType> {
   name: string;
   version: string;
   description: string;
@@ -30,30 +39,34 @@ export class RootCommand extends BaseCommand {
 
   async execute(
     args: (string | number)[],
-    options: RootCommandOption,
+    context: string[] = [],
+    options: RootCommandOptionType = RootCommandOption,
   ): Promise<void> {
-    if (options.version) {
+    context.push(this.name);
+
+    const parsedOptions = this.parseOptions(options);
+    const parsedAlias = this.parseAlias(options);
+
+    const parsed = parseArgs(args.map((arg) => arg.toString()), {
+      boolean: parsedOptions.booleanKeysArray,
+      string: parsedOptions.stringKeysArray,
+      collect: parsedOptions.arrayKeysArray,
+      alias: parsedAlias,
+    });
+
+    if (parsed._.length > 0 && !parsed.version) {
+      await this.executeSubCommand(parsed._, context, options);
+      return;
+    }
+
+    if ((parsed.help || parsed._.length === 0) && !parsed.version) {
+      this.help(context, options);
+      return;
+    }
+
+    if (parsed.version) {
       console.log(`version: ${this.version}`);
       return;
     }
-
-    if (options.help) {
-      console.log(`help: ${this.name}`);
-      return;
-    }
-
-    if (args.length > 0) {
-      await this.executeSubCommand(args, options);
-      return;
-    }
-  }
-
-  async run(args: string[]) {
-    const parsed = parseArgs(args, {
-      boolean: ["help", "version"],
-      alias: { h: "help", v: "version" },
-      stopEarly: true,
-    });
-    await this.execute(parsed._, parsed);
   }
 }

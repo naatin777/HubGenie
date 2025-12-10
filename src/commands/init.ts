@@ -8,20 +8,34 @@ import {
 } from "../utils/selection.ts";
 import { getConfig } from "../utils/config.ts";
 
-interface InitCommandOption {
-  help: boolean;
-  local: boolean;
-  global: boolean;
-  [key: string]: unknown;
-}
+const InitCommandOption = {
+  help: {
+    value: false,
+    description: "abcdefg",
+    alias: "h",
+  },
+  local: {
+    value: false,
+    description: "aafff",
+    alias: undefined,
+  },
+  global: {
+    value: false,
+    description: "aafff",
+    alias: undefined,
+  },
+};
 
-export class InitCommand extends BaseCommand {
+type InitCommandOptionType = typeof InitCommandOption;
+
+export class InitCommand extends BaseCommand<InitCommandOptionType> {
   name: string = "init";
   description: string = "Initialize a new project";
   commands: Command[] = [];
   async execute(
     args: (string | number)[],
-    options: InitCommandOption,
+    context: string[],
+    options: InitCommandOptionType,
   ): Promise<void> {
     console.log(args);
     console.log(options);

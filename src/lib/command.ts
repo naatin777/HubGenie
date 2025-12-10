@@ -1,25 +1,34 @@
+export type OptionType = Record<string, {
+  value: boolean | string | string[] | undefined;
+  description: string;
+  alias: string | undefined;
+}>;
+
 export interface Command {
   name: string;
   description: string;
   commands: Command[];
   execute(
     args: (string | number)[],
-    options: Record<string, unknown>,
+    context: (string | number)[],
+    options: OptionType,
   ): Promise<void>;
 }
 
-export abstract class BaseCommand implements Command {
+export abstract class BaseCommand<T extends OptionType> implements Command {
   abstract name: string;
   abstract description: string;
   abstract commands: Command[];
   abstract execute(
     args: (string | number)[],
-    options: Record<string, unknown>,
+    context: string[],
+    options: T,
   ): Promise<void>;
 
   async executeSubCommand(
     args: (string | number)[],
-    options: Record<string, unknown>,
+    context: string[],
+    options: T,
   ): Promise<void> {
     const commandMap = new Map(
       this.commands.map((command) => [command.name, command]),
@@ -27,7 +36,82 @@ export abstract class BaseCommand implements Command {
 
     if (typeof args[0] === "string") {
       const command = commandMap.get(args[0]);
-      await command?.execute(args.slice(1), options);
+      await command?.execute(args.slice(1), [this.name, ...context], options);
     }
+  }
+
+  parseOptions(options: T) {
+    type OptionKeys = keyof T & string;
+    type KeyOfType<U> = {
+      [P in OptionKeys]: T[P]["value"] extends U ? P : never;
+    }[OptionKeys];
+    type BooleanKeys = KeyOfType<boolean>;
+    type StringKeys = KeyOfType<string>;
+    type ArrayKeys = KeyOfType<string[]>;
+    type FallbackToStringArray<T extends PropertyKey> = [T] extends [never]
+      ? readonly string[]
+      : readonly T[];
+    const booleanKeysArray: BooleanKeys[] = [];
+    const stringKeysArray: StringKeys[] = [];
+    const arrayKeysArray: ArrayKeys[] = [];
+    const keys = Object.keys(options) as OptionKeys[];
+    keys.forEach((key) => {
+      const value = options[key].value;
+      if (typeof value === "boolean") {
+        booleanKeysArray.push(key as BooleanKeys);
+      } else if (typeof value === "string" && !Array.isArray(value)) {
+        stringKeysArray.push(key as StringKeys);
+      } else if (Array.isArray(value)) {
+        arrayKeysArray.push(key as ArrayKeys);
+      }
+    });
+    return {
+      booleanKeysArray: booleanKeysArray as FallbackToStringArray<
+        KeyOfType<boolean>
+      >,
+      stringKeysArray: stringKeysArray as FallbackToStringArray<
+        KeyOfType<string>
+      >,
+      arrayKeysArray: arrayKeysArray as FallbackToStringArray<
+        KeyOfType<string[]>
+      >,
+    };
+  }
+
+  parseAlias(options: T) {
+    type AliasToKeyType = {
+      [P in keyof T as T[P]["alias"] extends string ? T[P]["alias"] : never]: P;
+    };
+    const keys = Object.keys(options) as (keyof T)[];
+    const result = keys.reduce((acc, key) => {
+      const alias = options[key].alias;
+      if (typeof alias === "string") {
+        acc[alias] = key;
+      }
+      return acc;
+    }, {} as Record<string, keyof T>);
+    return result as AliasToKeyType;
+  }
+
+  help(context: string[], options: T) {
+    console.log(
+      `Usage: ${context.join(" ")} ${
+        this.commands.length === 0 ? "" : "[command]"
+      } [options]`,
+    );
+    console.log(
+      `Commands: \n${
+        this.commands.map((command) =>
+          `\t${command.name}:\t${command.description}`
+        ).join("\n")
+      }`,
+    );
+    console.log(
+      `Options: \n${
+        Object.keys(options).map((option) =>
+          `\t--${option}:\t${options[option].description}`
+        ).join("\n")
+      }`,
+    );
   }
 }

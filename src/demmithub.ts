@@ -27,5 +27,5 @@ if (import.meta.main) {
     ],
   });
 
-  app.run(Deno.args);
+  await app.execute(Deno.args);
 }
