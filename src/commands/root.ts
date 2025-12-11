@@ -1,5 +1,5 @@
 import { parseArgs } from "@std/cli";
-import { BaseCommand, type Command } from "../lib/command.ts";
+import { BaseCommand, HelpOption, VersionOption, type Command } from "../lib/command.ts";
 
 type RootCommandInit = {
   name: string;
@@ -8,18 +8,8 @@ type RootCommandInit = {
   commands: Command[];
 };
 
-const RootCommandOption = {
-  help: {
-    value: false,
-    description: "abcdefg",
-    alias: "h",
-  },
-  version: {
-    value: false,
-    description: "hijklmn",
-    alias: "v",
-  },
-};
+
+const RootCommandOption = {...HelpOption, ...VersionOption};
 
 type RootCommandOptionType = typeof RootCommandOption;
 
@@ -50,7 +40,7 @@ export class RootCommand extends BaseCommand<RootCommandOptionType> {
     const parsed = parseArgs(args.map((arg) => arg.toString()), {
       boolean: parsedOptions.booleanKeysArray,
       string: parsedOptions.stringKeysArray,
-      collect: parsedOptions.arrayKeysArray,
+      // collect: parsedOptions.arrayKeysArray,
       alias: parsedAlias,
     });
 

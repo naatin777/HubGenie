@@ -1,4 +1,4 @@
-import { BaseCommand, type Command } from "../lib/command.ts";
+import { BaseCommand, HelpOption, type Command } from "../lib/command.ts";
 import { issueAgent } from "../utils/openai.ts";
 import { selectPrompt } from "../prompt/select.ts";
 import { getIssueTemplatePath } from "../issue/path.ts";
@@ -13,13 +13,7 @@ import { createIssue } from "../github/issue.ts";
 import { ISSUE_SYSTEM_MESSAGE } from "../constants/message.ts";
 import { parseArgs } from "@std/cli/parse-args";
 
-const IssueCommandOption = {
-  help: {
-    value: false,
-    description: "abcdefg",
-    alias: "h",
-  },
-};
+const IssueCommandOption = {...HelpOption}
 
 type IssueCommandOptionType = typeof IssueCommandOption;
 
@@ -38,7 +32,7 @@ export class IssueCommand extends BaseCommand<IssueCommandOptionType> {
     const parsed = parseArgs(args.map((arg) => arg.toString()), {
       boolean: parsedOptions.booleanKeysArray,
       string: parsedOptions.stringKeysArray,
-      collect: parsedOptions.arrayKeysArray,
+      // collect: parsedOptions.arrayKeysArray,
       alias: parsedAlias,
     });
 

@@ -1,5 +1,5 @@
 import { parseArgs } from "@std/cli";
-import { BaseCommand, type Command } from "../lib/command.ts";
+import { BaseCommand, HelpOption, LocalOption, GlobalOption, type Command } from "../lib/command.ts";
 import { saveConfig } from "../utils/config.ts";
 import {
   inputOverview,
@@ -9,23 +9,7 @@ import {
 import { getConfig } from "../utils/config.ts";
 import type { ScopeFlag } from "../type.ts";
 
-const InitCommandOption = {
-  help: {
-    value: false,
-    description: "abcdefg",
-    alias: "h",
-  },
-  local: {
-    value: false,
-    description: "aafff",
-    alias: undefined,
-  },
-  global: {
-    value: false,
-    description: "aafff",
-    alias: undefined,
-  },
-};
+const InitCommandOption = {...HelpOption, ...LocalOption, ...GlobalOption };
 
 type InitCommandOptionType = typeof InitCommandOption;
 
