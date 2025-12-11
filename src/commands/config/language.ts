@@ -33,6 +33,11 @@ export class LanguageCommand extends BaseCommand<LanguageCommandOptionType> {
       return;
     }
 
+    if (parsed.help) {
+      this.help(context, options);
+      return;
+    }
+
     await this.action(parsed);
   }
 

@@ -33,6 +33,11 @@ export class OverviewCommand extends BaseCommand<OverviewCommandOptionType> {
       return;
     }
 
+    if (parsed.help) {
+      this.help(context, options);
+      return;
+    }
+
     await this.action(parsed);
   }
 
