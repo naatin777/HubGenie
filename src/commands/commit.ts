@@ -29,6 +29,7 @@ export class CommitCommand extends BaseCommand<CommitCommandOptionType> {
       string: parsedOptions.stringKeysArray,
       // collect: parsedOptions.arrayKeysArray,
       alias: parsedAlias,
+      stopEarly: true,
     });
 
     if (parsed._.length > 0) {

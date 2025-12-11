@@ -34,6 +34,7 @@ export class IssueCommand extends BaseCommand<IssueCommandOptionType> {
       string: parsedOptions.stringKeysArray,
       // collect: parsedOptions.arrayKeysArray,
       alias: parsedAlias,
+      stopEarly: true,
     });
 
     if (parsed.help) {

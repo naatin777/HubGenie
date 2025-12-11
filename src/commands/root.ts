@@ -42,6 +42,7 @@ export class RootCommand extends BaseCommand<RootCommandOptionType> {
       string: parsedOptions.stringKeysArray,
       // collect: parsedOptions.arrayKeysArray,
       alias: parsedAlias,
+      stopEarly: true,
     });
 
     if (parsed._.length > 0 && !parsed.version) {

@@ -25,6 +25,7 @@ export class LanguageCommand extends BaseCommand<LanguageCommandOptionType> {
       string: parsedOptions.stringKeysArray,
       // collect: parsedOptions.arrayKeysArray,
       alias: parsedAlias,
+      stopEarly: true,
     });
 
     if (parsed._.length > 0) {

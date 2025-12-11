@@ -30,6 +30,7 @@ export class InitCommand extends BaseCommand<InitCommandOptionType> {
       string: parsedOptions.stringKeysArray,
       // collect: parsedOptions.arrayKeysArray,
       alias: parsedAlias,
+      stopEarly: true,
     });
 
     if (parsed.help) {
