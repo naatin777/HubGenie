@@ -26,7 +26,6 @@ export class CommitCommand extends BaseCommand<CommitCommandOptionType> {
     context: string[],
     options: CommitCommandOptionType,
   ): Promise<void> {
-
     const spinner = new Spinner("Loading...");
     spinner.start();
     const git = new GitService();
