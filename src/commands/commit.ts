@@ -6,6 +6,7 @@ import { Spinner } from "../prompt/spinner.ts";
 import { editText } from "../utils/edit.ts";
 import { CommitSchema } from "../schema.ts";
 import { COMMIT_SYSTEM_MESSAGE } from "../constants/message.ts";
+import { parseArgs } from "@std/cli";
 
 const CommitCommandOption = {
   help: {
@@ -26,6 +27,30 @@ export class CommitCommand extends BaseCommand<CommitCommandOptionType> {
     context: string[],
     options: CommitCommandOptionType,
   ): Promise<void> {
+    const parsedOptions = this.parseOptions(options);
+    const parsedAlias = this.parseAlias(options);
+
+    const parsed = parseArgs(args.map((arg) => arg.toString()), {
+      boolean: parsedOptions.booleanKeysArray,
+      string: parsedOptions.stringKeysArray,
+      // collect: parsedOptions.arrayKeysArray,
+      alias: parsedAlias,
+    });
+
+    if (parsed._.length > 0) {
+      await this.executeSubCommand(parsed._, context, options);
+      return;
+    }
+
+    if (parsed.help) {
+      this.help(context, options);
+      return;
+    }
+
+    await this.action();
+  }
+
+  async action() {
     const spinner = new Spinner("Loading...");
     spinner.start();
     const git = new GitService();

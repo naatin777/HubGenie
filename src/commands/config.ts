@@ -36,8 +36,14 @@ export class ConfigCommand extends BaseCommand<ConfigCommandOptionType> {
     context: string[],
     options: ConfigCommandOptionType,
   ): Promise<void> {
+    const parsedOptions = this.parseOptions(options);
+    const parsedAlias = this.parseAlias(options);
+
     const parsed = parseArgs(args.map((arg) => arg.toString()), {
-      boolean: ["local", "global", "help"],
+      boolean: parsedOptions.booleanKeysArray,
+      string: parsedOptions.stringKeysArray,
+      // collect: parsedOptions.arrayKeysArray,
+      alias: parsedAlias,
     });
 
     if (parsed._.length > 0) {
@@ -45,7 +51,6 @@ export class ConfigCommand extends BaseCommand<ConfigCommandOptionType> {
       return;
     }
 
-    console.log(`${this.name}`);
-    console.log(parsed);
+    this.help(context, options);
   }
 }

@@ -2,6 +2,7 @@ import { parseArgs } from "@std/cli";
 import { BaseCommand, type Command } from "../../lib/command.ts";
 import { inputOverview } from "../../utils/selection.ts";
 import { getMergedConfig, saveConfig } from "../../utils/config.ts";
+import type { ScopeFlag } from "../../type.ts";
 
 const OverviewCommandOption = {
   help: {
@@ -32,8 +33,14 @@ export class OverviewCommand extends BaseCommand<OverviewCommandOptionType> {
     context: string[],
     options: OverviewCommandOptionType,
   ): Promise<void> {
+    const parsedOptions = this.parseOptions(options);
+    const parsedAlias = this.parseAlias(options);
+
     const parsed = parseArgs(args.map((arg) => arg.toString()), {
-      boolean: ["local", "global", "help"],
+      boolean: parsedOptions.booleanKeysArray,
+      string: parsedOptions.stringKeysArray,
+      // collect: parsedOptions.arrayKeysArray,
+      alias: parsedAlias,
     });
 
     if (parsed._.length > 0) {
@@ -41,15 +48,13 @@ export class OverviewCommand extends BaseCommand<OverviewCommandOptionType> {
       return;
     }
 
-    console.log(`${this.name}`);
-    console.log(args);
+    await this.action(parsed);
+  }
 
+  async action(scope: ScopeFlag) {
     const overview = inputOverview();
     const localConfig = await getMergedConfig();
     localConfig.overview = overview;
-    await saveConfig(localConfig, {
-      local: parsed.local,
-      global: parsed.global,
-    });
+    await saveConfig(localConfig, scope);
   }
 }

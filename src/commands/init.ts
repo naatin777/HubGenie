@@ -7,6 +7,7 @@ import {
   selectLanguage,
 } from "../utils/selection.ts";
 import { getConfig } from "../utils/config.ts";
+import type { ScopeFlag } from "../type.ts";
 
 const InitCommandOption = {
   help: {
@@ -37,14 +38,26 @@ export class InitCommand extends BaseCommand<InitCommandOptionType> {
     context: string[],
     options: InitCommandOptionType,
   ): Promise<void> {
-    console.log(args);
-    console.log(options);
+    const parsedOptions = this.parseOptions(options);
+    const parsedAlias = this.parseAlias(options);
 
     const parsed = parseArgs(args.map((arg) => arg.toString()), {
-      boolean: ["local", "global", "help"],
+      boolean: parsedOptions.booleanKeysArray,
+      string: parsedOptions.stringKeysArray,
+      // collect: parsedOptions.arrayKeysArray,
+      alias: parsedAlias,
     });
 
-    const config = await getConfig(parsed);
+    if (parsed.help) {
+      this.help(context, options);
+      return;
+    }
+
+    await this.action(parsed);
+  }
+
+  async action(scope: ScopeFlag) {
+    const config = await getConfig(scope);
     if (config) {
       console.error("Config already exists");
       return;
@@ -56,6 +69,6 @@ export class InitCommand extends BaseCommand<InitCommandOptionType> {
       language: language,
       editor: editor,
       overview: overview,
-    }, parsed);
+    }, scope);
   }
 }

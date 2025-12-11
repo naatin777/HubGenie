@@ -11,6 +11,7 @@ import { carouselPrompt } from "../prompt/carousel.ts";
 import { editText } from "../utils/edit.ts";
 import { createIssue } from "../github/issue.ts";
 import { ISSUE_SYSTEM_MESSAGE } from "../constants/message.ts";
+import { parseArgs } from "@std/cli/parse-args";
 
 const IssueCommandOption = {
   help: {
@@ -31,9 +32,25 @@ export class IssueCommand extends BaseCommand<IssueCommandOptionType> {
     context: string[],
     options: IssueCommandOptionType,
   ): Promise<void> {
-    console.log(args);
-    console.log(options);
+    const parsedOptions = this.parseOptions(options);
+    const parsedAlias = this.parseAlias(options);
 
+    const parsed = parseArgs(args.map((arg) => arg.toString()), {
+      boolean: parsedOptions.booleanKeysArray,
+      string: parsedOptions.stringKeysArray,
+      collect: parsedOptions.arrayKeysArray,
+      alias: parsedAlias,
+    });
+
+    if (parsed.help) {
+      this.help(context, options);
+      return;
+    }
+
+    await this.action();
+  }
+
+  async action() {
     const issueTemplatePath = await getIssueTemplatePath();
     const issueTemplates = issueTemplatePath.markdown.map((markdownPath) =>
       parseMarkdownIssueTemplate(new TextDecoder().decode(
