@@ -26,9 +26,6 @@ export class CommitCommand extends BaseCommand<CommitCommandOptionType> {
     context: string[],
     options: CommitCommandOptionType,
   ): Promise<void> {
-    console.log(this.name);
-    console.log(args);
-    console.log(options);
 
     const spinner = new Spinner("Loading...");
     spinner.start();

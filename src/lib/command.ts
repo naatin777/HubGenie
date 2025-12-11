@@ -1,3 +1,5 @@
+import { bold, blue, green, yellow } from "@std/fmt/colors";
+
 export type OptionType = Record<string, {
   value: boolean | string | string[] | undefined;
   description: string;
@@ -92,26 +94,75 @@ export abstract class BaseCommand<T extends OptionType> implements Command {
     }, {} as Record<string, keyof T>);
     return result as AliasToKeyType;
   }
+  help(context: string[], options: T): void {
+    // ----------------------------------------------------
+    // 1. Usage セクション
+    // ----------------------------------------------------
+    console.log(
+      bold(blue("Usage:")) +
+      ` ${context.join(" ")} ${this.commands.length === 0 ? "" : yellow("[command]")
+      } ${yellow("[options]")}`,
+    );
 
-  help(context: string[], options: T) {
+    // ----------------------------------------------------
+    // 2. Commands セクション
+    // ------------
+    const rawCommandNames = this.commands.map(cmd => cmd.name);
+    const maxRawCommandNameLength = rawCommandNames.reduce((max, name) => Math.max(max, name.length), 0);
+    const commandPaddingLength = maxRawCommandNameLength + 4; // 固定の追加スペース
+
+    console.log();
+    console.log(bold(blue("Commands:")));
     console.log(
-      `Usage: ${context.join(" ")} ${
-        this.commands.length === 0 ? "" : "[command]"
-      } [options]`,
+      this.commands.map((command) => {
+        // 修正点: 色付け前にpadEndで必要なパディング量を計算
+        const paddedName = command.name.padEnd(commandPaddingLength);
+
+        // 修正点: パディング後に色付けを適用
+        return `\t${green(paddedName)} ${command.description}`;
+      }).join("\n"),
     );
+
+    // ----------------------------------------------------
+    // 3. Options セクション
+    // ----------------------------------------------------
+
+    let maxRawOptionLineLength = 0;
+    const optionLines = Object.keys(options).map(key => {
+      const option = options[key];
+
+      // 修正点: 色付け前の生文字列の長さを計算
+      const rawAliasPart = option.alias ? `, -${option.alias}` : '';
+      const rawLine = `\t--${key}${rawAliasPart}`;
+
+      maxRawOptionLineLength = Math.max(maxRawOptionLineLength, rawLine.length);
+
+      // 表示用の色付けされた文字列を生成
+      const aliasPart = option.alias ? `, ${green(`-${option.alias}`)}` : '';
+      const coloredLine = `\t${green(`--${key}`)}${aliasPart}`;
+
+      return { rawLine, coloredLine, description: option.description };
+    });
+
+    const descriptionStart = maxRawOptionLineLength + 4; // 最長行 + パディング
+
+    console.log();
+    console.log(bold(blue("Options:")));
     console.log(
-      `Commands: \n${
-        this.commands.map((command) =>
-          `\t${command.name}:\t${command.description}`
-        ).join("\n")
-      }`,
+      optionLines.map(item => {
+        // 修正点: 色付けされた文字列に、計算されたパディング量でパディングを追加
+        // パディングの量は rawLine の長さで計算されているため、色のエスケープコードを補正
+
+        // パディング差分を計算: 目標位置から色付けされた文字列の見た目の長さを引く
+        const currentLength = item.rawLine.length;
+        const paddingNeeded = descriptionStart - currentLength;
+        const padding = ' '.repeat(paddingNeeded);
+
+        return `${item.coloredLine}${padding}${item.description}`;
+      }).join("\n"),
     );
-    console.log(
-      `Options: \n${
-        Object.keys(options).map((option) =>
-          `\t--${option}:\t${options[option].description}`
-        ).join("\n")
-      }`,
-    );
+
+
   }
+
 }
