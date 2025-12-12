@@ -70,7 +70,7 @@ export abstract class BaseCommand<T extends OptionType> implements Command {
 
     if (typeof args[0] === "string") {
       const command = commandMap.get(args[0]);
-      await command?.execute(args.slice(1), [this.name, ...context], options);
+      await command?.execute(args.slice(1), [...context, args[0]], options);
     }
   }
 
@@ -128,54 +128,68 @@ export abstract class BaseCommand<T extends OptionType> implements Command {
   }
 
   help(context: string[], options: T): void {
+    if (this.description) {
+      console.log(this.description);
+      console.log();
+    }
+
+    const hasCommands = this.commands.length > 0;
+    const optionKeys = Object.keys(options);
+    const hasOptions = optionKeys.length > 0;
+
     console.log(
       bold(blue("Usage:")) +
-        ` ${context.join(" ")} ${
-          this.commands.length === 0 ? "" : yellow("[command]")
-        } ${yellow("[options]")}`,
+      ` ${context.join(" ")}` +
+      (hasCommands ? ` ${yellow("[command]")}` : "") +
+      (hasOptions ? ` ${yellow("[options]")}` : ""),
     );
 
-    const rawCommandNames = this.commands.map((cmd) => cmd.name);
-    const maxRawCommandNameLength = rawCommandNames.reduce(
-      (max, name) => Math.max(max, name.length),
-      0,
-    );
-    const commandPaddingLength = maxRawCommandNameLength + 4;
+    if (hasCommands) {
+      const rawCommandNames = this.commands.map((cmd) => cmd.name);
+      const maxRawCommandNameLength = rawCommandNames.reduce(
+        (max, name) => Math.max(max, name.length),
+        0,
+      );
+      const commandPaddingLength = maxRawCommandNameLength + 4;
 
-    console.log();
-    console.log(bold(blue("Commands:")));
-    console.log(
-      this.commands.map((command) => {
-        const paddedName = command.name.padEnd(commandPaddingLength);
-        return `\t${green(paddedName)} ${command.description}`;
-      }).join("\n"),
-    );
-    let maxRawOptionLineLength = 0;
-    const optionLines = Object.keys(options).map((key) => {
-      const option = options[key];
+      console.log();
+      console.log(bold(blue("Commands:")));
+      console.log(
+        this.commands.map((command) => {
+          const paddedName = command.name.padEnd(commandPaddingLength);
+          return `\t${green(paddedName)} ${command.description}`;
+        }).join("\n"),
+      );
+    }
 
-      const rawAliasPart = option.alias ? `, -${option.alias}` : "";
-      const rawLine = `\t--${key}${rawAliasPart}`;
+    if (hasOptions) {
+      let maxRawOptionLineLength = 0;
+      const optionLines = optionKeys.map((key) => {
+        const option = options[key];
 
-      maxRawOptionLineLength = Math.max(maxRawOptionLineLength, rawLine.length);
+        const rawAliasPart = option.alias ? `, -${option.alias}` : "";
+        const rawLine = `\t--${key}${rawAliasPart}`;
 
-      const aliasPart = option.alias ? `, ${green(`-${option.alias}`)}` : "";
-      const coloredLine = `\t${green(`--${key}`)}${aliasPart}`;
+        maxRawOptionLineLength = Math.max(maxRawOptionLineLength, rawLine.length);
 
-      return { rawLine, coloredLine, description: option.description };
-    });
+        const aliasPart = option.alias ? `, ${green(`-${option.alias}`)}` : "";
+        const coloredLine = `\t${green(`--${key}`)}${aliasPart}`;
 
-    const descriptionStart = maxRawOptionLineLength + 4;
+        return { rawLine, coloredLine, description: option.description };
+      });
 
-    console.log();
-    console.log(bold(blue("Options:")));
-    console.log(
-      optionLines.map((item) => {
-        const currentLength = item.rawLine.length;
-        const paddingNeeded = descriptionStart - currentLength;
-        const padding = " ".repeat(paddingNeeded);
-        return `${item.coloredLine}${padding}${item.description}`;
-      }).join("\n"),
-    );
+      const descriptionStart = maxRawOptionLineLength + 4;
+
+      console.log();
+      console.log(bold(blue("Options:")));
+      console.log(
+        optionLines.map((item) => {
+          const currentLength = item.rawLine.length;
+          const paddingNeeded = descriptionStart - currentLength;
+          const padding = " ".repeat(paddingNeeded);
+          return `${item.coloredLine}${padding}${item.description}`;
+        }).join("\n"),
+      );
+    }
   }
 }
