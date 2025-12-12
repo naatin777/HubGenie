@@ -17,6 +17,7 @@
     "@std/fs": "jsr:@std/fs@^1.0.19",
     "@std/path": "jsr:@std/path@^1.1.2",
     "@std/yaml": "jsr:@std/yaml@^1.0.10",
+    "ink": "npm:ink@^6.5.1",
     "octokit": "npm:octokit@^5.0.5",
     "openai": "npm:openai@^6.9.0",
     "react": "npm:react@^19.2.3",
