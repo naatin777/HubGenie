@@ -25,7 +25,7 @@ export class InitCommand extends BaseCommand<InitCommandOptionType> {
   commands: Command[] = [];
   async execute(
     args: (string | number)[],
-    context: string[],
+    context: (string | number)[],
     options: InitCommandOptionType,
   ): Promise<void> {
     const parsedOptions = this.parseOptions(options);

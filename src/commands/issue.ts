@@ -23,7 +23,7 @@ export class IssueCommand extends BaseCommand<IssueCommandOptionType> {
   commands: Command[] = [];
   async execute(
     args: (string | number)[],
-    context: string[],
+    context: (string | number)[],
     options: IssueCommandOptionType,
   ): Promise<void> {
     const parsedOptions = this.parseOptions(options);

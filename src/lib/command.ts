@@ -55,13 +55,13 @@ export abstract class BaseCommand<T extends OptionType> implements Command {
   abstract commands: Command[];
   abstract execute(
     args: (string | number)[],
-    context: string[],
+    context: (string | number)[],
     options: T,
   ): Promise<void>;
 
   async executeSubCommand(
     args: (string | number)[],
-    context: string[],
+    context: (string | number)[],
     options: T,
   ): Promise<void> {
     const commandMap = new Map(
@@ -132,7 +132,7 @@ export abstract class BaseCommand<T extends OptionType> implements Command {
     return result as AliasToKeyType;
   }
 
-  help(context: string[], options: T): void {
+  help(context: (string | number)[], options: T): void {
     const hasCommands = this.commands.length > 0;
     const optionKeys = Object.keys(options);
     const hasOptions = optionKeys.length > 0;
