@@ -70,7 +70,7 @@ export abstract class BaseCommand<T extends OptionType> implements Command {
 
     if (typeof args[0] === "string") {
       const command = commandMap.get(args[0]);
-      if(command) {
+      if (command) {
         await command.execute(args.slice(1), [...context, args[0]], options);
       } else {
         console.error(`Command "${args[0]}" not found.\n`);

@@ -6,7 +6,7 @@ import {
   HelpOption,
   LocalOption,
 } from "../../lib/command.ts";
-import { selectLanguage } from "../../utils/selection.ts";
+import { selectEditor } from "../../utils/selection.ts";
 import { getMergedConfig, saveConfig } from "../../utils/config.ts";
 import type { ScopeFlag } from "../../type.ts";
 
@@ -48,9 +48,9 @@ export class EditorCommand extends BaseCommand<EditorCommandOptionType> {
   }
 
   async action(scope: ScopeFlag) {
-    const language = await selectLanguage();
+    const editor = await selectEditor();
     const localConfig = await getMergedConfig();
-    localConfig.language = language;
+    localConfig.editor = editor;
     await saveConfig(localConfig, scope);
   }
 }
