@@ -542,6 +542,7 @@
       "jsr:@std/path@^1.1.2",
       "jsr:@std/yaml@^1.0.10",
       "npm:@octokit/plugin-rest-endpoint-methods@17",
+      "npm:@types/react@*",
       "npm:ink@^6.5.1",
       "npm:octokit@^5.0.5",
       "npm:openai@^6.9.0",
