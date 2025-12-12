@@ -139,9 +139,9 @@ export abstract class BaseCommand<T extends OptionType> implements Command {
 
     console.log(
       bold(blue("Usage:")) +
-      ` ${context.join(" ")}` +
-      (hasCommands ? ` ${yellow("[command]")}` : "") +
-      (hasOptions ? ` ${yellow("[options]")}` : ""),
+        ` ${context.join(" ")}` +
+        (hasCommands ? ` ${yellow("[command]")}` : "") +
+        (hasOptions ? ` ${yellow("[options]")}` : ""),
     );
 
     if (hasCommands) {
@@ -170,7 +170,10 @@ export abstract class BaseCommand<T extends OptionType> implements Command {
         const rawAliasPart = option.alias ? `, -${option.alias}` : "";
         const rawLine = `\t--${key}${rawAliasPart}`;
 
-        maxRawOptionLineLength = Math.max(maxRawOptionLineLength, rawLine.length);
+        maxRawOptionLineLength = Math.max(
+          maxRawOptionLineLength,
+          rawLine.length,
+        );
 
         const aliasPart = option.alias ? `, ${green(`-${option.alias}`)}` : "";
         const coloredLine = `\t${green(`--${key}`)}${aliasPart}`;
