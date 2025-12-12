@@ -20,6 +20,7 @@
     "npm:@types/node@*": "24.2.0",
     "npm:octokit@^5.0.5": "5.0.5_@octokit+core@7.0.6",
     "npm:openai@^6.9.0": "6.9.0_zod@4.1.12",
+    "npm:react@^19.2.3": "19.2.3",
     "npm:zod@^4.1.12": "4.1.12"
   },
   "jsr": {
@@ -314,6 +315,9 @@
       ],
       "bin": true
     },
+    "react@19.2.3": {
+      "integrity": "sha512-Ku/hhYbVjOQnXDZFv2+RibmLFGwFdeeKHFcOTlrt7xplBnya5OGn/hIRDsqDiSUcfORsDC7MPxwork8jBwsIWA=="
+    },
     "toad-cache@3.7.0": {
       "integrity": "sha512-/m8M+2BJUpoJdgAHoG+baCwBT+tf2VraSfkBgl0Y00qIWt41DJ8R5B8nsEw0I58YwF5IZH6z24/2TobDKnqSWw=="
     },
@@ -343,6 +347,7 @@
       "npm:@octokit/plugin-rest-endpoint-methods@17",
       "npm:octokit@^5.0.5",
       "npm:openai@^6.9.0",
+      "npm:react@^19.2.3",
       "npm:zod@^4.1.12"
     ]
   }

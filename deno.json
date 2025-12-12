@@ -19,6 +19,7 @@
     "@std/yaml": "jsr:@std/yaml@^1.0.10",
     "octokit": "npm:octokit@^5.0.5",
     "openai": "npm:openai@^6.9.0",
+    "react": "npm:react@^19.2.3",
     "zod": "npm:zod@^4.1.12"
   }
 }
