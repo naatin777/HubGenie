@@ -1,24 +1,30 @@
 import { load } from "@std/dotenv";
 import type { EnvKey } from "../type.ts";
 
-await load({ export: true });
+let envLoadingPromise: Promise<void> | undefined = undefined;
 
-function getEnv(key: EnvKey): string {
+async function getEnv(key: EnvKey): Promise<string> {
+  if (!envLoadingPromise) {
+    envLoadingPromise = (async () => {
+      await load({ export: true });
+    })();
+  }
+  await envLoadingPromise;
   const value = Deno.env.get(key);
   if (!value) throw new Error(`${key} is not set`);
   return value;
 }
 
 export interface EnvService {
-  getApiKey(): string;
-  getBaseURL(): string;
-  getModel(): string;
-  getGitHubToken(): string;
+  getApiKey(): Promise<string>;
+  getBaseURL(): Promise<string>;
+  getModel(): Promise<string>;
+  getGitHubToken(): Promise<string>;
 }
 
 export const envService: EnvService = {
-  getApiKey: () => getEnv("DEMMITHUB_API_KEY"),
-  getBaseURL: () => getEnv("DEMMITHUB_BASE_URL"),
-  getModel: () => getEnv("DEMMITHUB_MODEL"),
-  getGitHubToken: () => getEnv("DEMMITHUB_GITHUB_TOKEN"),
+  getApiKey: async () => await getEnv("DEMMITHUB_API_KEY"),
+  getBaseURL: async () => await getEnv("DEMMITHUB_BASE_URL"),
+  getModel: async () => await getEnv("DEMMITHUB_MODEL"),
+  getGitHubToken: async () => await getEnv("DEMMITHUB_GITHUB_TOKEN"),
 };

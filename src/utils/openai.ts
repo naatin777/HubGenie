@@ -16,8 +16,8 @@ export async function generateStructuredOutput<T extends z.ZodType>(
   const config = await getMergedConfig();
 
   const openai = new OpenAI({
-    baseURL: envService.getBaseURL(),
-    apiKey: envService.getApiKey(),
+    baseURL: await envService.getBaseURL(),
+    apiKey: await envService.getApiKey(),
     organization: null,
     project: null,
     webhookSecret: null,
@@ -25,7 +25,7 @@ export async function generateStructuredOutput<T extends z.ZodType>(
   });
 
   const completion = await openai.chat.completions.parse({
-    model: envService.getModel(),
+    model: await envService.getModel(),
     messages: [
       {
         role: "system",
