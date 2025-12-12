@@ -22,5 +22,10 @@
     "openai": "npm:openai@^6.9.0",
     "react": "npm:react@^19.2.3",
     "zod": "npm:zod@^4.1.12"
+  },
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "types": ["npm:@types/react"]
   }
 }
