@@ -1,4 +1,4 @@
-import { BaseCommand, HelpOption, type Command } from "../lib/command.ts";
+import { BaseCommand, type Command, HelpOption } from "../lib/command.ts";
 import { GitService } from "../git/git_service.ts";
 import { generateStructuredOutput } from "../utils/openai.ts";
 import { selectPrompt } from "../prompt/select.ts";
@@ -8,7 +8,7 @@ import { CommitSchema } from "../schema.ts";
 import { COMMIT_SYSTEM_MESSAGE } from "../constants/message.ts";
 import { parseArgs } from "@std/cli";
 
-const CommitCommandOption = {...HelpOption};
+const CommitCommandOption = { ...HelpOption };
 
 type CommitCommandOptionType = typeof CommitCommandOption;
 

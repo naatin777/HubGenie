@@ -1,10 +1,20 @@
 import { parseArgs } from "@std/cli";
-import { BaseCommand, HelpOption, LocalOption, GlobalOption, type Command } from "../../lib/command.ts";
+import {
+  BaseCommand,
+  type Command,
+  GlobalOption,
+  HelpOption,
+  LocalOption,
+} from "../../lib/command.ts";
 import { inputOverview } from "../../utils/selection.ts";
 import { getMergedConfig, saveConfig } from "../../utils/config.ts";
 import type { ScopeFlag } from "../../type.ts";
 
-const OverviewCommandOption = {...HelpOption, ...LocalOption, ...GlobalOption};
+const OverviewCommandOption = {
+  ...HelpOption,
+  ...LocalOption,
+  ...GlobalOption,
+};
 
 type OverviewCommandOptionType = typeof OverviewCommandOption;
 

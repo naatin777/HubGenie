@@ -1,4 +1,4 @@
-import { BaseCommand, HelpOption, type Command } from "../lib/command.ts";
+import { BaseCommand, type Command, HelpOption } from "../lib/command.ts";
 import { issueAgent } from "../utils/openai.ts";
 import { selectPrompt } from "../prompt/select.ts";
 import { getIssueTemplatePath } from "../issue/path.ts";
@@ -13,7 +13,7 @@ import { createIssue } from "../github/issue.ts";
 import { ISSUE_SYSTEM_MESSAGE } from "../constants/message.ts";
 import { parseArgs } from "@std/cli/parse-args";
 
-const IssueCommandOption = {...HelpOption}
+const IssueCommandOption = { ...HelpOption };
 
 type IssueCommandOptionType = typeof IssueCommandOption;
 

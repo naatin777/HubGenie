@@ -1,7 +1,13 @@
 import { parseArgs } from "@std/cli";
-import { BaseCommand, HelpOption, LocalOption, GlobalOption, type Command } from "../lib/command.ts";
+import {
+  BaseCommand,
+  type Command,
+  GlobalOption,
+  HelpOption,
+  LocalOption,
+} from "../lib/command.ts";
 
-const ConfigCommandOption = {...HelpOption, ...LocalOption, ...GlobalOption};
+const ConfigCommandOption = { ...HelpOption, ...LocalOption, ...GlobalOption };
 
 type ConfigCommandOptionType = typeof ConfigCommandOption;
 

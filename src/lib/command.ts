@@ -38,16 +38,16 @@ export const GlobalOption = {
     value: false,
     description: "Set global settings.",
     alias: undefined,
-  }
-}
+  },
+};
 
 export const LocalOption = {
   local: {
     value: false,
     description: "Set local settings.",
     alias: undefined,
-  }
-}
+  },
+};
 
 export abstract class BaseCommand<T extends OptionType> implements Command {
   abstract name: string;
