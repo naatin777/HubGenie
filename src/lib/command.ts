@@ -1,4 +1,4 @@
-import { blue, bold, green, yellow } from "@std/fmt/colors";
+import { showHelp } from "../ui/help.tsx";
 
 export type OptionType = Record<string, {
   value: boolean | string | string[] | undefined;
@@ -132,67 +132,10 @@ export abstract class BaseCommand<T extends OptionType> implements Command {
     return result as AliasToKeyType;
   }
 
-  help(context: (string | number)[], options: T): void {
-    const hasCommands = this.commands.length > 0;
-    const optionKeys = Object.keys(options);
-    const hasOptions = optionKeys.length > 0;
-
-    console.log(
-      bold(blue("Usage:")) +
-        ` ${context.join(" ")}` +
-        (hasCommands ? ` ${yellow("[command]")}` : "") +
-        (hasOptions ? ` ${yellow("[options]")}` : ""),
-    );
-
-    if (hasCommands) {
-      const rawCommandNames = this.commands.map((cmd) => cmd.name);
-      const maxRawCommandNameLength = rawCommandNames.reduce(
-        (max, name) => Math.max(max, name.length),
-        0,
-      );
-      const commandPaddingLength = maxRawCommandNameLength + 4;
-
-      console.log();
-      console.log(bold(blue("Commands:")));
-      console.log(
-        this.commands.map((command) => {
-          const paddedName = command.name.padEnd(commandPaddingLength);
-          return `\t${green(paddedName)} ${command.description}`;
-        }).join("\n"),
-      );
-    }
-
-    if (hasOptions) {
-      let maxRawOptionLineLength = 0;
-      const optionLines = optionKeys.map((key) => {
-        const option = options[key];
-
-        const rawAliasPart = option.alias ? `, -${option.alias}` : "";
-        const rawLine = `\t--${key}${rawAliasPart}`;
-
-        maxRawOptionLineLength = Math.max(
-          maxRawOptionLineLength,
-          rawLine.length,
-        );
-
-        const aliasPart = option.alias ? `, ${green(`-${option.alias}`)}` : "";
-        const coloredLine = `\t${green(`--${key}`)}${aliasPart}`;
-
-        return { rawLine, coloredLine, description: option.description };
-      });
-
-      const descriptionStart = maxRawOptionLineLength + 4;
-
-      console.log();
-      console.log(bold(blue("Options:")));
-      console.log(
-        optionLines.map((item) => {
-          const currentLength = item.rawLine.length;
-          const paddingNeeded = descriptionStart - currentLength;
-          const padding = " ".repeat(paddingNeeded);
-          return `${item.coloredLine}${padding}${item.description}`;
-        }).join("\n"),
-      );
-    }
+  help(
+    context: (string | number)[],
+    options: T,
+  ): void {
+    showHelp(this.name, this.description, context, options, this.commands);
   }
 }
