@@ -27,5 +27,11 @@ export type IssueTemplate = Issue & {
   about: string;
 };
 
+export type Choice<T> = {
+  value: T;
+  name: string;
+  description: string;
+};
+
 export type IssueCreateResponse =
   RestEndpointMethodTypes["issues"]["create"]["response"];
