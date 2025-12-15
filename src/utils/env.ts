@@ -1,5 +1,10 @@
 import { load } from "@std/dotenv";
-import type { EnvKey } from "../type.ts";
+
+type EnvKey =
+  | "DEMMITHUB_API_KEY"
+  | "DEMMITHUB_BASE_URL"
+  | "DEMMITHUB_MODEL"
+  | "DEMMITHUB_GITHUB_TOKEN";
 
 let envLoadingPromise: Promise<void> | undefined = undefined;
 
