@@ -9,7 +9,7 @@ import {
 import { Spinner } from "../prompt/spinner.ts";
 import { carouselPrompt } from "../prompt/carousel.ts";
 import { editText } from "../utils/edit.ts";
-import { createIssue } from "../github/issue.ts";
+import { createIssue } from "../services/github/issue.ts";
 import { ISSUE_SYSTEM_MESSAGE } from "../constants/message.ts";
 import { parseArgs } from "@std/cli/parse-args";
 
