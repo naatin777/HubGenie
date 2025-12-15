@@ -1,5 +1,5 @@
-import { Box, render,  Text } from "ink";
-import type { Command, OptionType } from "../lib/command.ts";
+import { Box, render, Text } from "ink";
+import type { Command, OptionType } from "../../lib/command.ts";
 
 export function showHelp<T extends OptionType>(
   name: string,
@@ -77,7 +77,9 @@ export function Help<T extends OptionType>(
                 <Box key={key} flexDirection="row">
                   <Box width={18}>
                     <Text color="yellow">
-                      {options[key].alias ? `-${options[key].alias}, ` : '    '}--{key}
+                      {options[key].alias
+                        ? `-${options[key].alias}, `
+                        : "    "}--{key}
                     </Text>
                   </Box>
                   <Text>{options[key].description}</Text>
