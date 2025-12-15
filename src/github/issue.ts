@@ -9,7 +9,7 @@ export async function createIssue(
 ): Promise<IssueCreateResponse> {
   const gitService = new GitService();
   const { owner, repo } = await gitService.remote.getOwnerAndRepo();
-  const octokit = new Octokit({ auth: envService.getGitHubToken() });
+  const octokit = new Octokit({ auth: await envService.getGitHubToken() });
 
   const issue: IssueCreateResponse = await octokit.rest.issues.create({
     owner,

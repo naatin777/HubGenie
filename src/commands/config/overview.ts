@@ -24,7 +24,7 @@ export class OverviewCommand extends BaseCommand<OverviewCommandOptionType> {
   commands: Command[] = [];
   async execute(
     args: (string | number)[],
-    context: string[],
+    context: (string | number)[],
     options: OverviewCommandOptionType,
   ): Promise<void> {
     const parsedOptions = this.parseOptions(options);
@@ -44,7 +44,7 @@ export class OverviewCommand extends BaseCommand<OverviewCommandOptionType> {
     }
 
     if (parsed.help) {
-      this.help(context, options);
+      await this.help(context, options);
       return;
     }
 

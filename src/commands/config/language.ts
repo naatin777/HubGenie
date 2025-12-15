@@ -24,7 +24,7 @@ export class LanguageCommand extends BaseCommand<LanguageCommandOptionType> {
   commands: Command[] = [];
   async execute(
     args: (string | number)[],
-    context: string[],
+    context: (string | number)[],
     options: LanguageCommandOptionType,
   ): Promise<void> {
     const parsedOptions = this.parseOptions(options);
@@ -44,7 +44,7 @@ export class LanguageCommand extends BaseCommand<LanguageCommandOptionType> {
     }
 
     if (parsed.help) {
-      this.help(context, options);
+      await this.help(context, options);
       return;
     }
 

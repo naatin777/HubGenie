@@ -1,4 +1,6 @@
-import { blue, bold, green, yellow } from "@std/fmt/colors";
+import React from "react";
+import { Help } from "../ui/commands/help.tsx";
+import { render } from "ink";
 
 export type OptionType = Record<string, {
   value: boolean | string | string[] | undefined;
@@ -55,13 +57,13 @@ export abstract class BaseCommand<T extends OptionType> implements Command {
   abstract commands: Command[];
   abstract execute(
     args: (string | number)[],
-    context: string[],
+    context: (string | number)[],
     options: T,
   ): Promise<void>;
 
   async executeSubCommand(
     args: (string | number)[],
-    context: string[],
+    context: (string | number)[],
     options: T,
   ): Promise<void> {
     const commandMap = new Map(
@@ -74,7 +76,7 @@ export abstract class BaseCommand<T extends OptionType> implements Command {
         await command.execute(args.slice(1), [...context, args[0]], options);
       } else {
         console.error(`Command "${args[0]}" not found.\n`);
-        this.help(context, options);
+        await this.help(context, options);
       }
     }
   }
@@ -132,67 +134,19 @@ export abstract class BaseCommand<T extends OptionType> implements Command {
     return result as AliasToKeyType;
   }
 
-  help(context: string[], options: T): void {
-    const hasCommands = this.commands.length > 0;
-    const optionKeys = Object.keys(options);
-    const hasOptions = optionKeys.length > 0;
+  async help(
+    context: (string | number)[],
+    options: T,
+  ): Promise<void> {
+    const help = React.createElement(Help, {
+      name: this.name,
+      description: this.description,
+      context,
+      options,
+      commands: this.commands,
+    });
 
-    console.log(
-      bold(blue("Usage:")) +
-        ` ${context.join(" ")}` +
-        (hasCommands ? ` ${yellow("[command]")}` : "") +
-        (hasOptions ? ` ${yellow("[options]")}` : ""),
-    );
-
-    if (hasCommands) {
-      const rawCommandNames = this.commands.map((cmd) => cmd.name);
-      const maxRawCommandNameLength = rawCommandNames.reduce(
-        (max, name) => Math.max(max, name.length),
-        0,
-      );
-      const commandPaddingLength = maxRawCommandNameLength + 4;
-
-      console.log();
-      console.log(bold(blue("Commands:")));
-      console.log(
-        this.commands.map((command) => {
-          const paddedName = command.name.padEnd(commandPaddingLength);
-          return `\t${green(paddedName)} ${command.description}`;
-        }).join("\n"),
-      );
-    }
-
-    if (hasOptions) {
-      let maxRawOptionLineLength = 0;
-      const optionLines = optionKeys.map((key) => {
-        const option = options[key];
-
-        const rawAliasPart = option.alias ? `, -${option.alias}` : "";
-        const rawLine = `\t--${key}${rawAliasPart}`;
-
-        maxRawOptionLineLength = Math.max(
-          maxRawOptionLineLength,
-          rawLine.length,
-        );
-
-        const aliasPart = option.alias ? `, ${green(`-${option.alias}`)}` : "";
-        const coloredLine = `\t${green(`--${key}`)}${aliasPart}`;
-
-        return { rawLine, coloredLine, description: option.description };
-      });
-
-      const descriptionStart = maxRawOptionLineLength + 4;
-
-      console.log();
-      console.log(bold(blue("Options:")));
-      console.log(
-        optionLines.map((item) => {
-          const currentLength = item.rawLine.length;
-          const paddingNeeded = descriptionStart - currentLength;
-          const padding = " ".repeat(paddingNeeded);
-          return `${item.coloredLine}${padding}${item.description}`;
-        }).join("\n"),
-      );
-    }
+    const { waitUntilExit } = render(help);
+    await waitUntilExit();
   }
 }

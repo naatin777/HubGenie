@@ -20,7 +20,7 @@ export class EditorCommand extends BaseCommand<EditorCommandOptionType> {
   commands: Command[] = [];
   async execute(
     args: (string | number)[],
-    context: string[],
+    context: (string | number)[],
     options: EditorCommandOptionType,
   ): Promise<void> {
     const parsedOptions = this.parseOptions(options);
@@ -40,7 +40,7 @@ export class EditorCommand extends BaseCommand<EditorCommandOptionType> {
     }
 
     if (parsed.help) {
-      this.help(context, options);
+      await this.help(context, options);
       return;
     }
 

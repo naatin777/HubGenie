@@ -23,7 +23,7 @@ export class ConfigCommand extends BaseCommand<ConfigCommandOptionType> {
 
   async execute(
     args: (string | number)[],
-    context: string[],
+    context: (string | number)[],
     options: ConfigCommandOptionType,
   ): Promise<void> {
     const parsedOptions = this.parseOptions(options);
@@ -42,6 +42,6 @@ export class ConfigCommand extends BaseCommand<ConfigCommandOptionType> {
       return;
     }
 
-    this.help(context, options);
+    await this.help(context, options);
   }
 }

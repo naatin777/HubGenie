@@ -23,7 +23,7 @@ export class IssueCommand extends BaseCommand<IssueCommandOptionType> {
   commands: Command[] = [];
   async execute(
     args: (string | number)[],
-    context: string[],
+    context: (string | number)[],
     options: IssueCommandOptionType,
   ): Promise<void> {
     const parsedOptions = this.parseOptions(options);
@@ -38,7 +38,7 @@ export class IssueCommand extends BaseCommand<IssueCommandOptionType> {
     });
 
     if (parsed.help) {
-      this.help(context, options);
+      await this.help(context, options);
       return;
     }
 

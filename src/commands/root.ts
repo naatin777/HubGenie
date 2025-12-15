@@ -33,7 +33,7 @@ export class RootCommand extends BaseCommand<RootCommandOptionType> {
 
   async execute(
     args: (string | number)[],
-    context: string[] = [],
+    context: (string | number)[] = [],
     options: RootCommandOptionType = RootCommandOption,
   ): Promise<void> {
     context.push(this.name);
@@ -55,7 +55,7 @@ export class RootCommand extends BaseCommand<RootCommandOptionType> {
     }
 
     if ((parsed.help || parsed._.length === 0) && !parsed.version) {
-      this.help(context, options);
+      await this.help(context, options);
       return;
     }
 
