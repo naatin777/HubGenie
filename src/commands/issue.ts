@@ -1,11 +1,11 @@
 import { BaseCommand, type Command, HelpOption } from "../lib/command.ts";
 import { issueAgent } from "../utils/openai.ts";
 import { selectPrompt } from "../prompt/select.ts";
-import { getIssueTemplatePath } from "../issue/path.ts";
+import { getIssueTemplatePath } from "../utils/path.ts";
 import {
   parseMarkdownIssueTemplate,
   stringifyMarkdownIssue,
-} from "../issue/markdown.ts";
+} from "../utils/parser.ts";
 import { Spinner } from "../prompt/spinner.ts";
 import { carouselPrompt } from "../prompt/carousel.ts";
 import { editText } from "../utils/edit.ts";
