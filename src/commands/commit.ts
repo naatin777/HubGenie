@@ -1,6 +1,6 @@
 import { BaseCommand, type Command, HelpOption } from "../lib/command.ts";
 import { parseArgs } from "@std/cli";
-import { Commit } from "../ui/commands/commit.tsx";
+import { Commit } from "../features/commit/ui.tsx";
 import { render } from "ink";
 import React from "react";
 

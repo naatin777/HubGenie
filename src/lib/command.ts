@@ -1,5 +1,5 @@
 import React from "react";
-import { Help } from "../ui/commands/help.tsx";
+import { Help } from "../features/help/ui.tsx";
 import { render } from "ink";
 
 export type OptionType = Record<string, {
