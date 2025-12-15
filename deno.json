@@ -5,7 +5,8 @@
   "version": "0.0.0",
   "exports": "./src/demmithub.ts",
   "tasks": {
-    "commit": "deno run src/demmithub.ts commit"
+    "commit": "deno run src/main.ts commit",
+    "issue": "deno run src/main.ts issue"
   },
   "imports": {
     "@octokit/plugin-rest-endpoint-methods": "npm:@octokit/plugin-rest-endpoint-methods@^17.0.0",
