@@ -1,7 +1,5 @@
 import type { RestEndpointMethodTypes } from "@octokit/plugin-rest-endpoint-methods";
 
-
-
 export type Config = {
   language: string;
   editor: string;
