@@ -1,23 +1,5 @@
-import { Box, render, Text } from "ink";
+import { Box, Text } from "ink";
 import type { Command, OptionType } from "../../lib/command.ts";
-
-export function showHelp<T extends OptionType>(
-  name: string,
-  description: string,
-  context: (string | number)[],
-  options: T,
-  commands: Command[],
-) {
-  render(
-    <Help
-      name={name}
-      description={description}
-      context={context}
-      options={options}
-      commands={commands}
-    />,
-  );
-}
 
 export function Help<T extends OptionType>(
   { name, description, context, options, commands }: {
