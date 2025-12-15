@@ -40,7 +40,7 @@ export class InitCommand extends BaseCommand<InitCommandOptionType> {
     });
 
     if (parsed.help) {
-      this.help(context, options);
+      await this.help(context, options);
       return;
     }
 

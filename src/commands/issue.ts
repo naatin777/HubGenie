@@ -38,7 +38,7 @@ export class IssueCommand extends BaseCommand<IssueCommandOptionType> {
     });
 
     if (parsed.help) {
-      this.help(context, options);
+      await this.help(context, options);
       return;
     }
 

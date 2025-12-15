@@ -42,6 +42,6 @@ export class ConfigCommand extends BaseCommand<ConfigCommandOptionType> {
       return;
     }
 
-    this.help(context, options);
+    await this.help(context, options);
   }
 }

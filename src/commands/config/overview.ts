@@ -44,7 +44,7 @@ export class OverviewCommand extends BaseCommand<OverviewCommandOptionType> {
     }
 
     if (parsed.help) {
-      this.help(context, options);
+      await this.help(context, options);
       return;
     }
 

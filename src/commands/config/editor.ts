@@ -40,7 +40,7 @@ export class EditorCommand extends BaseCommand<EditorCommandOptionType> {
     }
 
     if (parsed.help) {
-      this.help(context, options);
+      await this.help(context, options);
       return;
     }
 

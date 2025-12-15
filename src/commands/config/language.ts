@@ -44,7 +44,7 @@ export class LanguageCommand extends BaseCommand<LanguageCommandOptionType> {
     }
 
     if (parsed.help) {
-      this.help(context, options);
+      await this.help(context, options);
       return;
     }
 

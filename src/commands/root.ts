@@ -55,7 +55,7 @@ export class RootCommand extends BaseCommand<RootCommandOptionType> {
     }
 
     if ((parsed.help || parsed._.length === 0) && !parsed.version) {
-      this.help(context, options);
+      await this.help(context, options);
       return;
     }
 

@@ -1,4 +1,6 @@
-import { showHelp } from "../ui/help.tsx";
+import React from "react";
+import { Help, showHelp } from "../ui/commands/help.tsx";
+import { render } from "ink";
 
 export type OptionType = Record<string, {
   value: boolean | string | string[] | undefined;
@@ -74,7 +76,7 @@ export abstract class BaseCommand<T extends OptionType> implements Command {
         await command.execute(args.slice(1), [...context, args[0]], options);
       } else {
         console.error(`Command "${args[0]}" not found.\n`);
-        this.help(context, options);
+        await this.help(context, options);
       }
     }
   }
@@ -132,10 +134,19 @@ export abstract class BaseCommand<T extends OptionType> implements Command {
     return result as AliasToKeyType;
   }
 
-  help(
+  async help(
     context: (string | number)[],
     options: T,
-  ): void {
-    showHelp(this.name, this.description, context, options, this.commands);
+  ): Promise<void> {
+    const help = React.createElement(Help, {
+      name: this.name,
+      description: this.description,
+      context,
+      options,
+      commands: this.commands,
+    });
+
+    const { waitUntilExit } = render(help);
+    await waitUntilExit();
   }
 }
