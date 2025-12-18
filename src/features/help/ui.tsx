@@ -45,8 +45,8 @@ export function Help<T extends OptionType>(
         <Box flexDirection="column" marginBottom={1}>
           <Text color="blue">Commands:</Text>
           <Box flexDirection="column" paddingLeft={4}>
-            {commands.map((command) => (
-              <Box key={command.name} flexDirection="row">
+            {commands.map((command, index) => (
+              <Box key={index} flexDirection="row">
                 <Box width={12}>
                   <Text color="green">{command.name}</Text>
                 </Box>
