@@ -1,7 +1,7 @@
 import { GitService } from "../git/git_service.ts";
 import { Octokit } from "octokit";
-import type { IssueCreateResponse } from "../type.ts";
-import { envService } from "../utils/env.ts";
+import type { IssueCreateResponse } from "../../type.ts";
+import { envService } from "../../utils/env.ts";
 
 export async function createIssue(
   title: string,

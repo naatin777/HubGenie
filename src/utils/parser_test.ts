@@ -2,7 +2,7 @@ import { assertEquals } from "@std/assert";
 import {
   parseMarkdownIssueTemplate,
   stringifyMarkdownIssue,
-} from "./markdown.ts";
+} from "./parser.ts";
 
 Deno.test("parseMarkdownIssueTemplate", () => {
   const markdown = `---

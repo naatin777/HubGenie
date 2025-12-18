@@ -1,11 +1,5 @@
 import type { RestEndpointMethodTypes } from "@octokit/plugin-rest-endpoint-methods";
 
-export type EnvKey =
-  | "DEMMITHUB_API_KEY"
-  | "DEMMITHUB_BASE_URL"
-  | "DEMMITHUB_MODEL"
-  | "DEMMITHUB_GITHUB_TOKEN";
-
 export type Config = {
   language: string;
   editor: string;

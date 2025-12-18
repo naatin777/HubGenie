@@ -1,7 +1,7 @@
 import { Box, Text } from "ink";
-import { Spinner } from "../components/spinner.tsx";
-import { Select } from "../components/select.tsx";
-import { useCommitFlow } from "./commit/hook.ts";
+import { useCommitFlow } from "./hook.ts";
+import { Spinner } from "../../components/spinner.tsx";
+import { Select } from "../../components/select.tsx";
 
 export function Commit() {
   const {

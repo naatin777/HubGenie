@@ -1,5 +1,5 @@
 import type z from "zod";
-import type { CommitSchema } from "../../../schema.ts";
+import type { CommitSchema } from "../../schema.ts";
 
 export type CommitState =
   | {

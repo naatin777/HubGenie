@@ -1,5 +1,5 @@
 import { Box, render, Text, useApp, useInput } from "ink";
-import type { Choice } from "../../type.ts";
+import type { Choice } from "../type.ts";
 import { useState } from "react";
 
 type SelectOptions<T> = {

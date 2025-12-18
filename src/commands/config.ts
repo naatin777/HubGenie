@@ -1,11 +1,6 @@
 import { parseArgs } from "@std/cli";
-import {
-  BaseCommand,
-  type Command,
-  GlobalOption,
-  HelpOption,
-  LocalOption,
-} from "../lib/command.ts";
+import { BaseCommand, type Command } from "../lib/command.ts";
+import { GlobalOption, HelpOption, LocalOption } from "../constants/option.ts";
 
 const ConfigCommandOption = { ...HelpOption, ...LocalOption, ...GlobalOption };
 
