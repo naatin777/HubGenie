@@ -17,7 +17,7 @@ export function Help<T extends OptionType>(
 
   useEffect(() => {
     exit();
-  }, []);
+  }, [exit]);
 
   return (
     <Box flexDirection="column" gap={1}>
