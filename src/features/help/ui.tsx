@@ -1,5 +1,6 @@
-import { Box, Text } from "ink";
+import { Box, Text, useApp } from "ink";
 import type { Command, OptionType } from "../../lib/command.ts";
+import { useEffect } from "react";
 
 export function Help<T extends OptionType>(
   { name, description, context, options, commands }: {
@@ -12,6 +13,11 @@ export function Help<T extends OptionType>(
 ) {
   const hasCommands = commands.length > 0;
   const hasOptions = Object.keys(options).length > 0;
+  const { exit } = useApp();
+
+  useEffect(() => {
+    exit();
+  }, []);
 
   return (
     <Box flexDirection="column" gap={1}>
