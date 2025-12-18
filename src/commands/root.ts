@@ -1,10 +1,6 @@
 import { parseArgs } from "@std/cli";
-import {
-  BaseCommand,
-  type Command,
-  HelpOption,
-  VersionOption,
-} from "../lib/command.ts";
+import { BaseCommand, type Command } from "../lib/command.ts";
+import { HelpOption, VersionOption } from "../constants/option.ts";
 
 type RootCommandInit = {
   name: string;
