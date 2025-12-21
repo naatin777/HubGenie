@@ -1,6 +1,6 @@
 import { parseArgs } from "@std/cli";
 import { BaseCommand, type Command } from "../lib/command.ts";
-import { getConfig, saveConfig } from "../utils/config.ts";
+import { getConfig } from "../utils/config.ts";
 import { SetupFlow } from "../components/setup_flow.tsx";
 import { render } from "ink";
 import React from "react";
