@@ -1,7 +1,7 @@
 import { useEffect, useReducer } from "react";
 import { commitReducer, type CommitState } from "./reducer.ts";
 import { GitService } from "../../services/git/git_service.ts";
-import { generateStructuredOutput } from "../../utils/openai.ts";
+import { generateStructuredOutput } from "../../services/ai.ts";
 import { COMMIT_SYSTEM_MESSAGE } from "../../constants/message.ts";
 import { CommitSchema } from "../../schema.ts";
 import { editText } from "../../utils/edit.ts";

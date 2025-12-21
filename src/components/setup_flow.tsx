@@ -5,7 +5,7 @@ import {
   LanguageSelector,
   OverviewInput,
 } from "./selection.tsx";
-import { saveConfig } from "../utils/config.ts";
+import { saveConfig } from "../services/config.ts";
 import type { ScopeFlag } from "../type.ts";
 
 export type SetupStep = "language" | "editor" | "overview" | "done";

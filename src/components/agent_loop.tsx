@@ -2,7 +2,7 @@ import { Box, render } from "ink";
 import { useState } from "react";
 import { TextInput } from "./text_input.tsx";
 import { Spinner } from "./spinner.tsx";
-import { generateStructuredOutput } from "../utils/openai.ts";
+import { generateStructuredOutput } from "../services/ai.ts";
 import { IssueAgentSchema, type IssueSchema } from "../schema.ts";
 import { ISSUE_SYSTEM_MESSAGE } from "../constants/message.ts";
 import type z from "zod";

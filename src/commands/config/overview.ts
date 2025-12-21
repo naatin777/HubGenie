@@ -1,6 +1,6 @@
 import { parseArgs } from "@std/cli";
 import { BaseCommand, type Command } from "../../lib/command.ts";
-import { getMergedConfig, saveConfig } from "../../utils/config.ts";
+import { getMergedConfig, saveConfig } from "../../services/config.ts";
 import { OverviewInput } from "../../components/selection.tsx";
 import { render } from "ink";
 import React from "react";
