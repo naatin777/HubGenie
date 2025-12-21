@@ -1,7 +1,9 @@
 import { parseArgs } from "@std/cli";
 import { BaseCommand, type Command } from "../../lib/command.ts";
-import { selectEditor } from "../../utils/selection.ts";
-import { getMergedConfig, saveConfig } from "../../utils/config.ts";
+import { getMergedConfig, saveConfig } from "../../services/config.ts";
+import { EditorSelector } from "../../components/selection.tsx";
+import { render } from "ink";
+import React from "react";
 import type { ScopeFlag } from "../../type.ts";
 import {
   GlobalOption,
@@ -47,9 +49,15 @@ export class EditorCommand extends BaseCommand<EditorCommandOptionType> {
   }
 
   async action(scope: ScopeFlag) {
-    const editor = await selectEditor();
-    const localConfig = await getMergedConfig();
-    localConfig.editor = editor;
-    await saveConfig(localConfig, scope);
+    const { waitUntilExit } = render(
+      React.createElement(EditorSelector, {
+        onSelect: async (editor: string) => {
+          const localConfig = await getMergedConfig();
+          localConfig.editor = editor;
+          await saveConfig(localConfig, scope);
+        },
+      }),
+    );
+    await waitUntilExit();
   }
 }

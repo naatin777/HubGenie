@@ -12,37 +12,54 @@ config:
           - deno.lock
           - .demmithub.yml
           - .gitignore
+          - src/utils/config.ts
+          - src/constants/config.ts
 
-actions:
+commands:
   - changed-files:
       - any-glob-to-any-file:
-          - src/actions/**/*
+          - src/commands/**/*
+          - src/lib/command.ts
 
-git:
+components:
   - changed-files:
       - any-glob-to-any-file:
-          - src/git/**/*
+          - src/components/**/*
+
+constants:
+  - changed-files:
+      - any-glob-to-any-file:
+          - src/constants/**/*
+
+services:
+  - changed-files:
+      - any-glob-to-any-file:
+          - src/services/**/*
 
 issue:
   - changed-files:
       - any-glob-to-any-file:
-          - src/issue/**/*
+          - src/features/issue/**/*
+          - src/services/github/issue.ts
 
-prompt:
+commit:
   - changed-files:
       - any-glob-to-any-file:
-          - src/prompt/**/*
+          - src/features/commit/**/*
+          - src/services/git/**/*
 
 utils:
   - changed-files:
       - any-glob-to-any-file:
           - src/utils/**/*
           - src/type.ts
+          - src/schema.ts
 
 core:
   - changed-files:
       - any-glob-to-any-file:
           - src/demmithub.ts
+          - src/main.ts
 
 test:
   - changed-files:

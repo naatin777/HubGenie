@@ -2,7 +2,7 @@ import OpenAI from "openai";
 import { zodResponseFormat } from "openai/helpers/zod";
 import { getMergedConfig } from "./config.ts";
 import type z from "zod";
-import { IssueAgentSchema } from "../schema.ts";
+
 import { envService } from "./env.ts";
 
 export async function generateStructuredOutput<T extends z.ZodType>(
@@ -44,41 +44,4 @@ export async function generateStructuredOutput<T extends z.ZodType>(
     ),
   });
   return completion.choices[0].message.parsed;
-}
-
-export async function issueAgent(
-  messages: {
-    role: "user" | "system" | "assistant";
-    content: string;
-  }[],
-) {
-  const history = [...messages];
-
-  while (true) {
-    const completion = await generateStructuredOutput(
-      history,
-      IssueAgentSchema,
-      "issueAgent",
-    );
-
-    if (!completion) {
-      throw new Error("Failed to parse completion");
-    }
-
-    if (completion.agent.status === "question") {
-      for (const question of completion.agent.questions) {
-        const userAnswer = prompt(question) ||
-          "leave it to you";
-
-        history.push({
-          role: "user",
-          content: `question: ${question} answer: ${userAnswer}`,
-        });
-      }
-    } else if (completion.agent.status === "final_answer") {
-      return completion.agent.item;
-    } else {
-      throw new Error(`Unexpected status received`);
-    }
-  }
 }

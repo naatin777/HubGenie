@@ -1,12 +1,9 @@
 import { parseArgs } from "@std/cli";
 import { BaseCommand, type Command } from "../lib/command.ts";
-import { saveConfig } from "../utils/config.ts";
-import {
-  inputOverview,
-  selectEditor,
-  selectLanguage,
-} from "../utils/selection.ts";
-import { getConfig } from "../utils/config.ts";
+import { getConfig } from "../services/config.ts";
+import { SetupFlow } from "../components/setup_flow.tsx";
+import { render } from "ink";
+import React from "react";
 import type { ScopeFlag } from "../type.ts";
 import { GlobalOption, HelpOption, LocalOption } from "../constants/option.ts";
 
@@ -48,13 +45,7 @@ export class InitCommand extends BaseCommand<InitCommandOptionType> {
       console.error("Config already exists");
       return;
     }
-    const language = await selectLanguage();
-    const editor = selectEditor();
-    const overview = inputOverview();
-    await saveConfig({
-      language: language,
-      editor: editor,
-      overview: overview,
-    }, scope);
+    const { waitUntilExit } = render(React.createElement(SetupFlow, { scope }));
+    await waitUntilExit();
   }
 }

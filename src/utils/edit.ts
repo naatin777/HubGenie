@@ -1,4 +1,4 @@
-import { getMergedConfig } from "./config.ts";
+import { getMergedConfig } from "../services/config.ts";
 
 export async function editText(text: string): Promise<string> {
   const tempFile = await Deno.makeTempFile({ suffix: ".txt" });

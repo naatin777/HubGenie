@@ -1,7 +1,9 @@
 import { parseArgs } from "@std/cli";
 import { BaseCommand, type Command } from "../../lib/command.ts";
-import { selectLanguage } from "../../utils/selection.ts";
-import { getMergedConfig, saveConfig } from "../../utils/config.ts";
+import { getMergedConfig, saveConfig } from "../../services/config.ts";
+import { LanguageSelector } from "../../components/selection.tsx";
+import { render } from "ink";
+import React from "react";
 import type { ScopeFlag } from "../../type.ts";
 import {
   GlobalOption,
@@ -51,9 +53,15 @@ export class LanguageCommand extends BaseCommand<LanguageCommandOptionType> {
   }
 
   async action(scope: ScopeFlag) {
-    const language = await selectLanguage();
-    const localConfig = await getMergedConfig();
-    localConfig.language = language;
-    await saveConfig(localConfig, scope);
+    const { waitUntilExit } = render(
+      React.createElement(LanguageSelector, {
+        onSelect: async (language: string) => {
+          const localConfig = await getMergedConfig();
+          localConfig.language = language;
+          await saveConfig(localConfig, scope);
+        },
+      }),
+    );
+    await waitUntilExit();
   }
 }

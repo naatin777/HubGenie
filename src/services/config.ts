@@ -1,4 +1,4 @@
-import { ConfigPaths } from "./path.ts";
+import { ConfigPaths } from "../utils/path.ts";
 import { parse, stringify } from "@std/yaml";
 import type { Config, ScopeFlag } from "../type.ts";
 import { defaultConfig } from "../constants/config.ts";
