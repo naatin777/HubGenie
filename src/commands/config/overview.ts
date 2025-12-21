@@ -1,7 +1,9 @@
 import { parseArgs } from "@std/cli";
 import { BaseCommand, type Command } from "../../lib/command.ts";
-import { inputOverview } from "../../utils/selection.ts";
 import { getMergedConfig, saveConfig } from "../../utils/config.ts";
+import { OverviewInput } from "../../components/selection.tsx";
+import { render } from "ink";
+import React from "react";
 import type { ScopeFlag } from "../../type.ts";
 import {
   GlobalOption,
@@ -51,9 +53,15 @@ export class OverviewCommand extends BaseCommand<OverviewCommandOptionType> {
   }
 
   async action(scope: ScopeFlag) {
-    const overview = inputOverview();
-    const localConfig = await getMergedConfig();
-    localConfig.overview = overview;
-    await saveConfig(localConfig, scope);
+    const { waitUntilExit } = render(
+      React.createElement(OverviewInput, {
+        onSubmit: async (overview: string) => {
+          const localConfig = await getMergedConfig();
+          localConfig.overview = overview;
+          await saveConfig(localConfig, scope);
+        },
+      }),
+    );
+    await waitUntilExit();
   }
 }
