@@ -27,7 +27,6 @@ export function TextInput(
 
     if (key.return) {
       onSubmit(value);
-      exit();
       return;
     }
 
