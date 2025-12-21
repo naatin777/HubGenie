@@ -2,7 +2,11 @@ import { Box, render, Text, useApp, useInput } from "ink";
 import { useEffect, useState } from "react";
 
 export function TextInput(
-  { label, onSubmit }: { label: string; onSubmit: (val: string) => void },
+  { label, isInline, onSubmit }: {
+    label: string;
+    isInline?: boolean;
+    onSubmit: (val: string) => void;
+  },
 ) {
   const [value, setValue] = useState("");
   const [cursorPosition, setCursorPosition] = useState(0);
@@ -72,13 +76,23 @@ export function TextInput(
   const after = value.slice(cursorPosition + 1);
 
   return (
-    <Box>
+    <Box flexDirection={isInline ? "row" : "column"}>
       <Text bold>{label}</Text>
-      <Box>
-        <Text color="green">{before}</Text>
-        <Text color="green" inverse={showCursor}>{charAtCursor}</Text>
-        <Text color="green">{after}</Text>
-      </Box>
+      {isInline
+        ? (
+          <Box flexDirection="row">
+            <Text color="green">{before}</Text>
+            <Text color="green" inverse={showCursor}>{charAtCursor}</Text>
+            <Text color="green">{after}</Text>
+          </Box>
+        )
+        : (
+          <Box>
+            <Text color="green">{before}</Text>
+            <Text color="green" inverse={showCursor}>{charAtCursor}</Text>
+            <Text color="green">{after}</Text>
+          </Box>
+        )}
     </Box>
   );
 }
@@ -87,6 +101,7 @@ if (import.meta.main) {
   render(
     <TextInput
       label="? Enter something › "
+      isInline
       onSubmit={(val) => {
         console.log("Submitted:", val);
       }}
