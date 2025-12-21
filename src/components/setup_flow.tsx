@@ -6,12 +6,12 @@ import {
   OverviewInput,
 } from "./selection.tsx";
 import { saveConfig } from "../services/config.ts";
-import type { ScopeFlag } from "../type.ts";
+import type { Config, ScopeFlag } from "../type.ts";
 
 export type SetupStep = "language" | "editor" | "overview" | "done";
 
 export function SetupFlow(
-  { scope, onDone }: { scope: ScopeFlag; onDone?: (config: any) => void },
+  { scope, onDone }: { scope: ScopeFlag; onDone?: (config: Config) => void },
 ) {
   const [step, setStep] = useState<SetupStep>("language");
   const [config, setConfig] = useState({
