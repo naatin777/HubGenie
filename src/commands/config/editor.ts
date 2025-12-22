@@ -3,7 +3,6 @@ import { getMergedConfig, saveConfig } from "../../services/config.ts";
 import { EditorSelector } from "../../components/selection.tsx";
 import { render } from "ink";
 import React from "react";
-import type { ScopeFlag } from "../../type.ts";
 import {
   ConfigCommandFlag,
   type ConfigCommandFlagType,
@@ -42,16 +41,12 @@ export class EditorCommand
       return;
     }
 
-    await this.action();
-  }
-
-  async action(scope: ScopeFlag = {}) {
     const { waitUntilExit } = render(
       React.createElement(EditorSelector, {
         onSelect: async (editor: string) => {
           const localConfig = await getMergedConfig();
           localConfig.editor = editor;
-          await saveConfig(localConfig, scope);
+          await saveConfig(localConfig, {});
         },
       }),
     );

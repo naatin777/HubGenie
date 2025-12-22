@@ -41,10 +41,6 @@ export class CommitCommand
       return;
     }
 
-    await this.action();
-  }
-
-  async action() {
     const commit = React.createElement(Commit, null);
     const { waitUntilExit } = render(commit);
     await waitUntilExit();

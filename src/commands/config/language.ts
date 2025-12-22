@@ -3,7 +3,6 @@ import { getMergedConfig, saveConfig } from "../../services/config.ts";
 import { LanguageSelector } from "../../components/selection.tsx";
 import { render } from "ink";
 import React from "react";
-import type { ScopeFlag } from "../../type.ts";
 import {
   ConfigCommandFlag,
   type ConfigCommandFlagType,
@@ -42,16 +41,12 @@ export class LanguageCommand
       return;
     }
 
-    await this.action();
-  }
-
-  async action(scope: ScopeFlag = {}) {
     const { waitUntilExit } = render(
       React.createElement(LanguageSelector, {
         onSelect: async (language: string) => {
           const localConfig = await getMergedConfig();
           localConfig.language = language;
-          await saveConfig(localConfig, scope);
+          await saveConfig(localConfig, {});
         },
       }),
     );

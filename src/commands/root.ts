@@ -52,11 +52,6 @@ export class RootCommand
       return;
     }
 
-    if (parsed.help) {
-      await this.help(consumedArgs);
-      return;
-    }
-
     if (parsed.version) {
       const version = React.createElement(Version, {
         name: this.name,
@@ -67,5 +62,7 @@ export class RootCommand
       await waitUntilExit();
       return;
     }
+
+    await this.help(consumedArgs);
   }
 }

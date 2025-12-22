@@ -3,7 +3,6 @@ import { getConfig } from "../services/config.ts";
 import { SetupFlow } from "../components/setup_flow.tsx";
 import { render } from "ink";
 import React from "react";
-import type { ScopeFlag } from "../type.ts";
 import {
   GlobalFlag,
   HelpFlag,
@@ -47,16 +46,12 @@ export class InitCommand
       return;
     }
 
-    await this.action();
-  }
-
-  async action(scope: ScopeFlag = {}) {
-    const config = await getConfig(scope);
+    const config = await getConfig({});
     if (config) {
       console.error("Config already exists");
       return;
     }
-    const { waitUntilExit } = render(React.createElement(SetupFlow, { scope }));
+    const { waitUntilExit } = render(React.createElement(SetupFlow));
     await waitUntilExit();
   }
 }

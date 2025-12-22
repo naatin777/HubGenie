@@ -41,10 +41,6 @@ export class IssueCommand
       return;
     }
 
-    await this.action();
-  }
-
-  async action() {
     const issue = React.createElement(Issue, null);
     const { waitUntilExit } = render(issue);
     await waitUntilExit();
