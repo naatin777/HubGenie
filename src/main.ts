@@ -15,13 +15,11 @@ if (import.meta.main) {
     version: DemmitHub.version,
     commands: [
       new InitCommand(),
-      new ConfigCommand({
-        subCommands: [
-          new LanguageCommand(),
-          new EditorCommand(),
-          new OverviewCommand(),
-        ],
-      }),
+      new ConfigCommand([
+        new LanguageCommand(),
+        new EditorCommand(),
+        new OverviewCommand(),
+      ]),
       new IssueCommand(),
       new CommitCommand(),
     ],

@@ -1,36 +1,40 @@
 import { BaseCommand, type Command } from "../lib/command.ts";
-import { parseArgs } from "@std/cli";
 import { Issue } from "../features/issue/ui.tsx";
 import { render } from "ink";
 import React from "react";
-import { HelpOption } from "../constants/option.ts";
+import { HelpFlag } from "../constants/commands/flags.ts";
 
-const IssueCommandOption = { ...HelpOption };
+const IssueCommandFlag = { ...HelpFlag };
+const IssueCommandOption = {};
 
+type IssueCommandFlagType = typeof IssueCommandFlag;
 type IssueCommandOptionType = typeof IssueCommandOption;
 
-export class IssueCommand extends BaseCommand<IssueCommandOptionType> {
+export class IssueCommand
+  extends BaseCommand<IssueCommandFlagType, IssueCommandOptionType> {
   name: string = "issue";
   description: string = "Manage issues in the repository";
   commands: Command[] = [];
   async execute(
-    args: (string | number)[],
-    context: (string | number)[],
+    remainingArgs: string[],
+    consumedArgs: string[] = [this.name],
+    flags: IssueCommandFlagType,
     options: IssueCommandOptionType,
   ): Promise<void> {
-    const parsedOptions = this.parseOptions(options);
-    const parsedAlias = this.parseAlias(options);
+    const parsed = this.parseArgs(remainingArgs, flags, options);
 
-    const parsed = parseArgs(args.map((arg) => arg.toString()), {
-      boolean: parsedOptions.booleanKeysArray,
-      string: parsedOptions.stringKeysArray,
-      // collect: parsedOptions.arrayKeysArray,
-      alias: parsedAlias,
-      stopEarly: true,
-    });
+    if (parsed._.length > 0) {
+      await this.executeSubCommand(
+        parsed._.map((arg) => arg.toString()),
+        consumedArgs,
+        flags,
+        options,
+      );
+      return;
+    }
 
     if (parsed.help) {
-      await this.help(context, options);
+      await this.help(consumedArgs, remainingArgs, flags, options);
       return;
     }
 

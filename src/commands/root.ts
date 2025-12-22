@@ -1,6 +1,5 @@
-import { parseArgs } from "@std/cli";
+import { HelpFlag, VersionFlag } from "../constants/commands/flags.ts";
 import { BaseCommand, type Command } from "../lib/command.ts";
-import { HelpOption, VersionOption } from "../constants/option.ts";
 
 type RootCommandInit = {
   name: string;
@@ -9,11 +8,14 @@ type RootCommandInit = {
   commands: Command[];
 };
 
-const RootCommandOption = { ...HelpOption, ...VersionOption };
+const RootCommandFlag = { ...HelpFlag, ...VersionFlag };
+const RootCommandOption = {};
 
+type RootCommandFlagType = typeof RootCommandFlag;
 type RootCommandOptionType = typeof RootCommandOption;
 
-export class RootCommand extends BaseCommand<RootCommandOptionType> {
+export class RootCommand
+  extends BaseCommand<RootCommandFlagType, RootCommandOptionType> {
   name: string;
   version: string;
   description: string;
@@ -28,30 +30,25 @@ export class RootCommand extends BaseCommand<RootCommandOptionType> {
   }
 
   async execute(
-    args: (string | number)[],
-    context: (string | number)[] = [],
+    remainingArgs: string[],
+    consumedArgs: string[] = [this.name],
+    flags: RootCommandFlagType = RootCommandFlag,
     options: RootCommandOptionType = RootCommandOption,
   ): Promise<void> {
-    context.push(this.name);
-
-    const parsedOptions = this.parseOptions(options);
-    const parsedAlias = this.parseAlias(options);
-
-    const parsed = parseArgs(args.map((arg) => arg.toString()), {
-      boolean: parsedOptions.booleanKeysArray,
-      string: parsedOptions.stringKeysArray,
-      // collect: parsedOptions.arrayKeysArray,
-      alias: parsedAlias,
-      stopEarly: true,
-    });
+    const parsed = this.parseArgs(remainingArgs, flags, options);
 
     if (parsed._.length > 0 && !parsed.version) {
-      await this.executeSubCommand(parsed._, context, options);
+      await this.executeSubCommand(
+        parsed._.map((arg) => arg.toString()),
+        consumedArgs,
+        flags,
+        options,
+      );
       return;
     }
 
     if ((parsed.help || parsed._.length === 0) && !parsed.version) {
-      await this.help(context, options);
+      await this.help(remainingArgs, consumedArgs, flags, options);
       return;
     }
 
