@@ -15,6 +15,9 @@ export class IssueCommand
   name: string = "issue";
   description: string = "Manage issues in the repository";
   commands: Command[] = [];
+  defaultFlags: IssueCommandFlagType = IssueCommandFlag;
+  defaultOptions: IssueCommandOptionType = IssueCommandOption;
+
   async execute(
     remainingArgs: string[],
     consumedArgs: string[] = [this.name],
@@ -34,7 +37,7 @@ export class IssueCommand
     }
 
     if (parsed.help) {
-      await this.help(consumedArgs, remainingArgs, flags, options);
+      await this.help(consumedArgs);
       return;
     }
 

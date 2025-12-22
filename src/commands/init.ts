@@ -21,6 +21,9 @@ export class InitCommand
   name: string = "init";
   description: string = "Initialize a new project";
   commands: Command[] = [];
+  defaultFlags: InitCommandFlagType = InitCommandFlag;
+  defaultOptions: InitCommandOptionType = InitCommandOption;
+
   async execute(
     remainingArgs: string[],
     consumedArgs: string[],
@@ -40,7 +43,7 @@ export class InitCommand
     }
 
     if (parsed.help) {
-      await this.help(remainingArgs, consumedArgs, flags, options);
+      await this.help(consumedArgs);
       return;
     }
 

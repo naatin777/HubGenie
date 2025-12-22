@@ -23,6 +23,8 @@ export class RootCommand
   version: string;
   description: string;
   commands: Command[];
+  defaultFlags: RootCommandFlagType = RootCommandFlag;
+  defaultOptions: RootCommandOptionType = RootCommandOption;
 
   constructor(options: RootCommandInit) {
     super();
@@ -51,7 +53,7 @@ export class RootCommand
     }
 
     if ((parsed.help || parsed._.length === 0) && !parsed.version) {
-      await this.help(remainingArgs, consumedArgs, flags, options);
+      await this.help(consumedArgs);
       return;
     }
 

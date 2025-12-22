@@ -15,6 +15,9 @@ export class CommitCommand
   name: string = "commit";
   description: string = "Commit changes to the repository";
   commands: Command[] = [];
+  defaultFlags: CommitCommandFlagType = CommitCommandFlag;
+  defaultOptions: CommitCommandOptionType = CommitCommandOption;
+
   async execute(
     remainingArgs: string[],
     consumedArgs: string[],
@@ -34,7 +37,7 @@ export class CommitCommand
     }
 
     if (parsed.help) {
-      await this.help(consumedArgs, remainingArgs, flags, options);
+      await this.help(consumedArgs);
       return;
     }
 

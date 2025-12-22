@@ -16,6 +16,8 @@ export class ConfigCommand
   name: string = "config";
   description: string = "Configure the repository";
   commands: Command[] = [];
+  defaultFlags: ConfigCommandFlagType = ConfigCommandFlag;
+  defaultOptions: ConfigCommandOptionType = ConfigCommandOption;
 
   constructor(subCommands: Command[]) {
     super();
@@ -40,6 +42,6 @@ export class ConfigCommand
       return;
     }
 
-    await this.help(consumedArgs, remainingArgs, flags, options);
+    await this.help(consumedArgs);
   }
 }
