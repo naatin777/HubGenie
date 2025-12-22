@@ -1,5 +1,8 @@
+import React from "react";
 import { HelpFlag, VersionFlag } from "../constants/commands/flags.ts";
 import { BaseCommand, type Command } from "../lib/command.ts";
+import { Version } from "../features/version/ui.tsx";
+import { render } from "ink";
 
 type RootCommandInit = {
   name: string;
@@ -53,7 +56,13 @@ export class RootCommand
     }
 
     if (parsed.version) {
-      console.log(`version: ${this.version}`);
+      const version = React.createElement(Version, {
+        name: this.name,
+        version: this.version,
+      });
+
+      const { waitUntilExit } = render(version);
+      await waitUntilExit();
       return;
     }
   }
