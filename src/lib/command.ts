@@ -38,6 +38,7 @@ export abstract class BaseCommand<
   abstract commands: Command[];
   abstract defaultFlags: F;
   abstract defaultOptions: O;
+
   abstract execute(
     remainingArgs: string[],
     consumedArgs: string[],
@@ -46,11 +47,18 @@ export abstract class BaseCommand<
   ): Promise<void>;
 
   async executeSubCommand(
-    remainingArgs: string[],
+    parsed: {
+      [x: string]: unknown;
+      _: Array<string | number>;
+    },
     consumedArgs: string[],
     flags: F,
     options: O,
   ): Promise<void> {
+    const remainingArgs = parsed._.map((arg) => arg.toString());
+    const appliedFlags = this.applyParsedFlags(flags, parsed);
+    const appliedOptions = this.applyParsedOptions(options, parsed);
+
     const command = this.commands.find((command) =>
       command.name === remainingArgs[0]
     );
@@ -59,8 +67,8 @@ export abstract class BaseCommand<
       await command.execute(
         remainingArgs.slice(1),
         [...consumedArgs, command.name],
-        flags,
-        options,
+        appliedFlags,
+        appliedOptions,
       );
     } else {
       await this.help(
@@ -68,6 +76,42 @@ export abstract class BaseCommand<
         `Command "${remainingArgs[0]}" not found.`,
       );
     }
+  }
+
+  applyParsedFlags(
+    flags: F,
+    parsed: {
+      [x: string]: unknown;
+      _: Array<string | number>;
+    },
+  ): F {
+    return Object.fromEntries(
+      Object.entries(flags).map(([key, flagDef]) => [
+        key,
+        {
+          ...flagDef,
+          value: parsed[key] !== undefined ? parsed[key] : flagDef.value,
+        },
+      ]),
+    ) as F;
+  }
+
+  applyParsedOptions(
+    options: O,
+    parsed: {
+      [x: string]: unknown;
+      _: Array<string | number>;
+    },
+  ): O {
+    return Object.fromEntries(
+      Object.entries(options).map(([key, optionDef]) => [
+        key,
+        {
+          ...optionDef,
+          value: parsed[key] !== undefined ? parsed[key] : optionDef.value,
+        },
+      ]),
+    ) as O;
   }
 
   parseArgs(remainingArgs: string[], flags: F, options: O) {

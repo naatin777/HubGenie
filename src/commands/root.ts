@@ -42,9 +42,9 @@ export class RootCommand
   ): Promise<void> {
     const parsed = this.parseArgs(remainingArgs, flags, options);
 
-    if (parsed._.length > 0 && !parsed.version) {
+    if (parsed._.length > 0) {
       await this.executeSubCommand(
-        parsed._.map((arg) => arg.toString()),
+        parsed,
         consumedArgs,
         flags,
         options,
@@ -52,7 +52,7 @@ export class RootCommand
       return;
     }
 
-    if ((parsed.help || parsed._.length === 0) && !parsed.version) {
+    if (parsed.help) {
       await this.help(consumedArgs);
       return;
     }

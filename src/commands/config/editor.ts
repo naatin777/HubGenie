@@ -5,33 +5,31 @@ import { render } from "ink";
 import React from "react";
 import type { ScopeFlag } from "../../type.ts";
 import {
-  GlobalFlag,
-  HelpFlag,
-  LocalFlag,
-} from "../../constants/commands/flags.ts";
-
-const EditorCommandFlag = { ...HelpFlag, ...LocalFlag, ...GlobalFlag };
-const EditorCommandOption = {};
-
-type EditorCommandFlagType = typeof EditorCommandFlag;
-type EditorCommandOptionType = typeof EditorCommandOption;
+  ConfigCommandFlag,
+  type ConfigCommandFlagType,
+  ConfigCommandOption,
+  type ConfigCommandOptionType,
+} from "../config.ts";
 
 export class EditorCommand
-  extends BaseCommand<EditorCommandFlagType, EditorCommandOptionType> {
+  extends BaseCommand<ConfigCommandFlagType, ConfigCommandOptionType> {
   name: string = "editor";
   description: string = "Configure the editor";
   commands: Command[] = [];
+  defaultFlags: ConfigCommandFlagType = ConfigCommandFlag;
+  defaultOptions: ConfigCommandOptionType = ConfigCommandOption;
+
   async execute(
     remainingArgs: string[],
     consumedArgs: string[],
-    flags: EditorCommandFlagType,
-    options: EditorCommandOptionType,
+    flags: ConfigCommandFlagType,
+    options: ConfigCommandOptionType,
   ): Promise<void> {
     const parsed = this.parseArgs(remainingArgs, flags, options);
 
     if (parsed._.length > 0) {
       await this.executeSubCommand(
-        parsed._.map((arg) => arg.toString()),
+        parsed,
         consumedArgs,
         flags,
         options,
@@ -40,7 +38,7 @@ export class EditorCommand
     }
 
     if (parsed.help) {
-      await this.help(consumedArgs, remainingArgs, flags, options);
+      await this.help(consumedArgs);
       return;
     }
 

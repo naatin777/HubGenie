@@ -5,37 +5,31 @@ import { render } from "ink";
 import React from "react";
 import type { ScopeFlag } from "../../type.ts";
 import {
-  GlobalFlag,
-  HelpFlag,
-  LocalFlag,
-} from "../../constants/commands/flags.ts";
-
-const LanguageCommandFlag = {
-  ...HelpFlag,
-  ...LocalFlag,
-  ...GlobalFlag,
-};
-const LanguageCommandOption = {};
-
-type LanguageCommandFlagType = typeof LanguageCommandFlag;
-type LanguageCommandOptionType = typeof LanguageCommandOption;
+  ConfigCommandFlag,
+  type ConfigCommandFlagType,
+  ConfigCommandOption,
+  type ConfigCommandOptionType,
+} from "../config.ts";
 
 export class LanguageCommand
-  extends BaseCommand<LanguageCommandFlagType, LanguageCommandOptionType> {
+  extends BaseCommand<ConfigCommandFlagType, ConfigCommandOptionType> {
   name: string = "language";
   description: string = "Configure the language";
   commands: Command[] = [];
+  defaultFlags: ConfigCommandFlagType = ConfigCommandFlag;
+  defaultOptions: ConfigCommandOptionType = ConfigCommandOption;
+
   async execute(
     remainingArgs: string[],
     consumedArgs: string[],
-    flags: LanguageCommandFlagType,
-    options: LanguageCommandOptionType,
+    flags: ConfigCommandFlagType,
+    options: ConfigCommandOptionType,
   ): Promise<void> {
     const parsed = this.parseArgs(remainingArgs, flags, options);
 
     if (parsed._.length > 0) {
       await this.executeSubCommand(
-        parsed._.map((arg) => arg.toString()),
+        parsed,
         consumedArgs,
         flags,
         options,
@@ -44,7 +38,7 @@ export class LanguageCommand
     }
 
     if (parsed.help) {
-      await this.help(consumedArgs, remainingArgs, flags, options);
+      await this.help(consumedArgs);
       return;
     }
 

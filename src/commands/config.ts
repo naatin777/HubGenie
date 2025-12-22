@@ -5,11 +5,11 @@ import {
   LocalFlag,
 } from "../constants/commands/flags.ts";
 
-const ConfigCommandFlag = { ...HelpFlag, ...LocalFlag, ...GlobalFlag };
-const ConfigCommandOption = {};
+export const ConfigCommandFlag = { ...HelpFlag, ...LocalFlag, ...GlobalFlag };
+export const ConfigCommandOption = {};
 
-type ConfigCommandFlagType = typeof ConfigCommandFlag;
-type ConfigCommandOptionType = typeof ConfigCommandOption;
+export type ConfigCommandFlagType = typeof ConfigCommandFlag;
+export type ConfigCommandOptionType = typeof ConfigCommandOption;
 
 export class ConfigCommand
   extends BaseCommand<ConfigCommandFlagType, ConfigCommandOptionType> {
@@ -34,7 +34,7 @@ export class ConfigCommand
 
     if (parsed._.length > 0) {
       await this.executeSubCommand(
-        parsed._.map((arg) => arg.toString()),
+        parsed,
         consumedArgs,
         flags,
         options,

@@ -34,7 +34,7 @@ export class InitCommand
 
     if (parsed._.length > 0) {
       await this.executeSubCommand(
-        parsed._.map((arg) => arg.toString()),
+        parsed,
         consumedArgs,
         flags,
         options,
