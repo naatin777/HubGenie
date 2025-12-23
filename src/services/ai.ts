@@ -3,7 +3,7 @@ import { generateObject, type LanguageModel, type ModelMessage } from "ai";
 import type { AI_PROVIDER_KEY } from "../constants/ai.ts";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { envService } from "./env.ts";
-import { getMergedConfig } from "./config.ts";
+import { ConfigService } from "./config.ts";
 
 export class AIService {
   protected modelCache: LanguageModel | null = null;
@@ -22,7 +22,8 @@ export class AIService {
   }
 
   static async create() {
-    const config = await getMergedConfig();
+    const configService = new ConfigService("project", envService);
+    const config = await configService.getMerged();
     const provider = config.provider;
     const model = config.model;
     const aiApiKey = await envService.getAiApiKey();

@@ -1,5 +1,4 @@
 import { BaseCommand, type Command } from "../lib/command.ts";
-import { getConfig } from "../services/config.ts";
 import { SetupFlow } from "../components/setup_flow.tsx";
 import { render } from "ink";
 import React from "react";
@@ -8,6 +7,8 @@ import {
   HelpFlag,
   LocalFlag,
 } from "../constants/commands/flags.ts";
+import { envService } from "../services/env.ts";
+import { ConfigService } from "../services/config.ts";
 
 const InitCommandFlag = { ...HelpFlag, ...LocalFlag, ...GlobalFlag };
 const InitCommandOption = {};
@@ -46,7 +47,8 @@ export class InitCommand
       return;
     }
 
-    const config = await getConfig({ ...parsed });
+    const configService = ConfigService.createFromFlags(parsed, envService);
+    const config = await configService.getMerged();
     if (config) {
       console.error("Config already exists");
       return;

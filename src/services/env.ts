@@ -3,7 +3,9 @@ import { EnvError } from "../lib/errors.ts";
 
 type EnvKey =
   | "DEMMITHUB_AI_API_KEY"
-  | "DEMMITHUB_GITHUB_TOKEN";
+  | "DEMMITHUB_GITHUB_TOKEN"
+  | "HOME"
+  | "USERPROFILE";
 
 let envLoadingPromise: Promise<void> | undefined = undefined;
 
@@ -22,9 +24,11 @@ async function getEnv(key: EnvKey): Promise<string> {
 export interface EnvService {
   getAiApiKey(): Promise<string>;
   getGitHubToken(): Promise<string>;
+  getHome(): Promise<string>;
 }
 
 export const envService: EnvService = {
   getAiApiKey: async () => await getEnv("DEMMITHUB_AI_API_KEY"),
   getGitHubToken: async () => await getEnv("DEMMITHUB_GITHUB_TOKEN"),
+  getHome: async () => await getEnv("HOME") || await getEnv("USERPROFILE"),
 };

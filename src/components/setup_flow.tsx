@@ -5,13 +5,17 @@ import {
   LanguageSelector,
   OverviewInput,
 } from "./selection.tsx";
-import { saveConfig } from "../services/config.ts";
-import type { Config, ScopeFlag } from "../type.ts";
+import {
+  type Config,
+  type ConfigScope,
+  ConfigService,
+} from "../services/config.ts";
+import { envService } from "../services/env.ts";
 
 export type SetupStep = "language" | "editor" | "overview" | "done";
 
 export function SetupFlow(
-  { scope, onDone }: { scope: ScopeFlag; onDone?: (config: Config) => void },
+  { scope, onDone }: { scope: ConfigScope; onDone?: (config: Config) => void },
 ) {
   const [step, setStep] = useState<SetupStep>("language");
   const [config, setConfig] = useState<Config>({
@@ -36,7 +40,8 @@ export function SetupFlow(
   const handleOverview = async (overview: string) => {
     const finalConfig = { ...config, overview };
     setConfig(finalConfig);
-    await saveConfig(finalConfig, scope);
+    const configService = new ConfigService(scope, envService);
+    await configService.save(finalConfig, scope);
     setStep("done");
     if (onDone) onDone(finalConfig);
     exit();
@@ -52,5 +57,5 @@ export function SetupFlow(
 }
 
 if (import.meta.main) {
-  render(<SetupFlow scope={{ local: true }} />);
+  render(<SetupFlow scope="local" />);
 }
