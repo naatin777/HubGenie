@@ -143,3 +143,147 @@ Deno.test("Help component - subCommand rendering", () => {
   assertStringIncludes(output!, "Nested command description");
   unmount();
 });
+
+Deno.test("Help component - flags only rendering", () => {
+  const flags = {
+    verbose: {
+      value: false,
+      description: "Enable verbose logging",
+      alias: "v",
+    },
+  };
+
+  const { lastFrame, unmount } = render(
+    <Help
+      name="test-cli"
+      description="A test CLI"
+      consumedArgs={["test-cli"]}
+      commands={[]}
+      flags={flags}
+      options={{}}
+      error={undefined}
+    />,
+  );
+
+  const output = lastFrame();
+  assertStringIncludes(output!, "Usage:");
+  assertStringIncludes(output!, "test-cli [options]");
+  assertStringIncludes(output!, "Options:");
+  assertStringIncludes(output!, "--verbose, -v");
+  unmount();
+});
+
+Deno.test("Help component - options only rendering", () => {
+  const options = {
+    config: {
+      value: "config.json",
+      description: "Path to config file",
+      alias: "c",
+    },
+  };
+
+  const { lastFrame, unmount } = render(
+    <Help
+      name="test-cli"
+      description="A test CLI"
+      consumedArgs={["test-cli"]}
+      commands={[]}
+      flags={{}}
+      options={options}
+      error={undefined}
+    />,
+  );
+
+  const output = lastFrame();
+  assertStringIncludes(output!, "Usage:");
+  assertStringIncludes(output!, "test-cli [options]");
+  assertStringIncludes(output!, "Options:");
+  assertStringIncludes(output!, "--config=<value>, -c=<value>");
+  unmount();
+});
+
+Deno.test("Help component - commands and flags rendering", () => {
+  const mockCommands: Command[] = [{
+    name: "init",
+    description: "Initialize project",
+    commands: [],
+    defaultFlags: {},
+    defaultOptions: {},
+    execute: async () => {},
+  }];
+  const flags = {
+    verbose: {
+      value: false,
+      description: "Enable verbose logging",
+      alias: "v",
+    },
+  };
+
+  const { lastFrame, unmount } = render(
+    <Help
+      name="test-cli"
+      description="A test CLI"
+      consumedArgs={["test-cli"]}
+      commands={mockCommands}
+      flags={flags}
+      options={{}}
+      error={undefined}
+    />,
+  );
+
+  const output = lastFrame();
+  assertStringIncludes(output!, "Usage:");
+  assertStringIncludes(output!, "test-cli [command] [options]");
+  assertStringIncludes(output!, "Commands:");
+  assertStringIncludes(output!, "init");
+  assertStringIncludes(output!, "Options:");
+  assertStringIncludes(output!, "--verbose, -v");
+  unmount();
+});
+
+Deno.test("Help component - all features rendering", () => {
+  const mockCommands: Command[] = [{
+    name: "init",
+    description: "Initialize project",
+    commands: [],
+    defaultFlags: {},
+    defaultOptions: {},
+    execute: async () => {},
+  }];
+  const flags = {
+    verbose: {
+      value: false,
+      description: "Enable verbose logging",
+      alias: "v",
+    },
+  };
+  const options = {
+    config: {
+      value: "config.json",
+      description: "Path to config file",
+      alias: "c",
+    },
+  };
+
+  const { lastFrame, unmount } = render(
+    <Help
+      name="test-cli"
+      description="A test CLI"
+      consumedArgs={["test-cli"]}
+      commands={mockCommands}
+      flags={flags}
+      options={options}
+      error={undefined}
+    />,
+  );
+
+  const output = lastFrame();
+  assertStringIncludes(output!, "Usage:");
+  assertStringIncludes(output!, "test-cli [command] [options]");
+  assertStringIncludes(output!, "Commands:");
+  assertStringIncludes(output!, "init");
+  assertStringIncludes(output!, "Options:");
+  assertStringIncludes(output!, "--verbose, -v");
+  assertStringIncludes(output!, "--config=<value>, -c=<value>");
+  unmount();
+});
