@@ -16,6 +16,7 @@
     "npm:@octokit/plugin-rest-endpoint-methods@17": "17.0.0_@octokit+core@7.0.6",
     "npm:@openrouter/ai-sdk-provider@^1.5.4": "1.5.4_ai@5.0.116__zod@4.2.1_zod@4.2.1",
     "npm:@types/react@*": "19.2.7",
+    "npm:ai@*": "5.0.116_zod@4.2.1",
     "npm:ai@^5.0.116": "5.0.116_zod@4.2.1",
     "npm:ink-testing-library@4": "4.0.0_@types+react@19.2.7",
     "npm:ink@4": "4.4.1_@types+react@19.2.7_react@18.3.1",
