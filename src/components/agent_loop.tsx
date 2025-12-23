@@ -2,10 +2,10 @@ import { Box, render } from "ink";
 import { useState } from "react";
 import { TextInput } from "./text_input.tsx";
 import { Spinner } from "./spinner.tsx";
-import { generateStructuredOutput } from "../services/ai.ts";
 import { IssueAgentSchema, type IssueSchema } from "../schema.ts";
 import { ISSUE_SYSTEM_MESSAGE } from "../constants/message.ts";
 import type z from "zod";
+import { AIService } from "../services/ai.ts";
 
 export function AgentLoop({
   initialMessages,
@@ -21,10 +21,11 @@ export function AgentLoop({
 
   const performStep = async () => {
     try {
-      const completion = await generateStructuredOutput(
+      const aiService = await AIService.create();
+      const completion = await aiService.generateStructuredOutput(
         history,
-        IssueAgentSchema,
         "issueAgent",
+        IssueAgentSchema,
       );
 
       if (!completion) {
