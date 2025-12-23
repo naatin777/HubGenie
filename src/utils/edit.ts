@@ -1,4 +1,5 @@
-import { getMergedConfig } from "../services/config.ts";
+import { ConfigService } from "../services/config.ts";
+import { envService } from "../services/env.ts";
 
 export async function editText(text: string): Promise<string> {
   const tempFile = await Deno.makeTempFile({ suffix: ".txt" });
@@ -6,7 +7,8 @@ export async function editText(text: string): Promise<string> {
   try {
     await Deno.writeTextFile(tempFile, text);
 
-    const config = await getMergedConfig();
+    const configService = new ConfigService("project", envService);
+    const config = await configService.getMerged();
     const [cmd, ...args] = config.editor.split(" ");
     const command = new Deno.Command(cmd, {
       args: [...args, tempFile],

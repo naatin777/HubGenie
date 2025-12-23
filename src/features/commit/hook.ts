@@ -1,11 +1,11 @@
 import { useEffect, useReducer } from "react";
 import { commitReducer, type CommitState } from "./reducer.ts";
 import { GitService } from "../../services/git/git_service.ts";
-import { generateStructuredOutput } from "../../services/ai.ts";
 import { COMMIT_SYSTEM_MESSAGE } from "../../constants/message.ts";
 import { CommitSchema } from "../../schema.ts";
 import { editText } from "../../utils/edit.ts";
 import { useApp } from "ink";
+import { AIService } from "../../services/ai.ts";
 
 const initialState: CommitState = { step: "loading" };
 
@@ -20,7 +20,8 @@ export function useCommitFlow() {
       dispatch({ type: "ERROR" });
       return;
     }
-    const result = await generateStructuredOutput(
+    const aiService = await AIService.create();
+    const result = await aiService.generateStructuredOutput(
       [
         {
           role: "system",
@@ -31,8 +32,8 @@ export function useCommitFlow() {
           content: diff,
         },
       ],
+      COMMIT_SYSTEM_MESSAGE,
       CommitSchema,
-      "commit messages",
     );
     if (!result) {
       dispatch({ type: "ERROR" });

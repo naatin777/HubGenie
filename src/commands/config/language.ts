@@ -1,5 +1,5 @@
 import { BaseCommand, type Command } from "../../lib/command.ts";
-import { getMergedConfig, saveConfig } from "../../services/config.ts";
+import { ConfigService } from "../../services/config.ts";
 import { LanguageSelector } from "../../components/selection.tsx";
 import { render } from "ink";
 import React from "react";
@@ -9,6 +9,7 @@ import {
   ConfigCommandOption,
   type ConfigCommandOptionType,
 } from "../config.ts";
+import { envService } from "../../services/env.ts";
 
 export class LanguageCommand
   extends BaseCommand<ConfigCommandFlagType, ConfigCommandOptionType> {
@@ -44,9 +45,13 @@ export class LanguageCommand
     const { waitUntilExit } = render(
       React.createElement(LanguageSelector, {
         onSelect: async (language: string) => {
-          const localConfig = await getMergedConfig();
+          const configService = ConfigService.createFromFlags(
+            parsed,
+            envService,
+          );
+          const localConfig = await configService.getMerged();
           localConfig.language = language;
-          await saveConfig(localConfig, { ...parsed });
+          await configService.save(localConfig);
         },
       }),
     );
