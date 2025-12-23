@@ -24,7 +24,6 @@
     "ink": "npm:ink@^5.2.1",
     "ink-testing-library": "npm:ink-testing-library@^4.0.0",
     "octokit": "npm:octokit@^5.0.5",
-    "openai": "npm:openai@^6.15.0",
     "react": "npm:react@18.3.1",
     "zod": "npm:zod@^4.2.1"
   },

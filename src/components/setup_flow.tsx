@@ -14,10 +14,12 @@ export function SetupFlow(
   { scope, onDone }: { scope: ScopeFlag; onDone?: (config: Config) => void },
 ) {
   const [step, setStep] = useState<SetupStep>("language");
-  const [config, setConfig] = useState({
+  const [config, setConfig] = useState<Config>({
     language: "",
     editor: "",
     overview: "",
+    provider: "ChatGPT",
+    model: "",
   });
   const { exit } = useApp();
 
