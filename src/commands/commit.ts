@@ -1,48 +1,46 @@
 import { BaseCommand, type Command } from "../lib/command.ts";
-import { parseArgs } from "@std/cli";
 import { Commit } from "../features/commit/ui.tsx";
 import { render } from "ink";
 import React from "react";
-import { HelpOption } from "../constants/option.ts";
+import { HelpFlag } from "../constants/commands/flags.ts";
 
-const CommitCommandOption = { ...HelpOption };
+const CommitCommandOption = {};
+const CommitCommandFlag = { ...HelpFlag };
 
 type CommitCommandOptionType = typeof CommitCommandOption;
+type CommitCommandFlagType = typeof CommitCommandFlag;
 
-export class CommitCommand extends BaseCommand<CommitCommandOptionType> {
+export class CommitCommand
+  extends BaseCommand<CommitCommandFlagType, CommitCommandOptionType> {
   name: string = "commit";
   description: string = "Commit changes to the repository";
   commands: Command[] = [];
+  defaultFlags: CommitCommandFlagType = CommitCommandFlag;
+  defaultOptions: CommitCommandOptionType = CommitCommandOption;
+
   async execute(
-    args: (string | number)[],
-    context: (string | number)[],
+    remainingArgs: string[],
+    consumedArgs: string[],
+    flags: CommitCommandFlagType,
     options: CommitCommandOptionType,
   ): Promise<void> {
-    const parsedOptions = this.parseOptions(options);
-    const parsedAlias = this.parseAlias(options);
-
-    const parsed = parseArgs(args.map((arg) => arg.toString()), {
-      boolean: parsedOptions.booleanKeysArray,
-      string: parsedOptions.stringKeysArray,
-      // collect: parsedOptions.arrayKeysArray,
-      alias: parsedAlias,
-      stopEarly: true,
-    });
+    const parsed = this.parseArgs(remainingArgs, flags, options);
 
     if (parsed._.length > 0) {
-      await this.executeSubCommand(parsed._, context, options);
+      await this.executeSubCommand(
+        parsed,
+        consumedArgs,
+        flags,
+        options,
+      );
       return;
     }
 
     if (parsed.help) {
-      await this.help(context, options);
+      await this.help(consumedArgs);
       return;
     }
 
-    await this.action();
-  }
-
-  async action() {
     const commit = React.createElement(Commit, null);
     const { waitUntilExit } = render(commit);
     await waitUntilExit();

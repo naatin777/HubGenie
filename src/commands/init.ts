@@ -1,51 +1,57 @@
-import { parseArgs } from "@std/cli";
 import { BaseCommand, type Command } from "../lib/command.ts";
 import { getConfig } from "../services/config.ts";
 import { SetupFlow } from "../components/setup_flow.tsx";
 import { render } from "ink";
 import React from "react";
-import type { ScopeFlag } from "../type.ts";
-import { GlobalOption, HelpOption, LocalOption } from "../constants/option.ts";
+import {
+  GlobalFlag,
+  HelpFlag,
+  LocalFlag,
+} from "../constants/commands/flags.ts";
 
-const InitCommandOption = { ...HelpOption, ...LocalOption, ...GlobalOption };
+const InitCommandFlag = { ...HelpFlag, ...LocalFlag, ...GlobalFlag };
+const InitCommandOption = {};
 
+type InitCommandFlagType = typeof InitCommandFlag;
 type InitCommandOptionType = typeof InitCommandOption;
 
-export class InitCommand extends BaseCommand<InitCommandOptionType> {
+export class InitCommand
+  extends BaseCommand<InitCommandFlagType, InitCommandOptionType> {
   name: string = "init";
   description: string = "Initialize a new project";
   commands: Command[] = [];
+  defaultFlags: InitCommandFlagType = InitCommandFlag;
+  defaultOptions: InitCommandOptionType = InitCommandOption;
+
   async execute(
-    args: (string | number)[],
-    context: (string | number)[],
+    remainingArgs: string[],
+    consumedArgs: string[],
+    flags: InitCommandFlagType,
     options: InitCommandOptionType,
   ): Promise<void> {
-    const parsedOptions = this.parseOptions(options);
-    const parsedAlias = this.parseAlias(options);
+    const parsed = this.parseArgs(remainingArgs, flags, options);
 
-    const parsed = parseArgs(args.map((arg) => arg.toString()), {
-      boolean: parsedOptions.booleanKeysArray,
-      string: parsedOptions.stringKeysArray,
-      // collect: parsedOptions.arrayKeysArray,
-      alias: parsedAlias,
-      stopEarly: true,
-    });
-
-    if (parsed.help) {
-      await this.help(context, options);
+    if (parsed._.length > 0) {
+      await this.executeSubCommand(
+        parsed,
+        consumedArgs,
+        flags,
+        options,
+      );
       return;
     }
 
-    await this.action(parsed);
-  }
+    if (parsed.help) {
+      await this.help(consumedArgs);
+      return;
+    }
 
-  async action(scope: ScopeFlag) {
-    const config = await getConfig(scope);
+    const config = await getConfig({ ...parsed });
     if (config) {
       console.error("Config already exists");
       return;
     }
-    const { waitUntilExit } = render(React.createElement(SetupFlow, { scope }));
+    const { waitUntilExit } = render(React.createElement(SetupFlow));
     await waitUntilExit();
   }
 }

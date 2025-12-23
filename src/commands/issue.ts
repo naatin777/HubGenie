@@ -1,43 +1,46 @@
 import { BaseCommand, type Command } from "../lib/command.ts";
-import { parseArgs } from "@std/cli";
 import { Issue } from "../features/issue/ui.tsx";
 import { render } from "ink";
 import React from "react";
-import { HelpOption } from "../constants/option.ts";
+import { HelpFlag } from "../constants/commands/flags.ts";
 
-const IssueCommandOption = { ...HelpOption };
+const IssueCommandFlag = { ...HelpFlag };
+const IssueCommandOption = {};
 
+type IssueCommandFlagType = typeof IssueCommandFlag;
 type IssueCommandOptionType = typeof IssueCommandOption;
 
-export class IssueCommand extends BaseCommand<IssueCommandOptionType> {
+export class IssueCommand
+  extends BaseCommand<IssueCommandFlagType, IssueCommandOptionType> {
   name: string = "issue";
   description: string = "Manage issues in the repository";
   commands: Command[] = [];
+  defaultFlags: IssueCommandFlagType = IssueCommandFlag;
+  defaultOptions: IssueCommandOptionType = IssueCommandOption;
+
   async execute(
-    args: (string | number)[],
-    context: (string | number)[],
+    remainingArgs: string[],
+    consumedArgs: string[] = [this.name],
+    flags: IssueCommandFlagType,
     options: IssueCommandOptionType,
   ): Promise<void> {
-    const parsedOptions = this.parseOptions(options);
-    const parsedAlias = this.parseAlias(options);
+    const parsed = this.parseArgs(remainingArgs, flags, options);
 
-    const parsed = parseArgs(args.map((arg) => arg.toString()), {
-      boolean: parsedOptions.booleanKeysArray,
-      string: parsedOptions.stringKeysArray,
-      // collect: parsedOptions.arrayKeysArray,
-      alias: parsedAlias,
-      stopEarly: true,
-    });
-
-    if (parsed.help) {
-      await this.help(context, options);
+    if (parsed._.length > 0) {
+      await this.executeSubCommand(
+        parsed,
+        consumedArgs,
+        flags,
+        options,
+      );
       return;
     }
 
-    await this.action();
-  }
+    if (parsed.help) {
+      await this.help(consumedArgs);
+      return;
+    }
 
-  async action() {
     const issue = React.createElement(Issue, null);
     const { waitUntilExit } = render(issue);
     await waitUntilExit();

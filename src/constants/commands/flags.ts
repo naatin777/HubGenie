@@ -1,4 +1,4 @@
-export const HelpOption = {
+export const HelpFlag = {
   help: {
     value: false,
     description: "Show help information.",
@@ -6,7 +6,7 @@ export const HelpOption = {
   },
 };
 
-export const VersionOption = {
+export const VersionFlag = {
   version: {
     value: false,
     description: "Show version information.",
@@ -14,7 +14,7 @@ export const VersionOption = {
   },
 };
 
-export const GlobalOption = {
+export const GlobalFlag = {
   global: {
     value: false,
     description: "Set global settings.",
@@ -22,7 +22,7 @@ export const GlobalOption = {
   },
 };
 
-export const LocalOption = {
+export const LocalFlag = {
   local: {
     value: false,
     description: "Set local settings.",

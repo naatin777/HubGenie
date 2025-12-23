@@ -1,6 +1,8 @@
-import { parseArgs } from "@std/cli";
+import React from "react";
+import { HelpFlag, VersionFlag } from "../constants/commands/flags.ts";
 import { BaseCommand, type Command } from "../lib/command.ts";
-import { HelpOption, VersionOption } from "../constants/option.ts";
+import { Version } from "../features/version/ui.tsx";
+import { render } from "ink";
 
 type RootCommandInit = {
   name: string;
@@ -9,15 +11,20 @@ type RootCommandInit = {
   commands: Command[];
 };
 
-const RootCommandOption = { ...HelpOption, ...VersionOption };
+const RootCommandFlag = { ...HelpFlag, ...VersionFlag };
+const RootCommandOption = {};
 
+type RootCommandFlagType = typeof RootCommandFlag;
 type RootCommandOptionType = typeof RootCommandOption;
 
-export class RootCommand extends BaseCommand<RootCommandOptionType> {
+export class RootCommand
+  extends BaseCommand<RootCommandFlagType, RootCommandOptionType> {
   name: string;
   version: string;
   description: string;
   commands: Command[];
+  defaultFlags: RootCommandFlagType = RootCommandFlag;
+  defaultOptions: RootCommandOptionType = RootCommandOption;
 
   constructor(options: RootCommandInit) {
     super();
@@ -28,36 +35,34 @@ export class RootCommand extends BaseCommand<RootCommandOptionType> {
   }
 
   async execute(
-    args: (string | number)[],
-    context: (string | number)[] = [],
+    remainingArgs: string[],
+    consumedArgs: string[] = [this.name],
+    flags: RootCommandFlagType = RootCommandFlag,
     options: RootCommandOptionType = RootCommandOption,
   ): Promise<void> {
-    context.push(this.name);
+    const parsed = this.parseArgs(remainingArgs, flags, options);
 
-    const parsedOptions = this.parseOptions(options);
-    const parsedAlias = this.parseAlias(options);
-
-    const parsed = parseArgs(args.map((arg) => arg.toString()), {
-      boolean: parsedOptions.booleanKeysArray,
-      string: parsedOptions.stringKeysArray,
-      // collect: parsedOptions.arrayKeysArray,
-      alias: parsedAlias,
-      stopEarly: true,
-    });
-
-    if (parsed._.length > 0 && !parsed.version) {
-      await this.executeSubCommand(parsed._, context, options);
-      return;
-    }
-
-    if ((parsed.help || parsed._.length === 0) && !parsed.version) {
-      await this.help(context, options);
+    if (parsed._.length > 0) {
+      await this.executeSubCommand(
+        parsed,
+        consumedArgs,
+        flags,
+        options,
+      );
       return;
     }
 
     if (parsed.version) {
-      console.log(`version: ${this.version}`);
+      const version = React.createElement(Version, {
+        name: this.name,
+        version: this.version,
+      });
+
+      const { waitUntilExit } = render(version);
+      await waitUntilExit();
       return;
     }
+
+    await this.help(consumedArgs);
   }
 }
