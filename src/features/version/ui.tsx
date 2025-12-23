@@ -20,8 +20,8 @@ export const Version: React.FC<VersionProps> = ({ name, version }) => {
   );
 };
 
-/* coverage-ignore-start */
+// deno-coverage-ignore-start
 if (import.meta.main) {
   render(<Version name="my-cli" version="1.5.4" />);
 }
-/* coverage-ignore-end */
+// deno-coverage-ignore-stop
