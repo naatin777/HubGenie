@@ -106,6 +106,40 @@ Deno.test("Help component - flags and options rendering", () => {
   assertStringIncludes(output!, "Enable verbose logging");
   assertStringIncludes(output!, "--config=<value>, -c=<value>");
   assertStringIncludes(output!, "Path to config file");
-  assertStringIncludes(output!, "[options]");
+  assertStringIncludes(output!, "test-cli [options]");
+  assertStringIncludes(output!, "A test CLI");
+  assertStringIncludes(output!, "Usage:");
+  assertStringIncludes(output!, "test-cli [options]");
+  unmount();
+});
+
+Deno.test("Help component - subCommand rendering", () => {
+  const mockSubCommands: Command[] = [{
+    name: "nested",
+    description: "Nested command description",
+    commands: [],
+    defaultFlags: {},
+    defaultOptions: {},
+    execute: async () => {},
+  }];
+
+  const { lastFrame, unmount } = render(
+    <Help
+      name="sub-command"
+      description="A sub command"
+      consumedArgs={["test-cli", "sub-command"]}
+      commands={mockSubCommands}
+      flags={{}}
+      options={{}}
+      error={undefined}
+    />,
+  );
+
+  const output = lastFrame();
+  assertStringIncludes(output!, "Usage:");
+  assertStringIncludes(output!, "test-cli sub-command [command]");
+  assertStringIncludes(output!, "Commands:");
+  assertStringIncludes(output!, "nested");
+  assertStringIncludes(output!, "Nested command description");
   unmount();
 });
