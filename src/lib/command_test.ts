@@ -44,6 +44,7 @@ class MockCommand extends BaseCommand<MockFlagType, MockOptionType> {
   defaultOptions = MockOption;
 
   helpCalled = false;
+  helpArgs: { consumedArgs: string[]; error?: string } | null = null;
 
   override execute(
     _remainingArgs: string[],
@@ -55,8 +56,9 @@ class MockCommand extends BaseCommand<MockFlagType, MockOptionType> {
     return Promise.resolve();
   }
 
-  override help(): Promise<void> {
+  override help(consumedArgs: string[], error?: string): Promise<void> {
     this.helpCalled = true;
+    this.helpArgs = { consumedArgs, error };
     return Promise.resolve();
   }
 }
@@ -125,6 +127,40 @@ Deno.test("BaseCommand.executeSubCommand - should execute matching subcommand", 
   assertEquals(sub.lastExecuted?.remainingArgs, ["arg1"]);
 });
 
+Deno.test("BaseCommand.executeSubCommand - should pass applied flags and options to subcommand", async () => {
+  const sub = new class extends MockSubCommand {
+    appliedFlags: MockFlagType | null = null;
+    appliedOptions: MockOptionType | null = null;
+
+    override execute(
+      _remainingArgs: string[],
+      _consumedArgs: string[],
+      flags: MockFlagType,
+      options: MockOptionType,
+    ): Promise<void> {
+      this.appliedFlags = flags;
+      this.appliedOptions = options;
+      return Promise.resolve();
+    }
+  }();
+
+  const cmd = new MockCommand();
+  cmd.commands = [sub];
+
+  const args = ["--verbose", "--name", "test", "sub", "arg1"];
+  const parsed = cmd.parseArgs(args, MockFlag, MockOption);
+
+  await cmd.executeSubCommand(
+    parsed,
+    ["root"],
+    MockFlag,
+    MockOption,
+  );
+
+  assertEquals(sub.appliedFlags?.verbose.value, true);
+  assertEquals(sub.appliedOptions?.name.value, "test");
+});
+
 Deno.test("BaseCommand.executeSubCommand - should call help if subcommand not found", async () => {
   const cmd = new MockCommand();
   cmd.commands = [];
@@ -149,6 +185,27 @@ Deno.test("BaseCommand.executeSubCommand - should call help if subcommand not fo
   }
 
   assertEquals(cmd.helpCalled, true);
+  assertEquals(cmd.helpArgs?.consumedArgs, ["root"]);
+  assertEquals(cmd.helpArgs?.error, 'Command "unknown" not found.');
+});
+
+Deno.test("BaseCommand.executeSubCommand - should call help if no subcommand provided", async () => {
+  const cmd = new MockCommand();
+  cmd.commands = [new MockSubCommand()];
+
+  const consumedArgs = ["root"];
+  const remainingArgs: string[] = [];
+  const parsed = cmd.parseArgs(remainingArgs, MockFlag, MockOption);
+
+  await cmd.executeSubCommand(
+    parsed,
+    consumedArgs,
+    MockFlag,
+    MockOption,
+  );
+
+  assertEquals(cmd.helpCalled, true);
+  assertEquals(cmd.helpArgs?.consumedArgs, ["root"]);
 });
 
 Deno.test("BaseCommand.parseArgs - should work with empty flags and options", () => {
