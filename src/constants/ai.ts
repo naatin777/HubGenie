@@ -4,3 +4,5 @@ export const AI_PROVIDER = [
   "Claude",
   "Google Gemini",
 ] as const;
+
+export type AI_PROVIDER_KEY = typeof AI_PROVIDER[number];

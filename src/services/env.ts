@@ -1,9 +1,8 @@
 import { load } from "@std/dotenv";
+import { EnvError } from "../lib/errors.ts";
 
 type EnvKey =
-  | "DEMMITHUB_API_KEY"
-  | "DEMMITHUB_BASE_URL"
-  | "DEMMITHUB_MODEL"
+  | "DEMMITHUB_AI_API_KEY"
   | "DEMMITHUB_GITHUB_TOKEN";
 
 let envLoadingPromise: Promise<void> | undefined = undefined;
@@ -16,20 +15,16 @@ async function getEnv(key: EnvKey): Promise<string> {
   }
   await envLoadingPromise;
   const value = Deno.env.get(key);
-  if (!value) throw new Error(`${key} is not set`);
+  if (!value) throw new EnvError(key);
   return value;
 }
 
 export interface EnvService {
-  getApiKey(): Promise<string>;
-  getBaseURL(): Promise<string>;
-  getModel(): Promise<string>;
+  getAiApiKey(): Promise<string>;
   getGitHubToken(): Promise<string>;
 }
 
 export const envService: EnvService = {
-  getApiKey: async () => await getEnv("DEMMITHUB_API_KEY"),
-  getBaseURL: async () => await getEnv("DEMMITHUB_BASE_URL"),
-  getModel: async () => await getEnv("DEMMITHUB_MODEL"),
+  getAiApiKey: async () => await getEnv("DEMMITHUB_AI_API_KEY"),
   getGitHubToken: async () => await getEnv("DEMMITHUB_GITHUB_TOKEN"),
 };
