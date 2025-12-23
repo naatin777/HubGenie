@@ -150,3 +150,25 @@ Deno.test("BaseCommand.executeSubCommand - should call help if subcommand not fo
 
   assertEquals(cmd.helpCalled, true);
 });
+
+Deno.test("BaseCommand.parseArgs - should work with empty flags and options", () => {
+  class EmptyMockCommand extends BaseCommand<
+    Record<string, never>,
+    Record<string, never>
+  > {
+    name = "empty";
+    description = "empty command";
+    commands: Command[] = [];
+    defaultFlags = {};
+    defaultOptions = {};
+    override execute(): Promise<void> {
+      return Promise.resolve();
+    }
+  }
+
+  const cmd = new EmptyMockCommand();
+  const args = ["arg1", "--unknown"];
+  const parsed = cmd.parseArgs(args, {}, {});
+
+  assertEquals(parsed._, ["arg1", "--unknown"]);
+});
