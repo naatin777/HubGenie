@@ -120,6 +120,7 @@ export function Help<F extends FlagType, O extends OptionType>(
   );
 }
 
+/* coverage-ignore-start */
 if (import.meta.main) {
   render(
     <Help
@@ -157,3 +158,4 @@ if (import.meta.main) {
     />,
   );
 }
+/* coverage-ignore-end */
