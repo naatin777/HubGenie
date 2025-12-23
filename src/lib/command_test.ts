@@ -17,6 +17,8 @@ class MockSubCommand extends BaseCommand<MockFlagType, MockOptionType> {
   name = "sub";
   description = "sub command";
   commands: Command[] = [];
+  defaultFlags = MockFlag;
+  defaultOptions = MockOption;
 
   lastExecuted: {
     consumedArgs: string[];
@@ -24,12 +26,12 @@ class MockSubCommand extends BaseCommand<MockFlagType, MockOptionType> {
   } | null = null;
 
   override execute(
-    consumedArgs: string[],
     remainingArgs: string[],
+    consumedArgs: string[],
     _flags: MockFlagType,
     _options: MockOptionType,
   ): Promise<void> {
-    this.lastExecuted = { consumedArgs, remainingArgs };
+    this.lastExecuted = { remainingArgs, consumedArgs };
     return Promise.resolve();
   }
 }
@@ -38,12 +40,14 @@ class MockCommand extends BaseCommand<MockFlagType, MockOptionType> {
   name = "mock";
   description = "mock command";
   commands: Command[] = [];
+  defaultFlags = MockFlag;
+  defaultOptions = MockOption;
 
   helpCalled = false;
 
   override execute(
-    _consumedArgs: string[],
     _remainingArgs: string[],
+    _consumedArgs: string[],
     _flags: MockFlagType,
     _options: MockOptionType,
   ): Promise<void> {
@@ -108,16 +112,17 @@ Deno.test("BaseCommand.executeSubCommand - should execute matching subcommand", 
 
   const consumedArgs = ["root"];
   const remainingArgs = ["sub", "arg1"];
+  const parsed = cmd.parseArgs(remainingArgs, MockFlag, MockOption);
 
   await cmd.executeSubCommand(
+    parsed,
     consumedArgs,
-    remainingArgs,
     MockFlag,
     MockOption,
   );
 
-  assertEquals(sub.lastExecuted?.consumedArgs, consumedArgs);
-  assertEquals(sub.lastExecuted?.remainingArgs, ["sub", "arg1"]);
+  assertEquals(sub.lastExecuted?.consumedArgs, ["root", "sub"]);
+  assertEquals(sub.lastExecuted?.remainingArgs, ["arg1"]);
 });
 
 Deno.test("BaseCommand.executeSubCommand - should call help if subcommand not found", async () => {
@@ -126,6 +131,7 @@ Deno.test("BaseCommand.executeSubCommand - should call help if subcommand not fo
 
   const consumedArgs = ["root"];
   const remainingArgs = ["unknown"];
+  const parsed = cmd.parseArgs(remainingArgs, MockFlag, MockOption);
 
   // Mock console.error to avoid noise in test output
   const originalError = console.error;
@@ -133,8 +139,8 @@ Deno.test("BaseCommand.executeSubCommand - should call help if subcommand not fo
 
   try {
     await cmd.executeSubCommand(
+      parsed,
       consumedArgs,
-      remainingArgs,
       MockFlag,
       MockOption,
     );

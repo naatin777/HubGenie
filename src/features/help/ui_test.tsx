@@ -1,0 +1,111 @@
+import { render } from "ink-testing-library";
+import { assertStringIncludes } from "@std/assert";
+import { Help } from "./ui.tsx";
+import type { Command } from "../../lib/command.ts";
+
+Deno.test("Help component - basic rendering", () => {
+  const { lastFrame, unmount } = render(
+    <Help
+      name="test-cli"
+      description="A test CLI"
+      consumedArgs={["test-cli"]}
+      commands={[]}
+      flags={{}}
+      options={{}}
+      error={undefined}
+    />,
+  );
+
+  const output = lastFrame();
+  assertStringIncludes(output!, "Name:");
+  assertStringIncludes(output!, "test-cli - A test CLI");
+  assertStringIncludes(output!, "Usage:");
+  assertStringIncludes(output!, "test-cli");
+  unmount();
+});
+
+Deno.test("Help component - error rendering", () => {
+  const { lastFrame, unmount } = render(
+    <Help
+      name="test-cli"
+      description="A test CLI"
+      consumedArgs={["test-cli"]}
+      commands={[]}
+      flags={{}}
+      options={{}}
+      error="Something went wrong"
+    />,
+  );
+
+  const output = lastFrame();
+  assertStringIncludes(output!, "Something went wrong");
+  unmount();
+});
+
+Deno.test("Help component - commands rendering", () => {
+  const mockCommands: Command[] = [{
+    name: "init",
+    description: "Initialize project",
+    commands: [],
+    defaultFlags: {},
+    defaultOptions: {},
+    execute: async () => {},
+  }];
+
+  const { lastFrame, unmount } = render(
+    <Help
+      name="test-cli"
+      description="A test CLI"
+      consumedArgs={["test-cli"]}
+      commands={mockCommands}
+      flags={{}}
+      options={{}}
+      error={undefined}
+    />,
+  );
+
+  const output = lastFrame();
+  assertStringIncludes(output!, "Commands:");
+  assertStringIncludes(output!, "init");
+  assertStringIncludes(output!, "Initialize project");
+  assertStringIncludes(output!, "[command]");
+  unmount();
+});
+
+Deno.test("Help component - flags and options rendering", () => {
+  const flags = {
+    verbose: {
+      value: false,
+      description: "Enable verbose logging",
+      alias: "v",
+    },
+  };
+  const options = {
+    config: {
+      value: "config.json",
+      description: "Path to config file",
+      alias: "c",
+    },
+  };
+
+  const { lastFrame, unmount } = render(
+    <Help
+      name="test-cli"
+      description="A test CLI"
+      consumedArgs={["test-cli"]}
+      commands={[]}
+      flags={flags}
+      options={options}
+      error={undefined}
+    />,
+  );
+
+  const output = lastFrame();
+  assertStringIncludes(output!, "Options:");
+  assertStringIncludes(output!, "--verbose, -v");
+  assertStringIncludes(output!, "Enable verbose logging");
+  assertStringIncludes(output!, "--config=<value>, -c=<value>");
+  assertStringIncludes(output!, "Path to config file");
+  assertStringIncludes(output!, "[options]");
+  unmount();
+});
