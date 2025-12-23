@@ -287,3 +287,49 @@ Deno.test("Help component - all features rendering", () => {
   assertStringIncludes(output!, "--config=<value>, -c=<value>");
   unmount();
 });
+
+Deno.test("Help component - flags and options without aliases", () => {
+  const flags = {
+    verbose: {
+      value: false,
+      description: "Enable verbose logging",
+      alias: undefined,
+    },
+  };
+  const options = {
+    config: {
+      value: "config.json",
+      description: "Path to config file",
+      alias: undefined,
+    },
+  };
+
+  const { lastFrame, unmount } = render(
+    <Help
+      name="test-cli"
+      description="A test CLI"
+      consumedArgs={["test-cli"]}
+      commands={[]}
+      flags={flags}
+      options={options}
+      error={undefined}
+    />,
+  );
+
+  const output = lastFrame();
+  assertStringIncludes(output!, "Options:");
+  assertStringIncludes(output!, "--verbose");
+  // Check that the alias portion (", -v") is NOT present
+  if (output!.includes("--verbose,")) {
+    throw new Error(
+      "Alias separator should not be present when alias is undefined",
+    );
+  }
+  assertStringIncludes(output!, "--config=<value>");
+  if (output!.includes("--config=<value>,")) {
+    throw new Error(
+      "Alias separator should not be present when alias is undefined",
+    );
+  }
+  unmount();
+});
