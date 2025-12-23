@@ -46,7 +46,7 @@ export class EditorCommand
         onSelect: async (editor: string) => {
           const localConfig = await getMergedConfig();
           localConfig.editor = editor;
-          await saveConfig(localConfig, {});
+          await saveConfig(localConfig, { ...parsed });
         },
       }),
     );

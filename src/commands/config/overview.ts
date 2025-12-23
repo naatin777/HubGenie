@@ -46,7 +46,7 @@ export class OverviewCommand
         onSubmit: async (overview: string) => {
           const localConfig = await getMergedConfig();
           localConfig.overview = overview;
-          await saveConfig(localConfig, {});
+          await saveConfig(localConfig, { ...parsed });
         },
       }),
     );

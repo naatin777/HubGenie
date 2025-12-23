@@ -141,6 +141,13 @@ export abstract class BaseCommand<
         ) => [key, options[key]?.value ?? this.defaultOptions[key].value]),
       ),
     };
+    type ParsedArgs =
+      & { [K in keyof F]: F[K]["value"] }
+      & { [K in keyof O]: O[K]["value"] }
+      & {
+        _: (string | number)[];
+        [x: string]: unknown;
+      };
 
     return parseArgs(remainingArgs, {
       boolean: flagKeys,
@@ -149,7 +156,7 @@ export abstract class BaseCommand<
       // deno-lint-ignore no-explicit-any
       default: defaults as any,
       stopEarly: true,
-    });
+    }) as ParsedArgs;
   }
 
   async help(

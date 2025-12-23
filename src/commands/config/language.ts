@@ -46,7 +46,7 @@ export class LanguageCommand
         onSelect: async (language: string) => {
           const localConfig = await getMergedConfig();
           localConfig.language = language;
-          await saveConfig(localConfig, {});
+          await saveConfig(localConfig, { ...parsed });
         },
       }),
     );

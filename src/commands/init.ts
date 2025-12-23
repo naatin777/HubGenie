@@ -46,7 +46,7 @@ export class InitCommand
       return;
     }
 
-    const config = await getConfig({});
+    const config = await getConfig({ ...parsed });
     if (config) {
       console.error("Config already exists");
       return;
