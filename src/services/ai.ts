@@ -1,5 +1,10 @@
 import { z } from "zod";
-import { generateObject, type LanguageModel, type ModelMessage } from "ai";
+import {
+  generateObject,
+  type LanguageModel,
+  type ModelMessage,
+  streamObject,
+} from "ai";
 import type { AI_PROVIDER_KEY } from "../constants/ai.ts";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { envService } from "./env.ts";
@@ -56,14 +61,29 @@ export class AIService {
     messages: ModelMessage[],
     system: string,
     schema: T,
-  ): Promise<z.infer<T>> {
+  ) {
     const { object } = await generateObject({
       model: await this.getModel(),
       system: system,
       messages: messages,
       schema: schema,
     });
-    return object as z.infer<T>;
+    return object;
+  }
+
+  async streamStructuredArrayOutput<T extends z.ZodType>(
+    messages: ModelMessage[],
+    system: string,
+    schema: T,
+  ) {
+    const { elementStream } = await streamObject({
+      model: await this.getModel(),
+      system: system,
+      messages: messages,
+      output: "array",
+      schema: schema,
+    });
+    return elementStream;
   }
 }
 
@@ -73,16 +93,35 @@ if (import.meta.main) {
     [
       {
         role: "user",
-        content: "Hello, how are you?",
+        content: "Hello, how are you? please output a lot of your thoughts",
       },
     ],
-    "please output success or error",
+    "Randomly output 10 patterns of success or failure",
     z.object({
-      type: z.discriminatedUnion("type", [
-        z.object({ type: z.literal("success"), message: z.string() }),
-        z.object({ type: z.literal("error"), code: z.number() }),
-      ]),
+      patterns: z.array(
+        z.discriminatedUnion("type", [
+          z.object({ type: z.literal("success"), message: z.string() }),
+          z.object({ type: z.literal("error"), code: z.number() }),
+        ]),
+      ),
     }),
   );
   console.log(result);
+
+  const resultStream = await aiService.streamStructuredArrayOutput(
+    [
+      {
+        role: "user",
+        content: "Hello, how are you? please output a lot of your thoughts",
+      },
+    ],
+    "Randomly output 10 patterns of success or failure",
+    z.discriminatedUnion("type", [
+      z.object({ type: z.literal("success"), message: z.string() }),
+      z.object({ type: z.literal("error"), code: z.number() }),
+    ]),
+  );
+  for await (const chunk of resultStream) {
+    console.log(chunk);
+  }
 }
