@@ -21,6 +21,7 @@
     "ink-testing-library": "npm:ink-testing-library@^4.0.0",
     "octokit": "npm:octokit@^5.0.5",
     "react": "npm:react@18.3.1",
+    "simple-git": "npm:simple-git@^3.30.0",
     "zod": "npm:zod@^4.2.1"
   },
   "compilerOptions": {
