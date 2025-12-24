@@ -1,25 +1,29 @@
 import { assertEquals, assertRejects } from "@std/assert";
-import type { GitRunner } from "./git_runner.ts";
 import { GitRemoteRepository } from "./remote_repository.ts";
 
 Deno.test("getOwnerAndRepo", async () => {
-  const mock: GitRunner = {
-    run: (args) => new Promise((resolve) => resolve(args.join(" "))),
+  const mockGit = {
+    getRemotes: (_verbose: boolean) => Promise.resolve([]),
   };
-  const gitRemoteRepository = new GitRemoteRepository(mock);
+  // @ts-expect-error: Mocking SimpleGit for testing
+  const gitRemoteRepository = new GitRemoteRepository(mockGit);
   await assertRejects(
     async () => await gitRemoteRepository.getOwnerAndRepo(),
     Error,
     "Invalid remote URL",
   );
 
-  const mock2: GitRunner = {
-    run: (_) =>
-      new Promise((resolve) =>
-        resolve("git@github.com:naatin777/DemmitHub.git")
-      ),
+  const mockGit2 = {
+    getRemotes: (_verbose: boolean) =>
+      Promise.resolve([
+        {
+          name: "origin",
+          refs: { fetch: "git@github.com:naatin777/DemmitHub.git" },
+        },
+      ]),
   };
-  const gitRemoteRepository2 = new GitRemoteRepository(mock2);
+  // @ts-expect-error: Mocking SimpleGit for testing
+  const gitRemoteRepository2 = new GitRemoteRepository(mockGit2);
   const { owner, repo } = await gitRemoteRepository2.getOwnerAndRepo();
   assertEquals(owner, "naatin777");
   assertEquals(repo, "DemmitHub");

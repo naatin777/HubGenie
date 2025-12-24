@@ -1,15 +1,14 @@
-import { DefaultGitRunner, type GitRunner } from "./git_runner.ts";
+import { type SimpleGit, simpleGit } from "simple-git";
 
 export class GitDiffRepository {
-  private readonly runner: GitRunner;
+  private readonly git: SimpleGit;
 
-  constructor(runner: GitRunner = new DefaultGitRunner()) {
-    this.runner = runner;
+  constructor(git: SimpleGit = simpleGit()) {
+    this.git = git;
   }
 
   async getGitDiffStaged(): Promise<string> {
-    return await this.runner.run([
-      "diff",
+    return await this.git.diff([
       "--cached",
       "--unified=0",
       "--color=never",
@@ -18,8 +17,7 @@ export class GitDiffRepository {
   }
 
   async getGitDiffStagedName(): Promise<string> {
-    return await this.runner.run([
-      "diff",
+    return await this.git.diff([
       "--cached",
       "--name-only",
     ]);
@@ -31,8 +29,7 @@ export class GitDiffRepository {
   }
 
   async getGitDiffUnstaged(): Promise<string> {
-    return await this.runner.run([
-      "diff",
+    return await this.git.diff([
       "--unified=0",
       "--color=never",
       "--no-prefix",
@@ -40,8 +37,7 @@ export class GitDiffRepository {
   }
 
   async getGitDiffUnstagedName(): Promise<string> {
-    return await this.runner.run([
-      "diff",
+    return await this.git.diff([
       "--name-only",
     ]);
   }

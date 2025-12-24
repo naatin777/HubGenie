@@ -1,26 +1,28 @@
 import { assertEquals } from "@std/assert";
-import type { GitRunner } from "./git_runner.ts";
 import { GitRevParseRepository } from "./rev_parse_repository.ts";
 
 Deno.test("isGitRepository", async () => {
-  const mock: GitRunner = {
-    run: (args) => new Promise((resolve) => resolve(args.join(" "))),
+  const mockGit = {
+    revparse: (args: string[]) => Promise.resolve(args.join(" ")),
   };
-  const gitRevParseRepository = new GitRevParseRepository(mock);
+  // @ts-expect-error: Mocking SimpleGit for testing
+  const gitRevParseRepository = new GitRevParseRepository(mockGit);
   const isGitRepository = await gitRevParseRepository.isGitRepository();
   assertEquals(isGitRepository, false);
 
-  const mock2: GitRunner = {
-    run: (_) => new Promise((resolve) => resolve("true")),
+  const mockGit2 = {
+    revparse: (_: string[]) => Promise.resolve("true"),
   };
-  const gitRevParseRepository2 = new GitRevParseRepository(mock2);
+  // @ts-expect-error: Mocking SimpleGit for testing
+  const gitRevParseRepository2 = new GitRevParseRepository(mockGit2);
   const isGitRepository2 = await gitRevParseRepository2.isGitRepository();
   assertEquals(isGitRepository2, true);
 
-  const mock3: GitRunner = {
-    run: (_) => new Promise((_, reject) => reject("true")),
+  const mockGit3 = {
+    revparse: (_: string[]) => Promise.reject("error"),
   };
-  const gitRevParseRepository3 = new GitRevParseRepository(mock3);
+  // @ts-expect-error: Mocking SimpleGit for testing
+  const gitRevParseRepository3 = new GitRevParseRepository(mockGit3);
   const isGitRepository3 = await gitRevParseRepository3.isGitRepository();
   assertEquals(isGitRepository3, false);
 });

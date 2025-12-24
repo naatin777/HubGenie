@@ -1,15 +1,14 @@
-import { DefaultGitRunner, type GitRunner } from "./git_runner.ts";
+import { type SimpleGit, simpleGit } from "simple-git";
 
 export class GitStatusRepository {
-  private readonly runner: GitRunner;
+  private readonly git: SimpleGit;
 
-  constructor(runner: GitRunner = new DefaultGitRunner()) {
-    this.runner = runner;
+  constructor(git: SimpleGit = simpleGit()) {
+    this.git = git;
   }
 
   async getStatus(): Promise<string> {
-    return await this.runner.run([
-      "status",
-    ]);
+    const statusSummary = await this.git.status();
+    return JSON.stringify(statusSummary, null, 2);
   }
 }
