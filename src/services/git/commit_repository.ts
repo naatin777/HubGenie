@@ -1,16 +1,14 @@
-import { DefaultGitRunner, type GitRunner } from "./git_runner.ts";
+import { type SimpleGit, simpleGit } from "simple-git";
 
 export class GitCommitRepository {
-  private readonly runner: GitRunner;
+  private readonly git: SimpleGit;
 
-  constructor(runner: GitRunner = new DefaultGitRunner()) {
-    this.runner = runner;
+  constructor(git: SimpleGit = simpleGit()) {
+    this.git = git;
   }
 
   async commitWithMessages(messages: string[]): Promise<string> {
-    return await this.runner.run([
-      "commit",
-      ...messages.flatMap((message) => ["-m", message]),
-    ]);
+    const result = await this.git.commit(messages);
+    return result.commit || "";
   }
 }

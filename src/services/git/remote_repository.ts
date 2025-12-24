@@ -1,15 +1,23 @@
-import { DefaultGitRunner, type GitRunner } from "./git_runner.ts";
+import { type SimpleGit, simpleGit } from "simple-git";
 
 export class GitRemoteRepository {
-  private readonly runner: GitRunner;
+  private readonly git: SimpleGit;
 
-  constructor(runner: GitRunner = new DefaultGitRunner()) {
-    this.runner = runner;
+  constructor(git: SimpleGit = simpleGit()) {
+    this.git = git;
   }
 
   async getOwnerAndRepo(): Promise<{ owner: string; repo: string }> {
-    const command = await this.runner.run(["remote", "get-url", "origin"]);
-    const match = command.trim().match(/[:/]([^/:]+)\/([^/]+?)(?:\.git)?$/);
+    const remotes = await this.git.getRemotes(true);
+    const origin = remotes.find((remote) => remote.name === "origin");
+
+    if (!origin || !origin.refs.fetch) {
+      throw new Error("Invalid remote URL");
+    }
+
+    const match = origin.refs.fetch.trim().match(
+      /[:/]([^/:]+)\/([^/]+?)(?:\.git)?$/,
+    );
     if (!match) throw new Error("Invalid remote URL");
     return { owner: match[1], repo: match[2] };
   }

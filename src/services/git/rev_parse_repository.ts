@@ -1,22 +1,16 @@
-import { DefaultGitRunner, type GitRunner } from "./git_runner.ts";
+import { type SimpleGit, simpleGit } from "simple-git";
 
 export class GitRevParseRepository {
-  private readonly runner: GitRunner;
+  private readonly git: SimpleGit;
 
-  constructor(runner: GitRunner = new DefaultGitRunner()) {
-    this.runner = runner;
+  constructor(git: SimpleGit = simpleGit()) {
+    this.git = git;
   }
 
   async isGitRepository(): Promise<boolean> {
     try {
-      const command = await this.runner.run([
-        "rev-parse",
-        "--is-inside-work-tree",
-      ]);
-      if (command === "true") {
-        return true;
-      }
-      return false;
+      const result = await this.git.revparse(["--is-inside-work-tree"]);
+      return result.trim() === "true";
     } catch {
       return false;
     }

@@ -1,12 +1,18 @@
 import { assertEquals } from "@std/assert";
-import type { GitRunner } from "./git_runner.ts";
 import { GitStatusRepository } from "./status_repository.ts";
 
 Deno.test("status", async () => {
-  const mock: GitRunner = {
-    run: (args) => new Promise((resolve) => resolve(args.join(" "))),
+  const mockStatus = {
+    current: "main",
+    files: [],
+    ahead: 0,
+    behind: 0,
   };
-  const gitStatusRepository = new GitStatusRepository(mock);
+  const mockGit = {
+    status: () => Promise.resolve(mockStatus),
+  };
+  // @ts-expect-error: Mocking SimpleGit for testing
+  const gitStatusRepository = new GitStatusRepository(mockGit);
   const status = await gitStatusRepository.getStatus();
-  assertEquals(status, "status");
+  assertEquals(status, JSON.stringify(mockStatus, null, 2));
 });

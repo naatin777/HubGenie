@@ -1,17 +1,19 @@
 import { assertEquals } from "@std/assert";
-import type { GitRunner } from "./git_runner.ts";
 import { GitCommitRepository } from "./commit_repository.ts";
 
 Deno.test("commitWithMessage", async () => {
-  const mock: GitRunner = {
-    run: (args) => new Promise((resolve) => resolve(args.join(" "))),
+  const mockGit = {
+    commit: (messages: string[]) =>
+      Promise.resolve({ commit: messages.join(" -m ") }),
   };
-  const gitCommitRepository = new GitCommitRepository(mock);
+  // @ts-expect-error: Mocking SimpleGit for testing
+  const gitCommitRepository = new GitCommitRepository(mockGit);
   const result = await gitCommitRepository.commitWithMessages(["test"]);
-  assertEquals(result, "commit -m test");
+  assertEquals(result, "test");
+
   const result2 = await gitCommitRepository.commitWithMessages([
     "test",
     "test2",
   ]);
-  assertEquals(result2, "commit -m test -m test2");
+  assertEquals(result2, "test -m test2");
 });
